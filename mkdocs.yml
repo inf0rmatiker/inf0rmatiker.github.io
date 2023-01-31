@@ -1,9 +1,9 @@
-site_name: Test docs
-site_description: 'A docs test'
-site_author: 'Michael Hausenblas'
+site_name: "inf0rmatiker docs"
+site_description: "GitHub Pages for inf0rmatiker"
+site_author: "Caleb Carlson"
 docs_dir: docs/
-repo_name: 'mhausenblas/mkdocs-template'
-repo_url: 'https://github.com/mhausenblas/mkdocs-template'
+repo_name: "inf0rmatiker"
+repo_url: "https://github.com/inf0rmatiker/inf0rmatiker.github.io"
 nav:
     - Home: index.md
 theme:

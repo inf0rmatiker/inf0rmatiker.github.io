@@ -35,6 +35,8 @@ with an amplitude of roughly 200 mV:
 
 ![60 Hz clean sine wave](./images/60_hz_clean.png)
 
+### Rectifying the signal
+
 All looks good so far. Now comes the tricky part. We want to essentially sample this voltage
 using the MCP3008 ADC thousands of times per second, and send the voltage readings to the Raspberry Pi
 which is polling for samples in a loop. However, the ADC only reads positive voltage values, i.e. 0 - 3.3V against its

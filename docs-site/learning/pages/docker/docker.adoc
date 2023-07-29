@@ -1,0 +1,3 @@
+= Docker
+
+Default template page for module to be replaced.

@@ -1,0 +1,38 @@
+
+* Kubernetes
+** xref:docs-site:learning:kubernetes/crds.adoc[CRDs]
+** xref:docs-site:learning:kubernetes/k8s-api-resources.adoc[Kubernetes Resources]
+** xref:docs-site:learning:kubernetes/k8s-install.adoc[Kubernetes Install]
+** xref:docs-site:learning:kubernetes/kubectl.adoc[kubectl]
+
+* Lustre
+** xref:docs-site:learning:lustre/compiling-lustre.adoc[Compiling Lustre]
+** xref:docs-site:learning:lustre/lustre-client.adoc[Lustre Client]
+** xref:docs-site:learning:lustre/lustre-server.adoc[Lustre Server]
+** xref:docs-site:learning:lustre/lustre-networking.adoc[Lustre Networking]
+
+* Security
+** xref:docs-site:learning:security/security.adoc[Security]
+
+* Linux
+** xref:docs-site:learning:linux/rocky-install.adoc[Rocky Linux Install]
+** xref:docs-site:learning:linux/rpms.adoc[RPMs]
+** Networking
+*** xref:docs-site:learning:linux/networking/linux-networking.adoc[Linux]
+*** xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]
+*** xref:docs-site:learning:linux/networking/ssh.adoc[SSH]
+*** xref:docs-site:learning:linux/networking/infiniband.adoc[InfiniBand]
+** Storage
+*** xref:docs-site:learning:linux/storage/drives.adoc[Drives]
+
+* Docker
+** xref:docs-site:learning:docker/registry-proxy.adoc[Registry Proxy]
+
+* Asciinema
+** xref:docs-site:learning:asciinema/asciinema.adoc[Asciinema]
+
+* BMC Management
+** xref:docs-site:learning:bmc-management/bmc-management.adoc[BMC Management]
+
+* GitHub
+** xref:docs-site:learning:github/github.adoc[GitHub]

@@ -1,0 +1,13 @@
+* xref:docs-site:ROOT:index.adoc[Overview]
+
+* Blog
++
+--
+include::docs-site:blog:partial$nav.adoc[Blog]
+--
+
+* Learning
++
+--
+include::docs-site:learning:partial$nav.adoc[Learning]
+--

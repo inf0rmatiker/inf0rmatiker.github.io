@@ -1,0 +1,87 @@
+= Proxy Guide
+
+== General Environment Proxy Configuration
+
+Gets loaded as environment variables by processes.
+
+[,bash]
+----
+cat >> /etc/environment<< EOF
+#Proxies for LR1
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+EOF
+----
+
+|===
+| Lower | Upper | Description | Example
+
+| `http_proxy`
+| `HTTP_PROXY`
+| Proxy to use for http traffic
+| `http_proxy=http://proxy.houston.hpecorp.net:8080`
+
+| `https_proxy`
+| `HTTPS_PROXY`
+| Proxy to use for https traffic
+| `https_proxy=http://proxy.houston.hpecorp.net:8080`
+
+| `no_proxy`
+| `NO_PROXY`
+| Do not use the proxy for these hostnames and IPs
+| `no_proxy=.us.cray.com,.hpe.com`
+|===
+
+The `no_proxy` variants tend to work based on string-based suffix matching. If your `no_proxy` is set to `.cray.com`, then requests to `foo.cray.com` will not use the configured proxy. Suffix matching works great for DNS names, but does not work well for IP addresses. If you have a whole subnet for which you do not want to use the proxy (e.g., `192.168.1.0/24`), then you must list out every IP address in `no_proxy` (`192.168.1.1,192.168.1.2,...192.168.1.254`).
+
+_Some_ tools may use different environment variables or offer more powerful syntax in `no_proxy`. Again, there is no actual standard just a common convention. What works for one application may not work for another.
+
+== Process-specific Proxy Configurations
+
+https://docs.docker.com/config/daemon/systemd/#httphttps-proxy[Docker systemd daemon]
+
+[,bash]
+----
+cat >> /etc/systemd/system/docker.service.d/http-proxy.conf << EOF
+[Service]
+Environment="HTTP_PROXY=http://proxy.houston.hpecorp.net:8080"
+Environment="HTTPS_PROXY=http://proxy.houston.hpecorp.net:8080"
+Environment="NO_PROXY=.us.cray.com"
+EOF
+----
+
+https://docs.docker.com/network/proxy/[Docker client]
+
+[,bash]
+----
+cat >> ~/.docker/config.json << EOF
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://proxy.houston.hpecorp.net:8080",
+     "httpsProxy": "http://proxy.houston.hpecorp.net:8080",
+     "noProxy": ".us.cray.com"
+   }
+ }
+}
+EOF
+----
+
+https://dnf.readthedocs.io/en/latest/conf_ref.html?highlight=proxy[DNF]
+
+[,bash]
+----
+cat >> /etc/dnf/dnf.conf << EOF
+[main]
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+EOF
+----
+

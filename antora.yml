@@ -1,0 +1,9 @@
+name: docs-site
+title: Caleb Carlson - Documentation
+version: 1.0
+asciidoc:
+  attributes:
+    source-language: asciidoc@
+    table-caption: true
+nav:
+- modules/ROOT/nav.adoc

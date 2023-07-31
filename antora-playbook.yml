@@ -1,0 +1,20 @@
+site:
+  title: Caleb Carlson - Documentation
+  url:  https://inf0rmatiker.github.io/
+  start_page: docs-site:ROOT:index.adoc
+output:
+  dir: ./build
+content:
+  sources:
+    - url: .
+      branches: [HEAD]
+ui:
+  bundle:
+    url: ./ui-bundle.zip
+    snapshot: true
+  supplemental_files:
+  - path: ui.yaml
+    contents: |
+      static_files: |
+      - .nojekyll
+  - path: .nojekyll

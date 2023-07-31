@@ -1,0 +1,75 @@
+= BMC Management
+
+:showtitle:
+:toc: auto
+
+== HPE iLo
+
+=== Updating License
+
+If you have an expired license:
+
+Apply key under `Administration > Licensing > Activation Key > Install`, or
+
+[,bash]
+----
+ssh root@<iLO address> set /map1 license=/<key>
+----
+
+=== Virtual Media Mount
+
+You can use iLo's Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an `.iso` file.
+
+image::docs-site:learning:bmc-management/iLo_insert_virtual_media.png[virtual media]
+
+== Find BMC Information from Host
+
+Use `ipmitool lan print` from the host OS
+
+[,console]
+----
+[root@mawenzi-06 ~]# ipmitool lan print
+Set in Progress         : Set Complete
+Auth Type Support       : NONE MD5 PASSWORD
+Auth Type Enable        : Callback : MD5 PASSWORD
+                        : User     : MD5 PASSWORD
+                        : Operator : MD5 PASSWORD
+                        : Admin    : MD5 PASSWORD
+                        : OEM      :
+IP Address Source       : DHCP Address
+IP Address              : 10.214.129.30
+Subnet Mask             : 255.255.248.0
+MAC Address             : 94:40:c9:47:b1:d7
+SNMP Community String   :
+BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+Default Gateway IP      : 10.214.128.1
+802.1q VLAN ID          : Disabled
+802.1q VLAN Priority    : 0
+RMCP+ Cipher Suites     : 0,1,2,3
+Cipher Suite Priv Max   : XuuaXXXXXXXXXXX
+                        :     X=Cipher Suite Unused
+                        :     c=CALLBACK
+                        :     u=USER
+                        :     o=OPERATOR
+                        :     a=ADMIN
+                        :     O=OEM
+Bad Password Threshold  : Not Available
+----
+
+== Using Serial Over LAN (SOL)
+
+Using `ipmitool`:
+
+* Activate a console:
++
+[,bash]
+----
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> sol activate
+----
+
+* Set boot device to virtual CD:
++
+[,bash]
+----
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis bootdev cdrom
+----

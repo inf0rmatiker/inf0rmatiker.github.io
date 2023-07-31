@@ -1,0 +1,256 @@
+= Lustre Server
+
+Installation, configuration, and management of a Lustre server cluster.
+
+* https://lustre.ornl.gov/lustre101-courses/[ORNL Lustre 101 Courses]
+** https://lustre.ornl.gov/lustre101-courses/C1/AdminEssentials.html[Lustre Administration Essentials]
+* https://wiki.lustre.org/Installing_the_Lustre_Software[Installing Lustre]
+
+== Terminology
+
+* MDT: Metadata Target
+* MDS: Metadata Server
+* MGT: Management Target
+* MGS: Management Service
+* OST: Object Storage Target
+* OSS: Object Storage Service
+
+== Installation
+
+Here we'll be using Rocky Linux 8.6 as a base.
+
+First, set your HTTP/s proxy so you can reach the greater internet:
+
+[,bash]
+----
+cat >> /etc/environment<< EOF
+#Proxies for LR1
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="localhost,127.0.0.1,.us.cray.com,.americas.cray.com,.dev.cray.com,.eag.rdlabs.hpecorp.net"
+EOF
+----
+
+Next, create a new repo file for the following repos:
+
+* Lustre server pieces
+** Patched kernel, kernel modules, and utilities built with MOFED Infiniband support
+* e2fsprogs for Lustre
+** Normally https://en.wikipedia.org/wiki/E2fsprogs[e2fsprogs] is a set of utilities for maintaining ext2, ext3, and ext4 filesystems
+** Lustre has their own set built for managing Lustre filesystems
+* Lustre client pieces
+** Modules built with MOFED Infiniband support
+
+[,bash]
+----
+cat >> /etc/yum.repos.d/lustre.repo<< EOF
+[lustre-server]
+name=rl8.6-ib - Lustre
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.1-ib/MOFED-5.6-2.0.9.0/el8.6/server/
+gpgcheck=0
+
+[e2fsprogs]
+name=rl8.6-ib - Ldiskfs
+baseurl=https://downloads.whamcloud.com/public/e2fsprogs/latest/el8/
+gpgcheck=0
+
+[lustre-client]
+name=rl8.6-ib - Lustre
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.1-ib/MOFED-5.6-2.0.9.0/el8.6/client/
+gpgcheck=0
+EOF
+----
+
+Now that you've added these repos, install the following packages using `dnf`
+
+* `epel`: Extra packages for Enterprise Linux, needed as a dependency in Lustre install
+
+[,bash]
+----
+dnf install epel-release e2fsprogs lustre -y
+----
+
+Reboot for changes to take effect, new patched kernel to be loaded, etc.
+
+[,bash]
+----
+reboot
+----
+
+Load the IP over Infiniband (`ipoib`) module, allowing us to assign our Infiniband device an IP address.
+
+[,bash]
+----
+modprobe ib_ipoib
+----
+
+Install https://docs.nvidia.com/networking/display/MLNXOFEDv461000/OpenSM[Infiniband-compliant Subnet Manager] `opensm`.
+The Infiniband switch we are connected to is an _unmanaged_ switch, so the switch can't be the Subnet Manager.
+So, _somewhere_ on the Infiniband network we need a Subnet Manager to manage the network. This can be done on the first node,
+or on a dedicated management node.
+
+If we had a managed Infiniband switch we could run the Subnet Manager there.
+
+[NOTE]
+How to do this with a Managed Switch... TODO
+
+[,bash]
+----
+dnf install -y opensm
+----
+
+Load the https://docs.kernel.org/infiniband/user_mad.html[Infiniband Userspace MAD] (Management Datagrams) module.
+This is needed for Open Subnet Manager in the following step.
+
+[,bash]
+----
+modprobe ib_umad
+----
+
+Start the https://docs.nvidia.com/networking/display/MLNXOFEDv461000/OpenSM[Infiniband-compliant Subnet Manager] `opensm` systemd service
+
+[,bash]
+----
+systemctl start opensm
+----
+
+Assign a static IP address to the `ib0` device, and set the link state to `UP`
+
+[,bash]
+----
+ip addr add 192.168.0.103/24 dev ib0
+ip link set dev ib0 up
+----
+
+Load the https://wiki.lustre.org/Lustre_Networking_(LNET)_Overview[LNET] module
+
+[,bash]
+----
+modprobe -v lnet
+----
+
+Load the lustre server modules
+
+[,bash]
+----
+modprobe -v lustre
+----
+
+
+[NOTE]
+A better way to do this persistently is to set the following fields in `/etc/sysconfig/network-scripts/ifcfg-ib0`
+[,console]
+----
+ONBOOT=yes
+BOOTPROTO=none
+IPADDR=192.168.0.103
+NETMASK=255.255.255.0
+----
+
+A prerequisite for this is to have the `ib_ipoib` module loaded, which can be done by adding an entry to `/etc/modules-load.d/`.
+While we're here we can also add on-boot modprobing for `lnet` and `lustre`.
+
+[,bash]
+----
+echo ib_ipoib > /etc/modules-load.d/ipoib.conf
+echo lnet > /etc/modules-load.d/lnet.conf
+echo lustre > /etc/modules-load.d/lustre.conf
+----
+
+Configure LNET, and add the `ib0` physical interface as the `o2ib` network
+
+[,bash]
+----
+lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0
+----
+
+Bring up the LNET network
+
+[,bash]
+----
+lctl network up
+----
+
+At this point we should have the following modules loaded and visible via `lsmod`
+
+[,console]
+----
+[root@mawenzi-03 ~]# lsmod | grep -i mlx
+mlx5_ib               454656  0
+ib_uverbs             155648  1 mlx5_ib
+ib_core               438272  8 rdma_cm,ib_ipoib,ko2iblnd,iw_cm,ib_umad,ib_uverbs,mlx5_ib,ib_cm
+mlx5_core            1912832  1 mlx5_ib
+mlxfw                  28672  1 mlx5_core
+pci_hyperv_intf        16384  1 mlx5_core
+tls                   102400  1 mlx5_core
+psample                20480  1 mlx5_core
+mlxdevm               180224  1 mlx5_core
+mlx_compat             16384  11 rdma_cm,ib_ipoib,mlxdevm,ko2iblnd,iw_cm,ib_umad,ib_core,ib_uverbs,mlx5_ib,ib_cm,mlx5_core
+----
+
+[,console]
+----
+[root@mawenzi-03 ~]# lsmod | grep -i ib
+ko2iblnd              237568  1
+rdma_cm               118784  1 ko2iblnd
+lnet                  704512  7 osc,ko2iblnd,obdclass,ptlrpc,lmv,lustre
+libcfs                266240  11 fld,lnet,osc,fid,ko2iblnd,obdclass,ptlrpc,lov,mdc,lmv,lustre
+ib_umad                28672  6
+ib_ipoib              155648  0
+ib_cm                 114688  2 rdma_cm,ib_ipoib
+nft_fib_inet           16384  1
+nft_fib_ipv4           16384  1 nft_fib_inet
+nft_fib_ipv6           16384  1 nft_fib_inet
+nft_fib                16384  3 nft_fib_ipv6,nft_fib_ipv4,nft_fib_inet
+nf_tables             180224  235 nft_ct,nft_reject_inet,nft_fib_ipv6,nft_fib_ipv4,nft_chain_nat,nf_tables_set,nft_reject,nft_fib,nft_fib_inet
+libcrc32c              16384  4 nf_conntrack,nf_nat,nf_tables,xfs
+mlx5_ib               454656  0
+ib_uverbs             155648  1 mlx5_ib
+ib_core               438272  8 rdma_cm,ib_ipoib,ko2iblnd,iw_cm,ib_umad,ib_uverbs,mlx5_ib,ib_cm
+mlx5_core            1912832  1 mlx5_ib
+mlx_compat             16384  11 rdma_cm,ib_ipoib,mlxdevm,ko2iblnd,iw_cm,ib_umad,ib_core,ib_uverbs,mlx5_ib,ib_cm,mlx5_core
+----
+
+[,console]
+----
+[root@mawenzi-03 ~]# lsmod | grep -i lustre
+lustre               1040384  0
+lmv                   204800  1 lustre
+mdc                   282624  1 lustre
+lov                   344064  2 mdc,lustre
+ptlrpc               2478080  7 fld,osc,fid,lov,mdc,lmv,lustre
+obdclass             3624960  8 fld,osc,fid,ptlrpc,lov,mdc,lmv,lustre
+lnet                  704512  7 osc,ko2iblnd,obdclass,ptlrpc,lmv,lustre
+libcfs                266240  11 fld,lnet,osc,fid,ko2iblnd,obdclass,ptlrpc,lov,mdc,lmv,lustre
+----
+
+=== Lustre Filesystem Creation
+
+Create MGT on `/dev/sdb`, make a directory under `/mnt` for it, then mount `/dev/sdb` to the directory.
+
+[,bash]
+----
+mkfs.lustre --mgs /dev/sdb
+mkdir /mnt/mgt
+mount -t lustre /dev/sdb /mnt/mgt
+----
+
+Create MDT on `/dev/sdc`, make a directory under `/mnt` for it, then mount `/dev/sdc` to the directory.
+
+[,bash]
+----
+mkfs.lustre --fsname=lustre --mgsnode=192.168.0.103@o2ib --mdt --index=0 /dev/sdc
+mkdir /mnt/mdt
+mount -t lustre /dev/sdc /mnt/mdt
+----
+
+Create OST on `/dev/sdd`, make a directory under `/mnt` for it, then mount `/dev/sdd` to the directory.
+
+[,bash]
+----
+mkfs.lustre --fsname=lustre --ost --mgsnode=192.168.0.103@o2ib --index=0 /dev/sdd
+mkdir /mnt/ost0
+mount -t lustre /dev/sdd /mnt/ost0
+----

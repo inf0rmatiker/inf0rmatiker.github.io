@@ -1,0 +1,90 @@
+= Installing Kubernetes on openSUSE Leap 15.3
+
+Original documentation for how to install `kubeadm`: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+. Open these ports on the firewall: https://kubernetes.io/docs/reference/ports-and-protocols/
+a. `firewall-cmd --add-port=6443/tcp --permanent`
+b. Repeat for all required ports
+. Install `conntrack`: `zypper install conntrack-tools`
+. Install `socat`: `zypper install socat`
+. Enable `ip_forward`: `echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward`
+ ** Follow this guide: https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic
+. Install `containerd` as the container runtime: Follow instructions on https://github.com/containerd/containerd/blob/main/docs/getting-started.md[containerd's Getting Started page]
+ ** Go get runc and CNI plugin files (see following steps)
+ ** Go get the https://github.com/containerd/containerd/releases[latest released containerd archive]
+ ** Untar it to `/usr/local`: `tar Cxzvf /usr/local containerd-1.6.6-linux-amd64.tar.gz`
+ ** Download https://github.com/containerd/containerd/blob/main/containerd.service[containerd.service] and copy it to `/usr/lib/systemd/system/containerd.service` (Official docs say to put it at `/usr/local/lib`, there's nothing there and this won't work. Put it in `/usr/lib/…`)
+ ** Launch systemd daemon for containerd:
+  *** `systemctl daemon-reload`
+  *** `systemctl enable --now containerd`
+ ** Get runc archive if you don't already have it: https://github.com/opencontainers/runc/releases
+ ** Install it: `install -m 755 runc.amd64 /usr/local/sbin/runc`
+ ** Go get CNI plugins: https://github.com/containernetworking/plugins/releases, and install them under `opt/cni/bin`:
+  *** `mkdir -p /opt/cni/bin`
+  *** `tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz`
+ ** Check it works by running `ctr --help`
+ ** Generate default containerd daemon configuration: `containerd config default > /etc/containerd/config.toml`
+. Configure systemd as cgroup with runc:
+ ** Edit `/etc/containerd/config.toml`:
++
+----
+   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+       ...
+       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+       SystemdCgroup = true
+----
+
+ ** Restart containerd: `sudo systemctl restart containerd`
+. Install `kubeadm`: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+. Install `critcl`:
++
+[,bash]
+----
+ DOWNLOAD_DIR=/usr/local/bin
+ sudo mkdir -p $DOWNLOAD_DIR
+ VERSION="v1.24.2"
+ wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
+ sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
+ rm -f crictl-$VERSION-linux-amd64.tar.gz
+----
+
+. Install `kubeadm`, `kubectl`, `kubelet`
++
+[,bash]
+----
+ RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"`
+ ARCH="amd64"
+ cd $DOWNLOAD_DIR
+ sudo curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/${ARCH}/{kubeadm,kubelet,kubectl}
+ sudo chmod +x {kubeadm,kubelet,kubectl}
+ RELEASE_VERSION="v0.4.0"
+ curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service
+ sudo mkdir -p /etc/systemd/system/kubelet.service.d
+ curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+----
+
+. Enable kubelet: `systemctl enable --now kubelet`
+
+[,bash]
+----
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+ mkdir -p $HOME/.kube
+ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+ export KUBECONFIG=/etc/kubernetes/admin.conf
+----
+
+. You should now deploy a pod network to the cluster.
+ ** Run `kubectl apply -f <podnetwork>.yaml` with one of the options listed at: https://kubernetes.io/docs/concepts/cluster-administration/addons/
+. Then you can join any number of worker nodes by running the following on each as `root`:
+
+[,bash]
+----
+kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-token-ca-cert-hash sha256:2b725a2cda814b07ee07c9d704de5a5cc2451c746eeb5b32277ebe661b9a36e4
+----

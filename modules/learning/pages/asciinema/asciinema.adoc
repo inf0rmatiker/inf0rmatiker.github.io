@@ -1,0 +1,35 @@
+= Terminal Capture Using Asciinema
+
+== Installation
+
+https://asciinema.org/docs/installation
+
+For MacOS:
+
+[,bash]
+----
+brew install asciinema
+----
+
+== View Asciinema Demo
+
+https://github.com/asciinema/asciinema-player
+
+=== Run HTTP Server
+
+Run HTTP server in the directory where you downloaded your `.cast`, `.css`, `.min.hs`, and `.html` files.
+
+[,bash]
+----
+pip3 install http.server
+python3 -m http.server
+----
+
+This should serve an HTTP server on `localhost:8000` or a similar port. Now, go to your browser and enter `http://localhost:8000/dkms.html`.
+
+== Record Asciinema Demo
+
+[,bash]
+----
+asciinema rec <filename>
+----

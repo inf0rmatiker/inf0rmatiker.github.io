@@ -1,4 +1,0 @@
-mkdocs
--r requirements.txt
-mkdocs-material
-mkdocs-material-extensions

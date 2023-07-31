@@ -1,0 +1,125 @@
+= Kubernetes API Resources
+
+:showtitle:
+:toc: auto
+
+This page contains commonly used Kubernetes resource definitions, templates, examples, and links to original API documentation.
+
+== Pod
+
+https://kubernetes.io/docs/concepts/workloads/pods/[Kubernetes Pod Documentation]
+
+Example Pod
+
+[,yaml]
+----
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rocky-admin-pod
+spec:
+  containers:
+    - name: rocky-admin-container
+      image: rockylinux:9.1.20221221
+      ports:
+        - containerPort: 80
+      imagePullPolicy: Always
+      command:
+        - "sleep"
+        - "86400"
+----
+
+== Job
+
+https://kubernetes.io/docs/concepts/workloads/controllers/job/[Kubernetes Job Documentation]
+
+== CronJob
+
+https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/[Kubernetes CronJob Documentation]
+
+== Deployment
+
+https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Kubernetes Deployment Documentation]
+
+== ReplicaSet
+
+https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/[Kubernetes ReplicaSet Documenetation]
+
+== StatefulSet
+
+https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/[Kubernetes StatefulSet Documentation]
+
+== DaemonSet
+
+https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/[Kubernetes DaemonSet Documentation]
+
+Example DaemonSet
+
+[,yaml]
+----
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: validation-svc-workers
+spec:
+  selector:
+    matchLabels:
+      name: validation-svc-worker
+  template:
+    metadata:
+      labels:
+        name: validation-svc-worker
+    spec:
+      nodeSelector:
+        validationSvcWorker: "true"
+      containers:
+        - name: validation-svc-worker
+          image: sustain/validation-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 50058
+          # Right now the easiest way to do this without creating a cluster service is just to set the master_uri to the
+          # validation-svc-master pod's cluster IP.
+          command: [ "python3", "-m", "overlay", "--worker", "--master_uri=<validation-svc-master-ip>:<master_port>", "--port=50058" ]
+          env:
+            - name: NODE_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName  # tell the pod about the host it's on, so it can talk to the local mongod
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+----
+
+== Services
+
+* https://kubernetes.io/docs/concepts/services-networking/[Kubernetes Networking Documentation]
+* https://kubernetes.io/docs/concepts/services-networking/service/[Kubernetes Service Documentation]
+
+=== NodePort Service
+
+https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport[Kubernetes NodePort Service Documentation]
+
+Example NodePort Service
+
+[,yaml]
+----
+apiVersion: v1
+kind: Service
+metadata:
+  name: validation-service
+spec:
+  type: NodePort
+  selector:
+    name: validation-svc-master
+  ports:
+    - name: master-port
+      port: 50059
+      nodePort: 30036
+      protocol: http
+----

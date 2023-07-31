@@ -1,0 +1,61 @@
+= Lustre Networking (LNET)
+
+:showtitle:
+:toc: auto
+
+Original Lustre documentation is linked below.
+
+* https://wiki.lustre.org/Lustre_Networking_(LNET)_Overview[Lustre Networking (LNET) Overview]
+* https://wiki.lustre.org/LNet_Router_Config_Guide[Router Config Guide]
+* https://wiki.whamcloud.com/display/LNet/LNet+Overview[LNET Overview]
+
+== LNET Utilites
+
+* https://manpages.org/lctl[`lctl`]: Control Lustre via ioctl interface
+* https://wiki.lustre.org/Dynamic_LNet_Configuration_and_lnetctl[`lnetctl`]: Manage LNET configurations
+
+== LNET Configuration
+
+This section assumes you're using an already-configured Infiniband fabric with IP over InfiniBand (IPoIB).
+To see how to do this prerequisite step, view the xref:docs-site:learning:linux/networking/infiniband.adoc[InfiniBand Documentation].
+
+Configure LNET, and add the `ib0` physical interface as the `o2ib` network
+
+Load the `lnet` kernel module
+
+[,bash]
+----
+modprobe lnet
+----
+
+[,bash]
+----
+lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0
+----
+
+Bring up the LNET network using `lctl`
+
+[,console]
+----
+[root@mawenzi-06 ~]# lctl network up
+LNET configured
+----
+
+Show the network using `lnetctl`
+
+[,console]
+----
+[root@mawenzi-01 ~]# lnetctl net show
+net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: o2ib
+      local NI(s):
+        - nid: 192.168.0.101@o2ib
+          status: up
+          interfaces:
+              0: ib0
+----

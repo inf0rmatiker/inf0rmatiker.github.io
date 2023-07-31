@@ -3,7 +3,7 @@ site:
   url:  https://inf0rmatiker.github.io/
   start_page: docs-site:ROOT:index.adoc
 output:
-  dir: ./docs
+  dir: ./build
 content:
   sources:
     - url: .
@@ -12,3 +12,9 @@ ui:
   bundle:
     url: ./ui-bundle.zip
     snapshot: true
+  supplemental_files:
+  - path: ui.yaml
+    contents: |
+      static_files: |
+      - .nojekyll
+  - path: .nojekyll

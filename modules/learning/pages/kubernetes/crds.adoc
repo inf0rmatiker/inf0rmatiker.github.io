@@ -1,0 +1,69 @@
+= Custom Resource Definitions (CRDs)
+
+:showtitle:
+:toc: auto
+
+This page contains commonly used Kubernetes CRD definitions, templates, examples, and links to original API documentation.
+
+== EtcdCluster
+
+https://github.com/coreos/etcd-operator[GitHub: coreos/etcd-operator [ARCHIVED]]
+
+[,yaml]
+----
+apiVersion: etcd.database.coreos.com/v1beta2
+kind: EtcdCluster
+metadata:
+  annotations:
+    cray.io/service: ssm-base-management-deployment-group-manager
+    etcd.database.coreos.com/scope: clusterwide
+    meta.helm.sh/release-name: ssm-base-management-deployment-group-manager
+    meta.helm.sh/release-namespace: services
+  labels:
+    app.kubernetes.io/instance: ssm-base-management-deployment-group-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ssm-base-management-deployment-group-manager-etcd
+    helm.sh/base-chart: cray-service-2.6.0
+    helm.sh/chart: ssm-base-management-deployment-group-manager-1.3.1
+  name: ssm-base-management-deployment-group-manager-etcd
+  namespace: services
+spec:
+  pod:
+    ClusterDomain: ""
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+            - key: etcd_cluster
+              operator: In
+              values:
+              - ssm-base-management-deployment-group-manager-etcd
+          topologyKey: kubernetes.io/hostname
+    annotations:
+      sidecar.istio.io/inject: "false"
+    busyboxImage: dtr.dev.cray.com/library/busybox:1.28.0-glibc
+    etcdEnv:
+    - name: ETCD_AUTO_COMPACTION_RETENTION
+      value: "1"
+    - name: ETCD_AUTO_COMPACTION_MODE
+      value: periodic
+    - name: ETCD_HEARTBEAT_INTERVAL
+      value: "4200"
+    - name: ETCD_ELECTION_TIMEOUT
+      value: "21000"
+    - name: ETCD_MAX_SNAPSHOTS
+      value: "5"
+    - name: ETCD_SNAPSHOT_COUNT
+      value: "10000"
+    persistentVolumeClaimSpec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 3Gi
+    resources: {}
+  repository: dtr.dev.cray.com/coreos/etcd
+  size: 3
+  version: 3.3.22
+----

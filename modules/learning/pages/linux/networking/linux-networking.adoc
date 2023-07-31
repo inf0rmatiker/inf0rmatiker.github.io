@@ -1,0 +1,76 @@
+= Linux Networking
+
+== Utilities
+
+* `ip`
+* `ifcfg`
+
+== Interfaces
+
+=== Bringing Interfaces Up/Down
+
+https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch05s02.html[Reference]
+
+Two methods can be used to bring interfaces up or down.
+
+Using `ip`
+
+----
+# ip link set dev <interface> up
+# ip link set dev <interface> down
+----
+
+Examples:
+
+[,bash]
+----
+ip link set dev eth0 up
+ip link set dev eth0 down
+----
+
+Using `ifconfig``
+
+----
+# /sbin/ifconfig <interface> up
+# /sbin/ifconfig <interface> down
+----
+
+Examples:
+
+[,bash]
+----
+/sbin/ifconfig eth0 up
+/sbin/ifconfig eth0 down
+----
+
+== Hostname
+
+Set hostname using `hostnamectl`
+
+[,bash]
+----
+hostnamectl set-hostname NAME
+----
+
+Set hostname at boot time by editing the grub boot parameters and adding `hostname=NAME`
+
+== Proxies
+
+Set proxy environment for HPE LR1: See xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]
+
+== Firewalls
+
+Disable the `firewalld` firewall daemon:
+
+[,bash]
+----
+systemctl stop firewalld
+systemctl disable firewalld
+----
+
+Disable SELinux
+
+[,bash]
+----
+setenforce 0
+----

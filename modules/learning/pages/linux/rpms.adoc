@@ -1,0 +1,116 @@
+= RedHat Package Manager (RPM)
+
+:showtitle:
+:toc: auto
+
+* https://rpm.org/[RPM.org]
+* https://en.wikipedia.org/wiki/RPM_Package_Manager[Wikipedia - RPM Package Manager]
+* https://rpm-packaging-guide.github.io/[RPM Packaging Guide]
+
+A lot of the RPM ecosystem is defined by what's in `/usr/lib/rpm`:
+
+[,console]
+----
+[root@mawenzi-04 ~]# ls /usr/lib/rpm
+brp-compress              check-buildroot      debuginfo.prov     fontconfig.prov  macros.python           perl.req             rpm.daily      rpmdeps
+brp-java-gcjcompile       check-files          desktop-file.prov  kabi.sh          metainfo.prov           pkgconfigdeps.sh     rpmdb_dump     rpm.log
+brp-python-bytecompile    check-prereqs        elfdeps            kmod.prov        mkinstalldirs           platform             rpmdb_load     rpmpopt-4.14.3
+brp-python-hardlink       check-rpaths         fileattrs          libtooldeps.sh   mono-find-provides      pythondeps.sh        rpmdb_loadcvt  rpmrc
+brp-strip                 check-rpaths-worker  find-debuginfo.sh  macros           mono-find-requires      pythondistdeps.py    rpmdb_recover  rpm.supp
+brp-strip-comment-note    config.guess         find-lang.sh       macros.d         ocaml-find-provides.sh  python-macro-helper  rpmdb_stat     script.req
+brp-strip-shared          config.sub           find-provides      macros.perl      ocaml-find-requires.sh  redhat               rpmdb_upgrade  sepdebugcrcfix
+brp-strip-static-archive  debugedit            find-requires      macros.php       perl.prov               rpm2cpio.sh          rpmdb_verify   tgpg
+----
+
+You can see what's in the `macros` file: `cat /usr/lib/rpm/macros`
+
+== SPEC Files
+
+From the Wiki, "The "Recipe" for creating an RPM package is a spec file. Spec files end in the ".spec" suffix and contain the package name, version, RPM revision number, steps to build, install, and clean a package, and a changelog. Multiple packages can be built from a single RPM spec file, if desired. RPM packages are created from RPM spec files using the rpmbuild tool.
+
+Spec files are usually distributed within SRPM files, which contain the spec file packaged along with the source code."
+
+Spec files can build multiple RPMs, as defined by the `%package` directive.
+
+When you install a SRPM, while it does look at the database for dependencies, it doesn't update the database with your SRPM info.
+Instead, it deposits the files into a directory tied to your user. Being able to define that directory is important.
+
+[,console]
+----
+rpm --showrc | less
+----
+
+=== `%prep`
+
+=== `%setup`
+
+Untar the specified file
+
+=== `%patch`
+
+Run the `patch` command using the patches specified
+
+== Inspecting RPM File
+
+Use `rpm -q [OPTIONS]` to query the RPM file against the installed RPM database on the system.
+
+View list of files in RPM
+
+[,console]
+----
+[root@mawenzi-04 ~]# rpm -qlp vim-common-9.0.1677-2.fc39.x86_64.rpm
+warning: vim-common-9.0.1677-2.fc39.x86_64.rpm: Header V4 RSA/SHA256 Signature, key ID 18b8e74c: NOKEY
+/etc/vimrc
+/usr/share/doc/vim-common
+/usr/share/doc/vim-common/README.md
+/usr/share/doc/vim-common/README.txt
+/usr/share/doc/vim-common/README_VIM9.md
+/usr/share/doc/vim-common/README_ami.txt
+/usr/share/doc/vim-common/README_amibin.txt
+/usr/share/doc/vim-common/README_amisrc.txt
+/usr/share/doc/vim-common/README_bindos.txt
+/usr/share/doc/vim-common/README_dos.txt
+/usr/share/doc/vim-common/README_extra.txt
+/usr/share/doc/vim-common/README_mac.txt
+/usr/share/doc/vim-common/README_ole.txt
+/usr/share/doc/vim-common/README_os2.txt
+/usr/share/doc/vim-common/README_os390.txt
+/usr/share/doc/vim-common/README_src.txt
+/usr/share/doc/vim-common/README_srcdos.txt
+/usr/share/doc/vim-common/README_unix.txt
+/usr/share/doc/vim-common/README_vms.txt
+/usr/share/doc/vim-common/README_w32s.txt
+/usr/share/doc/vim-common/docs
+...
+----
+
+View requirements/dependencies of RPM
+
+[,console]
+----
+[root@mawenzi-04 ~]# rpm -qp --requires vim-common-9.0.1677-2.fc39.x86_64.rpm
+warning: vim-common-9.0.1677-2.fc39.x86_64.rpm: Header V4 RSA/SHA256 Signature, key ID 18b8e74c: NOKEY
+/bin/sh
+/usr/bin/sh
+config(vim-common) = 2:9.0.1677-2.fc39
+rpmlib(CaretInVersions) <= 4.15.0-1
+rpmlib(CompressedFileNames) <= 3.0.4-1
+rpmlib(FileDigests) <= 4.6.0-1
+rpmlib(PayloadFilesHavePrefix) <= 4.0-1
+rpmlib(PayloadIsZstd) <= 5.4.18-1
+vim-data = 2:9.0.1677-2.fc39
+vim-filesystem
+xxd
+----
+
+View what this RPM provides after it's installed
+
+[,console]
+----
+[root@mawenzi-04 ~]# rpm -qp --provides vim-common-9.0.1677-2.fc39.x86_64.rpm
+warning: vim-common-9.0.1677-2.fc39.x86_64.rpm: Header V4 RSA/SHA256 Signature, key ID 18b8e74c: NOKEY
+config(vim-common) = 2:9.0.1677-2.fc39
+vim-common = 2:9.0.1677-2.fc39
+vim-common(x86-64) = 2:9.0.1677-2.fc39
+vim-toml = 2:9.0.1677-2.fc39
+----

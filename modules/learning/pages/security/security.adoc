@@ -1,0 +1,231 @@
+= Secure API Development
+
+== Techniques
+
+* JSON Web Tokens (JWT): Used for API client authentication and authorization
+** Expiration, privilege levels, etc.
+* Access Control Policies: Limit access to sensitive data
+* Role-based Authentication Control (RBAC): Limits administrative access to resources
+* Rate Limit Thresholds: Limits number of requests from a specified source
+* HTTPs: Encrypts requests/responses
+
+== Authentication
+
+* IP whitelisting/blacklisting: Limit by known IP addresses
+* OAuth and OAuth2: Use token-based and claim-based auth for secure communication
+* Secure token management, certification management
+
+== Secure API Code Best Practices
+
+* All data passed to API needs to be validated for injection-type attacks
+* All APIs need to be protected with mechanisms like OAuth or OpenID Connect
+* Sensitive data needs to be encrypted when stored and during transmission
+* Transaction replay attacks need to be identified using tools that analyze AIP request traffic and usage patterns
+* Arrests for surges in API usage should be put in place
+* Sensitive information should not be part of a URI and should only be sent in the HTTP header using a POST method
+* Error objects should be well-balanced and not contain internal workings of the underlying backend system
+* Timestamps can be used to limit a period of valid transaction
+* Two-factor authentication used to confirm user identify
+* OAuth can be used to issue a short-lived access token
+* Implement an API gateway which enforces RBAC to which APIs are available
+* Use the HTTP header, X-HTTP-Method-Override when proxies only support GET and POST methods
+
+== API Development Features
+
+* Filtering should be used to limit returned data based on filter paramters
+* Paging - requests a subset of the data to be returned based on requested parameters
+* Sorting - Requests that data is returned in a sorted order based on parameters
+* Data should be available in JSON format for REST APIs
+
+=== API Pagination
+
+Returns the data in chunks, or pages.
+
+* Offset pagination - requests the number of rows to return starting at an offset value
+* Keyset pagination - Uses the filter values of the last page to fetch the next set of items
+* Seek pagination - Uses UID to fetch next set of items
+
+=== API Filtering
+
+Filter operaters can be sent as part of the URL request using a colon, such as: `?price=gte:10`.
+
+=== API Sorting
+
+One method is to sort based on specified sort key, such as: `sort=key1,key2`. Also can be based on key and direction, such as: `sort=key1:asc,key2`.
+
+== API Development Tools
+
+* VSCode, Eclipse, Jetbrains IDEs can be used for developing APIs.
+* Swagger can be used to document APIs
+* SoapUI and Fiddler can be used to develop and test APIs
+* Katalon can be used to record, create, and perform automated testing on APIs
+
+Evaluate marketplace to determine which ones suit your needs.
+
+=== REST API Mocking Tools
+
+* MockServer is available as a Netty web server, Docker container, or Maven plugin
+* Nock is a library that replicates and creates mock servers using Node.js
+* Mockoon is a downloadable application that mocks environments
+* Beeceptor is a free online tool for mocking REST API web services, responses to HTTP requests
+
+== Web API Security
+
+* Hash-based Message Authentication Code (HMAC) uses an API key and secret key to transfer data between client/server
+** Service owner provides client application with API key, and secret key. Client will have both keys installed. API key is unique to the client, while the secret key can be reused. When a call is made to the API, the secret key is used to hash the contents to generate an HMAC signature. The message and the API key are passed to the API. The receiving server repeats the process and compares its own HMAC signature to the one sent in the request.
+** Could still be used to impersonate another system
+* When two-way communication is required, a digital signature should be used using private/public key pairs.
+** Ensures trust is established for the senders identity.
+* OAuth exposes a single endpoint for the login process that returns a security token created and stored on the server.
+** Restricts certain functions of an API to certain users.
+
+== API Management and Security
+
+* API keys can be used for authentication
+* Basic authentication can be done with username and password
+* OpenID Connect (OIDC) adds an identity later on top of OAuth layer
+
+=== Web API Security Threats
+
+* Man-in-the-middle (MITM) attacks involve someone intercepting and altering communications between client and server.
+** Claiming session token and using it to issue requests for sensitive information
+* API injection includes cross-site scripting and SQL injection attacks
+** Malicious code inserted into the API
+** Escaping input, like APIs request to SQL database
+* Distributed denial-of-service (DDoS)
+** Using multiple endpoints to attack a target simultaneously consuming resources and overwhelming the server with requests
+
+=== REST API Security
+
+REST APIs use HTTP and support Transport Layer Security (TLS) encryption to send secure data, using x509 certificates by the client and server to securely authenticate against each other _before_ the messages are sent and received to/from the API.
+
+REST APIs natively use Secure Sockets Layer (SSL) and HTTPS to perform encryption of data in transit with TLS.
+
+=== API Security Best Practices
+
+Security starts at the front end. 
+
+* Should always use multi-factor authentication
+* Data should be encrypted to and from client
+* Data that is cached or persisted should be encrypted
+* Data should be validated on the client
+
+Securing access at the gateway is the most effective way to stop security breaches.
+
+* Authenticate users before allowing them to perform any operations
+* Use quotas and throttling to prevent a rogue application from overwhelming the API
+* Use sniffer applications to determine the type of data passed to the API and detect malicious data
+
+=== REST API Security Principles
+
+* Open designs and standards should be used instead of secret/confidential algorithms. These are well-tested and vetted.
+* RBAC should be used to separate privileges conditionally
+* Mechanisms for accessing resources should not be shared
+* Security mechanisms should not make the user experience more difficult.
+* The principle of least privileges should be enforced
+* TLS is the foundation of API security and should be tested regularly
+* Both end users and applications should be authenticated
+* URLs should never contain username, password, session token, or API keys, as this information can be logged or traced
+* Timestamps should be added to HTTP headers to prevent replay attacks
+* API security should not be overly complex
+
+=== OAuth Authorization
+
+Clients are provided an access token by the server. Access tokens are generated in JWT format. 
+
+* _JWT header_ contains metadata and cryptographic algorithms to secure its content
+* _JWT payload_ contains a set of statements about the allowed permissions and information like expiration time
+* _JWT signature_ validates that the token is trustworthy and untampered
+
+*OAuth Roles*
+
+* Resource Owner: end user and can grant access to the protected resource
+* Resource Server: host of the protected resource you will access
+* Client: application making the request to the protected resource on behalf of the Resource Owner
+* Authorization Server: server that authenticates the Resource Owner and issues access tokens
+
+*OAuth Protocol Flow*
+
+1. Client application asks for authorization from the resource owner.
+2. If the resource owner provides access, then an Authorization Grant credential is sent to the client application. This AG represents the resource owners authorization in credential form.
+3. The client requests an authorization token from the authorization server using the Authorization Grant credential.
+4. If the application is authorized and authenticated, the access token is granted to the client by the authorization server.
+5. The client application sends the access token to the resource server to request a protected resource.
+6. If valid, the protected resource is served to the client.
+
+*Authorization Grant Types*
+
+* Regular web apps can use the _Authorization Code Flow_, which is used to get an access token. This is usually used with a web browser.
+* Public clients that are unable to securely store client secrets can use the _Implicit Flow_ to obtain an access token. Used by Javascript-centric or Single Page Apps that require storing client secrets externally to the app, usually within the URI, exposing it to the resource owner.
+* Highly trusted applications can use the _Resource Owner Password Grant Flow_ (ROPG) to request an access token.
+* Machine-to-machine applications can use the _Client Credentials Flow_ to authenticate and receive an access token.
+
+*OAuth Endpoints*
+
+* _Authorization_ endpoint interacts with the resource owner to get authorization to access a resource
+* _Token_ endpoint is used to get an access token or a refresh token
+** _Access Token_ that is granted to the client presents an authorization code from the Authorization Endpoint for a set of credentials.
+** _Refresh Token_ is used to maintain access to a resource
+
+=== Secure API Authorization Methods
+
+Authorization is ensuring the requester is only able to perform actions required to do their job.
+
+4 commonly used methods
+
+* HTTP authentication schemas
+* API Keys
+* OAuth 2.0 for scope of permissions
+* OpenID Connect
+
+*HTTP Authentication*
+
+Difficult to manage at scale. Basic authentication sends the base64-encoded username and password in the request header and is not very secure.
+
+Bearer authentication uses security tokens called "Bearer Tokens" to request resources and should be used with HTTPS (SSL).
+
+Digest authentication hashes the username and password and transmits the hashed value. If the server matches the hash, the client is sent a "Digest Token".
+
+*API Keys*
+
+A unique value is generated and assigned to the user. Widely used by not considered a good security measure. API Keys should never be placed in the URL string as this is easily discovered. Useful for performing simple read operations that do not change the underlying data.
+
+*OAuth 2.0*
+
+Strong method that identifies users and dictates their scope of permissions. Once a user is authenticated, they get an Access Token if it's the first time, or a Refresh Token if it's a subsequent request. Access tokens allow access to a resource and are often short-lived.
+
+*OpenID Connect*
+
+Easy-to-use, secure service that removes developers having to build out user profiles for authenticating. It is an identity layer built on top of OAuth 2.0 and acts as a REST API that delivers payload in JSON format for providing information about the identity of the clients authentication to the protected resource.
+
+Secure information is encoded in JWTs for secure transmission.
+
+*OAuth Grant Types*
+
+* _Authorization Code Grant Type_: Client redirects the user to the authorization server for authorization. User logs into the auth server to approve the client application. Once authorized, the auth server sends back an auth code and state parameter.
+* _Client Credentials Grant Type_: Least secure. Only used when there is an existing authorization grant between the client/server. Used in machine-to-machine authentication. Client posts a request with the grant type, client id, client secret, and the requested scope. JSON object is returned that contains the token type, expiration time, and access token.
+* _Implicit Flow Grant Type_: Intended for clients such as single page webb apps that can't protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.
+* _Resource Owner Password Grant Type_: Less secure because the client is required to handle the user's credentials. Only used by highly trusted partners in native applications. Client collects and sends authorization credentials to the authorization server. JSON object is returned that contains the token type, expiration time, access token, and refresh token.
+
+=== SAML vs. OAuth
+
+Security Assertion Markup Language (SAML) is a protocol for _both_ authentication adn authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user's identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.
+
+OAuth is an authorization framework that uses and works over HTTPS with access tokens instead of a username/password. User auth is delegated to the service which hosts the user account, which authorizes third party access to resources. Has documented flows aka Grant Types, applicable to different situations.
+
+=== Transport Layer Security (TLS)
+
+* Encrypts data in transit by using symmetric encryption
+* Verifies and confirms the identity of both the client and the server during the initial handshake process
+* Integrity ensures that the data has not been forged or tampered with
+
+=== TLS vs. SSL vs. HTTPS
+
+TLS is a replacement protocol originating from SSL, and started out as SSL 3.1, deprecating SSL. HTTPS is an implementation of the TLS encryption protocol on top of HTTP.
+
+*TLS Sequence*
+
+* Connections are initiated using a TLS handshake to establish a secure connection
+* Public key cryptography is used to send encryption and session keys between the client and server
+* Authentication is done using a public key to encrypt data that can be decrypted on the server with a private key
+* Authenticated and encrypted data is signed with a message authentication code (AMD) to ensure data integrity

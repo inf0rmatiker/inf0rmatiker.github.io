@@ -25,7 +25,7 @@ tree docs-site/$MODULE_CATEGORY/pages/$MODULE_DIR_NAME
 cat >> docs-site/$MODULE_CATEGORY/partials/nav.adoc << EOF
 
 * $MODULE_NAME
-** xref::docs-site:$MODULE_CATEGORY:$MODULE_DIR_NAME:$MODULE_DIR_NAME.adoc[$MODULE_NAME]
+** xref:docs-site:$MODULE_CATEGORY:$MODULE_DIR_NAME:$MODULE_DIR_NAME.adoc[$MODULE_NAME]
 EOF
 
 echo -e "\nCreated new entry in docs-site/$MODULE_CATEGORY/partials/nav.adoc\n$(tail -3 docs-site/$MODULE_CATEGORY/partials/nav.adoc)"

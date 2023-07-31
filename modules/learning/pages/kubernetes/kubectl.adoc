@@ -1,0 +1,83 @@
+= Helpful `kubectl` Commands
+
+:showtitle:
+:toc: auto
+
+== Set Default Namespace
+
+[,bash]
+----
+kubectl config set-context --current --namespace=services
+----
+
+== List All Pods in a Bad State
+
+[,bash]
+----
+#!/bin/bash
+
+if [ $# -gt 0 ]; then
+    KUBECTL_OPTS="$*"
+else
+    KUBECTL_OPTS=-A
+fi
+
+kubectl get pods ${KUBECTL_OPTS} | grep -v -e Running -e Completed
+kubectl get pods ${KUBECTL_OPTS} | grep Running | grep -vE '(1/1|2/2|3/3|4/4|5/5|6/6)'
+kubectl get pods ${KUBECTL_OPTS} | grep wait-for.*Running
+----
+
+== Delete a Resource
+
+By resource name:
+
+[,bash]
+----
+kubectl delete -n <namespace> <resource>
+----
+
+== Create a Resource
+
+Using a YAML file:
+
+[,bash]
+----
+kubectl apply -f file.yaml
+----
+
+== Port Forward to Container in Pod
+
+https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/[Port forward to access application in cluster]
+
+[,bash]
+----
+kubectl port-forward <pod> -c <container> 28015:27017
+----
+
+== Get Logs of Container in Pod
+
+[,bash]
+----
+kubectl get logs -n <namespace> <pod> <container>
+----
+
+Follow logs:
+
+[,bash]
+----
+kubectl get logs -f -n <namespace> <pod> <container>
+----
+
+== Get Shell in Running Container
+
+[,bash]
+----
+kubectl exec -it -n <namespace> <pod> <container> -- /bin/sh
+----
+
+== Restart all the Pods in a DaemonSet
+
+[,bash]
+----
+kubectl rollout restart daemonset <daemonset_name>
+----

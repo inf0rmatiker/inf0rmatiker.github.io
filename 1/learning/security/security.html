@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Secure API Development :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/security/security.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GitHub</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Security</li>
+    <li><a href="security.html">Security</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Secure API Development</h1>
+<div class="sect1">
+<h2 id="_techniques"><a class="anchor" href="#_techniques"></a>Techniques</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>JSON Web Tokens (JWT): Used for API client authentication and authorization</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Expiration, privilege levels, etc.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Access Control Policies: Limit access to sensitive data</p>
+</li>
+<li>
+<p>Role-based Authentication Control (RBAC): Limits administrative access to resources</p>
+</li>
+<li>
+<p>Rate Limit Thresholds: Limits number of requests from a specified source</p>
+</li>
+<li>
+<p>HTTPs: Encrypts requests/responses</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_authentication"><a class="anchor" href="#_authentication"></a>Authentication</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>IP whitelisting/blacklisting: Limit by known IP addresses</p>
+</li>
+<li>
+<p>OAuth and OAuth2: Use token-based and claim-based auth for secure communication</p>
+</li>
+<li>
+<p>Secure token management, certification management</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_secure_api_code_best_practices"><a class="anchor" href="#_secure_api_code_best_practices"></a>Secure API Code Best Practices</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>All data passed to API needs to be validated for injection-type attacks</p>
+</li>
+<li>
+<p>All APIs need to be protected with mechanisms like OAuth or OpenID Connect</p>
+</li>
+<li>
+<p>Sensitive data needs to be encrypted when stored and during transmission</p>
+</li>
+<li>
+<p>Transaction replay attacks need to be identified using tools that analyze AIP request traffic and usage patterns</p>
+</li>
+<li>
+<p>Arrests for surges in API usage should be put in place</p>
+</li>
+<li>
+<p>Sensitive information should not be part of a URI and should only be sent in the HTTP header using a POST method</p>
+</li>
+<li>
+<p>Error objects should be well-balanced and not contain internal workings of the underlying backend system</p>
+</li>
+<li>
+<p>Timestamps can be used to limit a period of valid transaction</p>
+</li>
+<li>
+<p>Two-factor authentication used to confirm user identify</p>
+</li>
+<li>
+<p>OAuth can be used to issue a short-lived access token</p>
+</li>
+<li>
+<p>Implement an API gateway which enforces RBAC to which APIs are available</p>
+</li>
+<li>
+<p>Use the HTTP header, X-HTTP-Method-Override when proxies only support GET and POST methods</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_api_development_features"><a class="anchor" href="#_api_development_features"></a>API Development Features</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Filtering should be used to limit returned data based on filter paramters</p>
+</li>
+<li>
+<p>Paging - requests a subset of the data to be returned based on requested parameters</p>
+</li>
+<li>
+<p>Sorting - Requests that data is returned in a sorted order based on parameters</p>
+</li>
+<li>
+<p>Data should be available in JSON format for REST APIs</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_api_pagination"><a class="anchor" href="#_api_pagination"></a>API Pagination</h3>
+<div class="paragraph">
+<p>Returns the data in chunks, or pages.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Offset pagination - requests the number of rows to return starting at an offset value</p>
+</li>
+<li>
+<p>Keyset pagination - Uses the filter values of the last page to fetch the next set of items</p>
+</li>
+<li>
+<p>Seek pagination - Uses UID to fetch next set of items</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_filtering"><a class="anchor" href="#_api_filtering"></a>API Filtering</h3>
+<div class="paragraph">
+<p>Filter operaters can be sent as part of the URL request using a colon, such as: <code>?price=gte:10</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_sorting"><a class="anchor" href="#_api_sorting"></a>API Sorting</h3>
+<div class="paragraph">
+<p>One method is to sort based on specified sort key, such as: <code>sort=key1,key2</code>. Also can be based on key and direction, such as: <code>sort=key1:asc,key2</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_api_development_tools"><a class="anchor" href="#_api_development_tools"></a>API Development Tools</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>VSCode, Eclipse, Jetbrains IDEs can be used for developing APIs.</p>
+</li>
+<li>
+<p>Swagger can be used to document APIs</p>
+</li>
+<li>
+<p>SoapUI and Fiddler can be used to develop and test APIs</p>
+</li>
+<li>
+<p>Katalon can be used to record, create, and perform automated testing on APIs</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Evaluate marketplace to determine which ones suit your needs.</p>
+</div>
+<div class="sect2">
+<h3 id="_rest_api_mocking_tools"><a class="anchor" href="#_rest_api_mocking_tools"></a>REST API Mocking Tools</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>MockServer is available as a Netty web server, Docker container, or Maven plugin</p>
+</li>
+<li>
+<p>Nock is a library that replicates and creates mock servers using Node.js</p>
+</li>
+<li>
+<p>Mockoon is a downloadable application that mocks environments</p>
+</li>
+<li>
+<p>Beeceptor is a free online tool for mocking REST API web services, responses to HTTP requests</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_web_api_security"><a class="anchor" href="#_web_api_security"></a>Web API Security</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Hash-based Message Authentication Code (HMAC) uses an API key and secret key to transfer data between client/server</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Service owner provides client application with API key, and secret key. Client will have both keys installed. API key is unique to the client, while the secret key can be reused. When a call is made to the API, the secret key is used to hash the contents to generate an HMAC signature. The message and the API key are passed to the API. The receiving server repeats the process and compares its own HMAC signature to the one sent in the request.</p>
+</li>
+<li>
+<p>Could still be used to impersonate another system</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>When two-way communication is required, a digital signature should be used using private/public key pairs.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Ensures trust is established for the senders identity.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>OAuth exposes a single endpoint for the login process that returns a security token created and stored on the server.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Restricts certain functions of an API to certain users.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_api_management_and_security"><a class="anchor" href="#_api_management_and_security"></a>API Management and Security</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>API keys can be used for authentication</p>
+</li>
+<li>
+<p>Basic authentication can be done with username and password</p>
+</li>
+<li>
+<p>OpenID Connect (OIDC) adds an identity later on top of OAuth layer</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_web_api_security_threats"><a class="anchor" href="#_web_api_security_threats"></a>Web API Security Threats</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Man-in-the-middle (MITM) attacks involve someone intercepting and altering communications between client and server.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Claiming session token and using it to issue requests for sensitive information</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>API injection includes cross-site scripting and SQL injection attacks</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Malicious code inserted into the API</p>
+</li>
+<li>
+<p>Escaping input, like APIs request to SQL database</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Distributed denial-of-service (DDoS)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Using multiple endpoints to attack a target simultaneously consuming resources and overwhelming the server with requests</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rest_api_security"><a class="anchor" href="#_rest_api_security"></a>REST API Security</h3>
+<div class="paragraph">
+<p>REST APIs use HTTP and support Transport Layer Security (TLS) encryption to send secure data, using x509 certificates by the client and server to securely authenticate against each other <em>before</em> the messages are sent and received to/from the API.</p>
+</div>
+<div class="paragraph">
+<p>REST APIs natively use Secure Sockets Layer (SSL) and HTTPS to perform encryption of data in transit with TLS.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_api_security_best_practices"><a class="anchor" href="#_api_security_best_practices"></a>API Security Best Practices</h3>
+<div class="paragraph">
+<p>Security starts at the front end.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Should always use multi-factor authentication</p>
+</li>
+<li>
+<p>Data should be encrypted to and from client</p>
+</li>
+<li>
+<p>Data that is cached or persisted should be encrypted</p>
+</li>
+<li>
+<p>Data should be validated on the client</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Securing access at the gateway is the most effective way to stop security breaches.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Authenticate users before allowing them to perform any operations</p>
+</li>
+<li>
+<p>Use quotas and throttling to prevent a rogue application from overwhelming the API</p>
+</li>
+<li>
+<p>Use sniffer applications to determine the type of data passed to the API and detect malicious data</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rest_api_security_principles"><a class="anchor" href="#_rest_api_security_principles"></a>REST API Security Principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Open designs and standards should be used instead of secret/confidential algorithms. These are well-tested and vetted.</p>
+</li>
+<li>
+<p>RBAC should be used to separate privileges conditionally</p>
+</li>
+<li>
+<p>Mechanisms for accessing resources should not be shared</p>
+</li>
+<li>
+<p>Security mechanisms should not make the user experience more difficult.</p>
+</li>
+<li>
+<p>The principle of least privileges should be enforced</p>
+</li>
+<li>
+<p>TLS is the foundation of API security and should be tested regularly</p>
+</li>
+<li>
+<p>Both end users and applications should be authenticated</p>
+</li>
+<li>
+<p>URLs should never contain username, password, session token, or API keys, as this information can be logged or traced</p>
+</li>
+<li>
+<p>Timestamps should be added to HTTP headers to prevent replay attacks</p>
+</li>
+<li>
+<p>API security should not be overly complex</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_oauth_authorization"><a class="anchor" href="#_oauth_authorization"></a>OAuth Authorization</h3>
+<div class="paragraph">
+<p>Clients are provided an access token by the server. Access tokens are generated in JWT format.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>JWT header</em> contains metadata and cryptographic algorithms to secure its content</p>
+</li>
+<li>
+<p><em>JWT payload</em> contains a set of statements about the allowed permissions and information like expiration time</p>
+</li>
+<li>
+<p><em>JWT signature</em> validates that the token is trustworthy and untampered</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OAuth Roles</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Resource Owner: end user and can grant access to the protected resource</p>
+</li>
+<li>
+<p>Resource Server: host of the protected resource you will access</p>
+</li>
+<li>
+<p>Client: application making the request to the protected resource on behalf of the Resource Owner</p>
+</li>
+<li>
+<p>Authorization Server: server that authenticates the Resource Owner and issues access tokens</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OAuth Protocol Flow</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Client application asks for authorization from the resource owner.</p>
+</li>
+<li>
+<p>If the resource owner provides access, then an Authorization Grant credential is sent to the client application. This AG represents the resource owners authorization in credential form.</p>
+</li>
+<li>
+<p>The client requests an authorization token from the authorization server using the Authorization Grant credential.</p>
+</li>
+<li>
+<p>If the application is authorized and authenticated, the access token is granted to the client by the authorization server.</p>
+</li>
+<li>
+<p>The client application sends the access token to the resource server to request a protected resource.</p>
+</li>
+<li>
+<p>If valid, the protected resource is served to the client.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Authorization Grant Types</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Regular web apps can use the <em>Authorization Code Flow</em>, which is used to get an access token. This is usually used with a web browser.</p>
+</li>
+<li>
+<p>Public clients that are unable to securely store client secrets can use the <em>Implicit Flow</em> to obtain an access token. Used by Javascript-centric or Single Page Apps that require storing client secrets externally to the app, usually within the URI, exposing it to the resource owner.</p>
+</li>
+<li>
+<p>Highly trusted applications can use the <em>Resource Owner Password Grant Flow</em> (ROPG) to request an access token.</p>
+</li>
+<li>
+<p>Machine-to-machine applications can use the <em>Client Credentials Flow</em> to authenticate and receive an access token.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>OAuth Endpoints</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Authorization</em> endpoint interacts with the resource owner to get authorization to access a resource</p>
+</li>
+<li>
+<p><em>Token</em> endpoint is used to get an access token or a refresh token</p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Access Token</em> that is granted to the client presents an authorization code from the Authorization Endpoint for a set of credentials.</p>
+</li>
+<li>
+<p><em>Refresh Token</em> is used to maintain access to a resource</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_secure_api_authorization_methods"><a class="anchor" href="#_secure_api_authorization_methods"></a>Secure API Authorization Methods</h3>
+<div class="paragraph">
+<p>Authorization is ensuring the requester is only able to perform actions required to do their job.</p>
+</div>
+<div class="paragraph">
+<p>4 commonly used methods</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HTTP authentication schemas</p>
+</li>
+<li>
+<p>API Keys</p>
+</li>
+<li>
+<p>OAuth 2.0 for scope of permissions</p>
+</li>
+<li>
+<p>OpenID Connect</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>HTTP Authentication</strong></p>
+</div>
+<div class="paragraph">
+<p>Difficult to manage at scale. Basic authentication sends the base64-encoded username and password in the request header and is not very secure.</p>
+</div>
+<div class="paragraph">
+<p>Bearer authentication uses security tokens called "Bearer Tokens" to request resources and should be used with HTTPS (SSL).</p>
+</div>
+<div class="paragraph">
+<p>Digest authentication hashes the username and password and transmits the hashed value. If the server matches the hash, the client is sent a "Digest Token".</p>
+</div>
+<div class="paragraph">
+<p><strong>API Keys</strong></p>
+</div>
+<div class="paragraph">
+<p>A unique value is generated and assigned to the user. Widely used by not considered a good security measure. API Keys should never be placed in the URL string as this is easily discovered. Useful for performing simple read operations that do not change the underlying data.</p>
+</div>
+<div class="paragraph">
+<p><strong>OAuth 2.0</strong></p>
+</div>
+<div class="paragraph">
+<p>Strong method that identifies users and dictates their scope of permissions. Once a user is authenticated, they get an Access Token if it&#8217;s the first time, or a Refresh Token if it&#8217;s a subsequent request. Access tokens allow access to a resource and are often short-lived.</p>
+</div>
+<div class="paragraph">
+<p><strong>OpenID Connect</strong></p>
+</div>
+<div class="paragraph">
+<p>Easy-to-use, secure service that removes developers having to build out user profiles for authenticating. It is an identity layer built on top of OAuth 2.0 and acts as a REST API that delivers payload in JSON format for providing information about the identity of the clients authentication to the protected resource.</p>
+</div>
+<div class="paragraph">
+<p>Secure information is encoded in JWTs for secure transmission.</p>
+</div>
+<div class="paragraph">
+<p><strong>OAuth Grant Types</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>Authorization Code Grant Type</em>: Client redirects the user to the authorization server for authorization. User logs into the auth server to approve the client application. Once authorized, the auth server sends back an auth code and state parameter.</p>
+</li>
+<li>
+<p><em>Client Credentials Grant Type</em>: Least secure. Only used when there is an existing authorization grant between the client/server. Used in machine-to-machine authentication. Client posts a request with the grant type, client id, client secret, and the requested scope. JSON object is returned that contains the token type, expiration time, and access token.</p>
+</li>
+<li>
+<p><em>Implicit Flow Grant Type</em>: Intended for clients such as single page webb apps that can&#8217;t protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.</p>
+</li>
+<li>
+<p><em>Resource Owner Password Grant Type</em>: Less secure because the client is required to handle the user&#8217;s credentials. Only used by highly trusted partners in native applications. Client collects and sends authorization credentials to the authorization server. JSON object is returned that contains the token type, expiration time, access token, and refresh token.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_saml_vs_oauth"><a class="anchor" href="#_saml_vs_oauth"></a>SAML vs. OAuth</h3>
+<div class="paragraph">
+<p>Security Assertion Markup Language (SAML) is a protocol for <em>both</em> authentication adn authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user&#8217;s identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.</p>
+</div>
+<div class="paragraph">
+<p>OAuth is an authorization framework that uses and works over HTTPS with access tokens instead of a username/password. User auth is delegated to the service which hosts the user account, which authorizes third party access to resources. Has documented flows aka Grant Types, applicable to different situations.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transport_layer_security_tls"><a class="anchor" href="#_transport_layer_security_tls"></a>Transport Layer Security (TLS)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Encrypts data in transit by using symmetric encryption</p>
+</li>
+<li>
+<p>Verifies and confirms the identity of both the client and the server during the initial handshake process</p>
+</li>
+<li>
+<p>Integrity ensures that the data has not been forged or tampered with</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tls_vs_ssl_vs_https"><a class="anchor" href="#_tls_vs_ssl_vs_https"></a>TLS vs. SSL vs. HTTPS</h3>
+<div class="paragraph">
+<p>TLS is a replacement protocol originating from SSL, and started out as SSL 3.1, deprecating SSL. HTTPS is an implementation of the TLS encryption protocol on top of HTTP.</p>
+</div>
+<div class="paragraph">
+<p><strong>TLS Sequence</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Connections are initiated using a TLS handshake to establish a secure connection</p>
+</li>
+<li>
+<p>Public key cryptography is used to send encryption and session keys between the client and server</p>
+</li>
+<li>
+<p>Authentication is done using a public key to encrypt data that can be decrypted on the server with a private key</p>
+</li>
+<li>
+<p>Authenticated and encrypted data is signed with a message authentication code (AMD) to ensure data integrity</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

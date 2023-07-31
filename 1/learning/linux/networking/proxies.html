@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Proxy Guide :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/proxies.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GitHub</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Networking</li>
+    <li><a href="proxies.html">Proxies</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Proxy Guide</h1>
+<div class="sect1">
+<h2 id="_general_environment_proxy_configuration"><a class="anchor" href="#_general_environment_proxy_configuration"></a>General Environment Proxy Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gets loaded as environment variables by processes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/environment&lt;&lt; EOF
+#Proxies for LR1
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+EOF</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Lower</th>
+<th class="tableblock halign-left valign-top">Upper</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http_proxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTP_PROXY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Proxy to use for http traffic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http_proxy=http://proxy.houston.hpecorp.net:8080</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>https_proxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTPS_PROXY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Proxy to use for https traffic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>https_proxy=http://proxy.houston.hpecorp.net:8080</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>no_proxy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NO_PROXY</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Do not use the proxy for these hostnames and IPs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>no_proxy=.us.cray.com,.hpe.com</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>no_proxy</code> variants tend to work based on string-based suffix matching. If your <code>no_proxy</code> is set to <code>.cray.com</code>, then requests to <code>foo.cray.com</code> will not use the configured proxy. Suffix matching works great for DNS names, but does not work well for IP addresses. If you have a whole subnet for which you do not want to use the proxy (e.g., <code>192.168.1.0/24</code>), then you must list out every IP address in <code>no_proxy</code> (<code>192.168.1.1,192.168.1.2,&#8230;&#8203;192.168.1.254</code>).</p>
+</div>
+<div class="paragraph">
+<p><em>Some</em> tools may use different environment variables or offer more powerful syntax in <code>no_proxy</code>. Again, there is no actual standard just a common convention. What works for one application may not work for another.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_process_specific_proxy_configurations"><a class="anchor" href="#_process_specific_proxy_configurations"></a>Process-specific Proxy Configurations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy">Docker systemd daemon</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/systemd/system/docker.service.d/http-proxy.conf &lt;&lt; EOF
+[Service]
+Environment="HTTP_PROXY=http://proxy.houston.hpecorp.net:8080"
+Environment="HTTPS_PROXY=http://proxy.houston.hpecorp.net:8080"
+Environment="NO_PROXY=.us.cray.com"
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.docker.com/network/proxy/">Docker client</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; ~/.docker/config.json &lt;&lt; EOF
+{
+ "proxies":
+ {
+   "default":
+   {
+     "httpProxy": "http://proxy.houston.hpecorp.net:8080",
+     "httpsProxy": "http://proxy.houston.hpecorp.net:8080",
+     "noProxy": ".us.cray.com"
+   }
+ }
+}
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://dnf.readthedocs.io/en/latest/conf_ref.html?highlight=proxy">DNF</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/dnf/dnf.conf &lt;&lt; EOF
+[main]
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+EOF</code></pre>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

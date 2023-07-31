@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lustre Client :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/lustre/lustre-client.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GitHub</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Lustre</li>
+    <li><a href="lustre-client.html">Lustre Client</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lustre Client</h1>
+<div class="sect1">
+<h2 id="_configure_and_mount_lustre_filesystem"><a class="anchor" href="#_configure_and_mount_lustre_filesystem"></a>Configure and Mount Lustre Filesystem</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_using_the_lustre_client_repo"><a class="anchor" href="#_using_the_lustre_client_repo"></a>Using the Lustre Client Repo</h3>
+<div class="paragraph">
+<p>Here we&#8217;ll be using Rocky Linux 8.6 as a base.</p>
+</div>
+<div class="paragraph">
+<p>First, set your HTTP/s proxy information in your environment so you can reach the greater internet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/environment&lt;&lt; EOF
+#Proxies for LR1
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="localhost,127.0.0.1,.us.cray.com,.americas.cray.com,.dev.cray.com,.eag.rdlabs.hpecorp.net"
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the <code>dnf</code> proxy configuration
+* Disable GPG key checking for ease of use</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/dnf/dnf.conf&lt;&lt; EOF
+[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, create a new repo file for the following repos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Lustre client pieces</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Modules built with MOFED Infiniband support</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/yum.repos.d/lustre.repo&lt;&lt; EOF
+[lustre-client]
+name=rl8.6-ib - Lustre
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.1-ib/MOFED-5.6-2.0.9.0/el8.6/client/
+gpgcheck=0
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that you&#8217;ve added these repos, install the Lustre client using <code>dnf</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install epel-release lustre-client -y --allowerasing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reboot for changes to take effect, new patched kernel to be loaded, etc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">reboot</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enable_infiniband_card"><a class="anchor" href="#_enable_infiniband_card"></a>Enable Infiniband Card</h3>
+<div class="paragraph">
+<p>Load the IP over Infiniband (<code>ipoib</code>) module, allowing us to assign our Infiniband device an IP address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe ib_ipoib</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assign a static IP address to the <code>ib0</code> device, and set the link state to <code>UP</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip addr add 192.168.0.103/24 dev ib0
+ip link set dev ib0 up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Load the <a href="https://wiki.lustre.org/Lustre_Networking_(LNET)_Overview">LNET</a> module</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe -v lnet</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A better way to do this persistently is to set the following fields in <code>/etc/sysconfig/network-scripts/ifcfg-ib0</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">ONBOOT=yes
+BOOTPROTO=none
+IPADDR=192.168.0.103
+NETMASK=255.255.255.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A prerequisite for this is to have the <code>ib_ipoib</code> module loaded, which can be done by adding an entry to <code>/etc/modules-load.d/</code>.
+While we&#8217;re here we can also add on-boot modprobing for <code>lnet</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo ib_ipoib &gt; /etc/modules-load.d/ipoib.conf
+echo lnet &gt; /etc/modules-load.d/lnet.conf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure LNET, and add the <code>ib0</code> physical interface as the <code>o2ib</code> network</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bring up the LNET network using <code>lctl</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# lctl network up
+LNET configured</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Mount the <code>lustre</code> filesystem using the Lustre Client</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p /mnt/lustre
+mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_validating_lustre_client"><a class="anchor" href="#_validating_lustre_client"></a>Validating Lustre Client</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Show Lustre mounts on the system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# mount -t lustre
+192.168.0.101@o2ib:/lustre on /mnt/lustre type lustre (rw,seclabel,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Show Lustre client version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">k8s-worker1-shira-mercury01:~ # cat /proc/fs/lustre/version
+lustre: 2.15.0.7_rc2_cray_3_g412d1c5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By creating a new file in the filesystem, sanity test:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a directory on the Lustre filesystem: <code>mkdir /lus/ccarlson</code></p>
+</li>
+<li>
+<p>Create a new file under <code>/lus/ccarlson</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> touch /lus/ccarlson/dummyfile</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify <code>dummyfile</code> exists:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"> k8s-worker1-shira-mercury01:~ # ll /lus/ccarlson/
+ total 1
+ -rw-r--r-- 1 root root 17 Apr  7 14:29 dummyfile</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>By using the <code>lfs</code> utility to view information about the filesystem.</p>
+</div>
+<div class="paragraph">
+<p><code>lfs check</code>: Display the status of MGTs, MDTs or OSTs (as specified in the command)
+or all the servers (MGTs, MDTs and OSTs).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">k8s-worker1-shira-mercury01:~ # lfs check all
+testfs-OST0000-osc-ffff9ea20bb2d800 active.
+testfs-OST0001-osc-ffff9ea20bb2d800 active.
+testfs-MDT0000-mdc-ffff9ea20bb2d800 active.
+testfs-MDT0001-mdc-ffff9ea20bb2d800 active.
+MGC7@kfi active.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>lfs df</code>: Report filesystem disk space usage or inodes usage of each MDS and all OSDs
+or a batch belonging to a specific pool.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">k8s-worker1-shira-mercury01:~ # lfs df /lus
+UUID                   1K-blocks        Used   Available Use% Mounted on
+testfs-MDT0000_UUID  10037371136      518656 10036850432   1% /lus[MDT:0]
+testfs-MDT0001_UUID  10037534976      184064 10037348864   1% /lus[MDT:1]
+testfs-OST0000_UUID  14645113856  5222995968  9422115840  36% /lus[OST:0]
+testfs-OST0001_UUID  14645118976   111712256 14533404672   1% /lus[OST:1]
+
+filesystem_summary:  29290232832  5334708224 23955520512  19% /lus</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_client_connectivity"><a class="anchor" href="#_client_connectivity"></a>Client Connectivity</h3>
+<div class="paragraph">
+<p>Viewing client connectivity to MGS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">52a33fef-e9df-417c-98de-a811c4f36816:~ # for snid in $(lctl list_nids | xargs echo); do for dnid in 2586@kfi 2650@kfi 2651@kfi 2696@kfi ; do echo "$snid -&gt; $dnid" ; lnetct
+l ping --source $snid --timeout 127 $dnid ; done ; done
+2079@kfi -&gt; 2586@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2586@kfi
+        - nid: 2650@kfi
+2079@kfi -&gt; 2650@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2586@kfi
+        - nid: 2650@kfi
+2079@kfi -&gt; 2651@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2651@kfi
+        - nid: 2696@kfi
+2079@kfi -&gt; 2696@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2651@kfi
+        - nid: 2696@kfi
+2270@kfi -&gt; 2586@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2586@kfi
+        - nid: 2650@kfi
+2270@kfi -&gt; 2650@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2586@kfi
+        - nid: 2650@kfi
+2270@kfi -&gt; 2651@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2651@kfi
+        - nid: 2696@kfi
+2270@kfi -&gt; 2696@kfi
+ping:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer ni:
+        - nid: 2651@kfi
+        - nid: 2696@kfi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And viewing a single peer connection in high detail:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">52a33fef-e9df-417c-98de-a811c4f36816:~ # lnetctl peer show -v 4 --nid 2586@kfi
+peer:
+    - primary nid: 2586@kfi
+      Multi-Rail: True
+      peer state: 273
+      peer ni:
+        - nid: 2586@kfi
+          udsp info:
+              net priority: -1
+              nid priority: -1
+          state: NA
+          max_ni_tx_credits: 128
+          available_tx_credits: 128
+          min_tx_credits: 127
+          tx_q_num_of_buf: 0
+          available_rtr_credits: 128
+          min_rtr_credits: 128
+          refcount: 1
+          statistics:
+              send_count: 51
+              recv_count: 51
+              drop_count: 0
+          sent_stats:
+              put: 47
+              get: 4
+              reply: 0
+              ack: 0
+              hello: 0
+          received_stats:
+              put: 46
+              get: 0
+              reply: 4
+              ack: 1
+              hello: 0
+          dropped_stats:
+              put: 0
+              get: 0
+              reply: 0
+              ack: 0
+              hello: 0
+          health stats:
+              health value: 1000
+              dropped: 0
+              timeout: 0
+              error: 0
+              network timeout: 0
+              ping_count: 0
+              next_ping: 0
+        - nid: 2650@kfi
+          udsp info:
+              net priority: -1
+              nid priority: -1
+          state: NA
+          max_ni_tx_credits: 128
+          available_tx_credits: 128
+          min_tx_credits: 127
+          tx_q_num_of_buf: 0
+          available_rtr_credits: 128
+          min_rtr_credits: 128
+          refcount: 1
+          statistics:
+              send_count: 49
+              recv_count: 48
+              drop_count: 0
+          sent_stats:
+              put: 47
+              get: 2
+              reply: 0
+              ack: 0
+              hello: 0
+          received_stats:
+              put: 45
+              get: 0
+              reply: 2
+              ack: 1
+              hello: 0
+          dropped_stats:
+              put: 0
+              get: 0
+              reply: 0
+              ack: 0
+              hello: 0
+          health stats:
+              health value: 1000
+              dropped: 0
+              timeout: 0
+              error: 0
+              network timeout: 0
+              ping_count: 0
+              next_ping: 0
+        - nid: 2651@kfi
+          udsp info:
+              net priority: -1
+              nid priority: -1
+          state: NA
+          max_ni_tx_credits: 128
+          available_tx_credits: 128
+          min_tx_credits: 127
+          tx_q_num_of_buf: 0
+          available_rtr_credits: 128
+          min_rtr_credits: 128
+          refcount: 1
+          statistics:
+              send_count: 49
+              recv_count: 3
+              drop_count: 0
+          sent_stats:
+              put: 46
+              get: 3
+              reply: 0
+              ack: 0
+              hello: 0
+          received_stats:
+              put: 0
+              get: 0
+              reply: 3
+              ack: 0
+              hello: 0
+          dropped_stats:
+              put: 0
+              get: 0
+              reply: 0
+              ack: 0
+              hello: 0
+          health stats:
+              health value: 1000
+              dropped: 0
+              timeout: 0
+              error: 0
+              network timeout: 0
+              ping_count: 0
+              next_ping: 0
+        - nid: 2696@kfi
+          udsp info:
+              net priority: -1
+              nid priority: -1
+          state: NA
+          max_ni_tx_credits: 128
+          available_tx_credits: 128
+          min_tx_credits: 127
+          tx_q_num_of_buf: 0
+          available_rtr_credits: 128
+          min_rtr_credits: 128
+          refcount: 1
+          statistics:
+              send_count: 49
+              recv_count: 3
+              drop_count: 0
+          sent_stats:
+              put: 46
+              get: 3
+              reply: 0
+              ack: 0
+              hello: 0
+          received_stats:
+              put: 0
+              get: 0
+              reply: 3
+              ack: 0
+              hello: 0
+          dropped_stats:
+              put: 0
+              get: 0
+              reply: 0
+              ack: 0
+              hello: 0
+          health stats:
+              health value: 1000
+              dropped: 0
+              timeout: 0
+              error: 0
+              network timeout: 0
+              ping_count: 0
+              next_ping: 0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lustre_client_builds_location"><a class="anchor" href="#_lustre_client_builds_location"></a>Lustre Client Builds location</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://steve-0.hpc.amslabs.hpecorp.net/storage">steve-0 storage parent directory</a></p>
+</li>
+<li>
+<p><a href="http://steve-0.hpc.amslabs.hpecorp.net/storage/lustre_builds/kfilnd-client/3/">steve-0 lustre client for OpenSUSE 15.2</a></p>
+</li>
+<li>
+<p><a href="http://steve-0.hpc.amslabs.hpecorp.net/storage/lustre_builds/kfilnd-client/7/">steve-0 lustre client for el8 RHEL</a></p>
+</li>
+<li>
+<p><a href="https://arti.dev.cray.com/artifactory/kj-third-party-generic-stable-local/noarch/x86_64/lustre-client-2.15.0.6.tgz">artifactory lustre-client</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_persistent_client_cache"><a class="anchor" href="#_persistent_client_cache"></a>Persistent Client Cache</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://doc.lustre.org/lustre_manual.xhtml#pcc">Lustre Docs</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://doc.lustre.org/lustre_manual.xhtml#pcc.examples">PCC Examples</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_pcc_prerequisites"><a class="anchor" href="#_pcc_prerequisites"></a>PCC Prerequisites</h3>
+<div class="paragraph">
+<p>Make sure you have Lustre client modules installed and LNET is up and running.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0
+lctl network up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure you have the Lustre filesystem mounted</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mount -t lustre 192.168.0.101@o2ib:/lustre /mnt/lustre</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pcc_installation"><a class="anchor" href="#_pcc_installation"></a>PCC Installation</h3>
+<div class="paragraph">
+<p>Create a clean ext4 partition on an NVMe drive. This is where the PCC stuff will live.</p>
+</div>
+<div class="paragraph">
+<p>Here, I&#8217;m using <code>fdisk /dev/nvme1n1</code> to create a new partition spanning the size of the disk.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-07 ~]# lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sr0          11:0    1  2.1G  0 rom
+nvme1n1     259:0    0  1.5T  0 disk
+└─nvme1n1p1 259:9    0  1.5T  0 part
+nvme0n1     259:1    0  1.5T  0 disk
+├─nvme0n1p1 259:2    0  600M  0 part /boot/efi
+├─nvme0n1p2 259:3    0    1G  0 part /boot
+└─nvme0n1p3 259:4    0   74G  0 part
+  ├─rl-root 253:0    0   70G  0 lvm  /
+  └─rl-swap 253:1    0    4G  0 lvm  [SWAP]
+nvme2n1     259:5    0  1.5T  0 disk
+nvme3n1     259:6    0  1.5T  0 disk
+nvme4n1     259:7    0  1.5T  0 disk</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, make an ext4 filesystem on that partition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-07 ~]# mkfs -t ext4 /dev/nvme1n1p1
+mke2fs 1.45.6 (20-Mar-2020)
+Discarding device blocks: done
+Creating filesystem with 390703190 4k blocks and 97681408 inodes
+Filesystem UUID: 792ae761-b8cb-4e60-91e4-ab991b3a9f0b
+Superblock backups stored on blocks:
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+	4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968,
+	102400000, 214990848
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (262144 blocks): done
+Writing superblocks and filesystem accounting information: done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Mount the partition to <code>/mnt/pcc</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-07 ~]# mount -t ext4 /dev/nvme1n1p1 /mnt/pcc</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Launch a new installation of a Hierarchical Storage Manager (HSM) daemon with the serially next-available client ID. In this case,
+we already have 2 other PCC clients so we need to use an ID of <code>3</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">lhsmtool_posix --daemon --hsm-root /mnt/pcc --archive=3 /mnt/lustre &lt; /dev/null &gt; /tmp/copytool_log 2&gt;&amp;1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>lctl</code> to add the <code>/mnt/pcc</code> PCC backend to the client. Here we specify a paramter list using <code>-p</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>uid={0}</code> means auto-cache anything written by the root user.</p>
+</li>
+<li>
+<p><code>rwid=3</code> means use the archive with ID 3, which is what we just created using <code>lhsmtool</code>.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl pcc add /mnt/lustre /mnt/pcc --param "uid={0} rwid=3"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, test PCC by creating a new file with some junk text:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-07 ~]# echo "QQQQQ" &gt; /mnt/lustre/test2
+[root@mawenzi-07 ~]# lfs pcc state /mnt/lustre/test2
+file: /mnt/lustre/test2, type: readwrite, PCC file: /0002/0000/13aa/0000/0002/0000/0x2000013aa:0x2:0x0, user number: 0, flags: 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can view the PCC file by looking under the PCC path <code>/mnt/pcc</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-07 ~]# xxd /mnt/pcc/0002/0000/13aa/0000/0002/0000/0x2000013aa\:0x2\:0x0
+00000000: 5151 5151 510a                           QQQQQ.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_client_benchmarks"><a class="anchor" href="#_client_benchmarks"></a>Client Benchmarks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Talk by John Fragalla regarding Lustre benchmarking:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/0/2327/files/2014/03/Fragalla-Xyratex_Lustre_PerformanceTuning_Fragalla_0314.pdf">Fragalla - Lustre Performance Tuning</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_non_pcc_benchmarks"><a class="anchor" href="#_non_pcc_benchmarks"></a>Non-PCC Benchmarks</h3>
+<div class="sect3">
+<h4 id="_dd"><a class="anchor" href="#_dd"></a>dd</h4>
+<div class="paragraph">
+<p><a href="https://linux.die.net/man/1/dd">dd Documentation</a></p>
+</div>
+<div class="paragraph">
+<p>Create a script <code>dd_benchmark.sh</code> with the following contents</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+for aa in {1..5}; do
+    dd if=/dev/zero of=/mnt/lustre/file$aa bs=4k iflag=fullblock,count_bytes count=50G
+    rm -f file$aa
+done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This copies 50GiB of zeroes to <code>/mnt/lustre/fileX</code> in 4k blocks.</p>
+</div>
+<div class="paragraph">
+<p>Running this should produce the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# ./dd_benchmark.sh
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 118.528 s, 453 MB/s
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 146.544 s, 366 MB/s
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 125.689 s, 427 MB/s
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 138.86 s, 387 MB/s
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 136.06 s, 395 MB/s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_iozone"><a class="anchor" href="#_iozone"></a>IOzone</h4>
+<div class="paragraph">
+<p><a href="https://www.iozone.org/">IOZone Documentation</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/opt/iozone/bin/iozone -Ra -g 150G -b pcc-iozone-output.wks -i 0 -f /mnt/lustre/iozone-benchmarking</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_lustre_ior"><a class="anchor" href="#_lustre_ior"></a>Lustre IOR</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://wiki.lustre.org/IOR">IOR Documentation</a></p>
+</li>
+<li>
+<p><a href="https://www.open-mpi.org/doc/v4.0/man1/mpirun.1.php">MPIrun Summary</a></p>
+</li>
+<li>
+<p><a href="https://ior.readthedocs.io/en/latest/userDoc/tutorial.html">IOR Usage</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://ior.readthedocs.io/en/latest/userDoc/install.html">Install IOR</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/usr/lib64/openmpi/bin/mpirun --allow-run-as-root -n 8 /usr/local/bin/ior -v -t 1m -b 32g -o /mnt/lustre/test.`date +"%Y%m%d.%H%M%S"` -F -C -e</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>IOR options</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-t</code>: Transfer size</p>
+</li>
+<li>
+<p><code>-v</code>: Verbose</p>
+</li>
+<li>
+<p><code>-b</code>: Block size (how big each file is that gets created)</p>
+</li>
+<li>
+<p><code>-o</code>: Output file name/path</p>
+</li>
+<li>
+<p><code>-F</code>: File-per-process, instead of single shared file</p>
+</li>
+<li>
+<p><code>-C</code>: Client-side read caching, force each MPI process to read the data written by its neighboring node</p>
+</li>
+<li>
+<p><code>-e</code>: Issue an fsync() call immediately after all of the write()s return to force the dirty pages we just wrote to flush out to Lustre</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

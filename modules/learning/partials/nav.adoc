@@ -38,4 +38,4 @@
 ** xref:docs-site:learning:github/github.adoc[GitHub]
 
 * Algorithms
-** xref:docs-site:learning:algorithms:algorithms.adoc[Algorithms]
+** xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]

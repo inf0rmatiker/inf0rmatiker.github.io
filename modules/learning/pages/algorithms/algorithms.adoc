@@ -1,3 +1,3 @@
-= Rocky Install
+= Algorithms
 
 Default template page for module to be replaced.

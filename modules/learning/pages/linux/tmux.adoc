@@ -1,0 +1,53 @@
+= Terminal Multiplexer (Tmux) Guidance
+
+https://tmuxcheatsheet.com/[Tmux Cheat Sheet and Quick Reference]
+
+== Start a New Session
+
+Start a new session called "install"
+
+[,bash]
+----
+tmux new -s install
+----
+
+== List Current Sessions
+
+[,bash]
+----
+tmux list-sessions
+----
+
+== Join Session
+
+Join a session called install
+
+[,bash]
+----
+tmux attach-session -t install
+----
+
+== Toggle Scroll Mode
+
+[,console]
+----
+Ctrl-B : [
+----
+
+To deactivate, press `q`
+
+== Synchronize Panes
+
+Send every keystroke to all panes. Useful for launching the same command simultaneously across panes.
+
+[,console]
+----
+Ctrl-B : setw synchronize-panes on
+----
+
+To turn off:
+
+[,console]
+----
+Ctrl-B : setw synchronize-panes off
+----

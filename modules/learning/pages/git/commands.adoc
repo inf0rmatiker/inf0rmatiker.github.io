@@ -1,0 +1,34 @@
+= Git Commands
+
+Useful `git` commands for managing a repository.
+
+== Sign-off on a Commit
+
+NOTE: This is _different_ from _signing_ a commit.
+
+https://volunteer.coscup.org/docs/en/dev/how-to-signoff/[COSCUP Volunteer Docs: How to Sign-off Commits]
+
+Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.
+
+----
+Commit message.
+
+first_name last_name <email_address>
+----
+
+For example,
+
+----
+Generate vendor dependencies at build-time
+
+* Remove vendor/ directory
+* Generate vendor/ during build
+* Gitignore vendor/ dir
+* Add go mod vendor to make build
+* Add go mod vendor to docker build
+* Use go mod download instead of vendor
+
+Signed-off-by: Caleb Carlson <ccarlson355@gmail.com>
+----
+
+

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Drive Management :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/storage/drives.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../../_'</script>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../networking/infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GitHub</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Git</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../git/configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../git/commands.html">Commands</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Storage</li>
+    <li><a href="drives.html">Drives</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Drive Management</h1>
+<div class="sect1">
+<h2 id="_utilities"><a class="anchor" href="#_utilities"></a>Utilities</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://linux.die.net/man/8/lsblk"><code>lsblk</code></a>: List information about block devices</p>
+</li>
+<li>
+<p><a href="https://linux.die.net/man/1/df"><code>df</code></a>: Report file system disk space usage</p>
+</li>
+<li>
+<p><a href="https://linux.die.net/man/8/sgdisk"><code>sgdisk</code></a>: Command-line GUID partition table (GPT) manipulator for Linux and Unix</p>
+</li>
+<li>
+<p><a href="https://linux.die.net/man/8/fdisk"><code>fdisk</code></a>: Manipulate disk partition table</p>
+</li>
+<li>
+<p><a href="https://linux.die.net/man/8/parted"><code>parted</code></a>: GNU Parted - a partition manipulation program</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_print_drive_information"><a class="anchor" href="#_print_drive_information"></a>Print Drive Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>sgdisk --print &lt;device&gt;</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --print /dev/nvme0n1
+Disk /dev/nvme0n1: 3125627568 sectors, 1.5 TiB
+Model: MZXL51T6HBJR-000H3
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): EF3781EC-7B13-453B-9651-FE12C5375137
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 3125627534
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 2967095917 sectors (1.4 TiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         1230847   600.0 MiB   EF00  EFI System Partition
+   2         1230848         3327999   1024.0 MiB  8300
+   3         3328000       158533631   74.0 GiB    8E00</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Using <code>fdisk --list &lt;device&gt;</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# fdisk --list /dev/nvme0n1
+Disk /dev/nvme0n1: 1.5 TiB, 1600321314816 bytes, 3125627568 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: EF3781EC-7B13-453B-9651-FE12C5375137
+
+Device           Start       End   Sectors  Size Type
+/dev/nvme0n1p1    2048   1230847   1228800  600M EFI System
+/dev/nvme0n1p2 1230848   3327999   2097152    1G Linux filesystem
+/dev/nvme0n1p3 3328000 158533631 155205632   74G Linux LVM</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Using <code>lsblk</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sr0          11:0    1  2.1G  0 rom
+nvme2n1     259:0    0  1.5T  0 disk
+nvme0n1     259:1    0  1.5T  0 disk
+├─nvme0n1p1 259:5    0  600M  0 part /boot/efi
+├─nvme0n1p2 259:6    0    1G  0 part /boot
+└─nvme0n1p3 259:7    0   74G  0 part
+  ├─rl-root 253:0    0   70G  0 lvm  /
+  └─rl-swap 253:1    0    4G  0 lvm  [SWAP]
+nvme4n1     259:2    0  1.5T  0 disk
+└─nvme4n1p1 259:8    0  100G  0 part
+nvme3n1     259:3    0  1.5T  0 disk
+nvme1n1     259:4    0  1.5T  0 disk</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cleardelete_partitions"><a class="anchor" href="#_cleardelete_partitions"></a>Clear/Delete Partitions</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Whenever deleting partitions make sure to either reboot or run <code>partprobe</code> to inform the kernel of the partition changes.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>sgdisk --zap-all &lt;device&gt;</code>: zap (destroy) all GPT and MBR data structures</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --zap-all /dev/nvme4n1
+GPT data structures destroyed! You may now partition the disk using fdisk or
+other utilities.</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Using <code>sgdisk --delete &lt;partnum&gt; &lt;device&gt;</code>, delete the second partition on the <code>/dev/nvme4n1</code> drive</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --delete 2 /dev/nvme4n1
+The operation has completed successfully.</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_create_partitions"><a class="anchor" href="#_create_partitions"></a>Create Partitions</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Whenever creating partitions make sure to either reboot or run <code>partprobe</code> to inform the kernel of the partition changes.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>sgdisk</code>, create a new partition on the <code>/dev/nvme0n1</code> drive, converting MBR partitions to GPT, 0 MiB from the last partition&#8217;s end, 100 GiB in size, change the partition label from <code>2</code> to <code>dpapi</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --mbrtogpt --randomize-guids --new 2:+0M:+100G --change-name 2:dpapi /dev/nvme4n1
+Setting name!
+partNum is 1
+The operation has completed successfully.</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This creates an entry <code>/dev/disk/by-partlabel/dpapi &#8594; /dev/nvme0n1p2</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>fdisk /dev/nvme0n4</code>, an interactive CLI, create a new GPT partition table, and a single partition of size 100 GiB</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# fdisk /dev/nvme4n1
+
+Welcome to fdisk (util-linux 2.32.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0xcfa29f92.
+
+Command (m for help): g
+Created a new GPT disklabel (GUID: EAA1BB8B-AF62-C948-9332-376F905FE637).
+
+Command (m for help): n
+Partition number (1-128, default 1): 1
+First sector (2048-3125627534, default 2048): 2048
+Last sector, +sectors or +size{K,M,G,T,P} (2048-3125627534, default 3125627534): +100G
+
+Created a new partition 1 of type 'Linux filesystem' and of size 100 GiB.
+
+Command (m for help): p
+Disk /dev/nvme4n1: 1.5 TiB, 1600321314816 bytes, 3125627568 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: EAA1BB8B-AF62-C948-9332-376F905FE637
+
+Device         Start       End   Sectors  Size Type
+/dev/nvme4n1p1  2048 209717247 209715200  100G Linux filesystem
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

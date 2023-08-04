@@ -83,7 +83,7 @@ Jun 30 20:28:27 mawenzi-03 systemd[1]: Started LSB: Activates/Deactivates Infini
 
 == Mellanox OFED (MOFED)
 
-=== Utilities
+=== MOFED Utilities
 
 https://docs.nvidia.com/networking/display/MFT4130/Mellanox+Firmware+Tools+%28MFT%29+Documentation[Mellanox Firmware Tools]
 
@@ -95,13 +95,13 @@ https://docs.nvidia.com/networking/display/MFT4130/Mellanox+Firmware+Tools+%28MF
     2. Perform reset operation on the device
 * https://docs.nvidia.com/networking/display/MFTV4133/mlxcables+-+Mellanox+Cables+Tool[`mlxcables`]: Mellanox Cables Tool
 
-=== Kernel Module Relationships
+=== MOFED Kernel Module Relationships
 
 This describes the various modules of MLNX_OFED relations with the other Linux Kernel modules.
 
 * https://enterprise-support.nvidia.com/s/article/mellanox-linux-driver-modules-relationship--mlnx-ofed-x[Mellanox Linux Driver Modules Relationship (MLNX_OFED)]
 
-=== Installation
+=== MOFED Installation
 
 * https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/[Linux Drivers]
 * https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED[Installing MOFED]

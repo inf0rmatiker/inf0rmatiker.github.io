@@ -264,10 +264,31 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_prerequisites_and_dependencies"><a class="anchor" href="#_prerequisites_and_dependencies"></a>Prerequisites and Dependencies</h2>
+<h2 id="_client"><a class="anchor" href="#_client"></a>Client</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Here we&#8217;ll explore how to compile the Lustre client.</p>
+</div>
+<div class="paragraph">
+<p>Reference documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(All_other_Builds)">Compiling Lustre Client (non-DKMS)</a></p>
+</li>
+<li>
+<p><a href="https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(DKMS_Packages_only)">Compiling Lustre Client (DKMS)</a></p>
+</li>
+</ul>
+</div>
 <div class="sect2">
-<h3 id="_setup_rocky_8_6_repositories"><a class="anchor" href="#_setup_rocky_8_6_repositories"></a>Setup Rocky 8.6 Repositories</h3>
+<h3 id="_prerequisites_and_dependencies"><a class="anchor" href="#_prerequisites_and_dependencies"></a>Prerequisites and Dependencies</h3>
+<div class="paragraph">
+<p>There are quite a few prerequisites that need to be satisfied to get a proper build environment before we can compile anything.</p>
+</div>
+<div class="sect3">
+<h4 id="_setup_rocky_8_6_repositories"><a class="anchor" href="#_setup_rocky_8_6_repositories"></a>Setup Rocky 8.6 Repositories</h4>
 <div class="paragraph">
 <p>Out of the box, Rocky 8.6 points to Rocky 8.8 repositories for packages. This will become problematic if we try to install
 packages that depend on a newer version of the kernel, as they&#8217;ll install that newer version of the <code>kernel-core</code> and <code>kernel-devel</code>.
@@ -388,7 +409,7 @@ name=Rocky Linux $releasever - Devel WARNING! FOR BUILDROOT AND KOJI USE
 #mirrorlist=https://mirrors.rockylinux.org/mirrorlist?arch=$basearch&amp;repo=Devel-$releasever
 baseurl=https://dl.rockylinux.org/vault/rocky/8.6/Devel/x86_64/os/
 gpgcheck=1
-enabled=0
+enabled=1
 countme=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-rockyofficial
 
@@ -415,12 +436,12 @@ EOF</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Then, disable the original 8.8 repos, and enable the 8.6 repos</p>
+<p>Then, disable the original 8.8 repos, and enable the 8.6 repos (if you haven&#8217;t already).</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf config-manager --disable appstream baseos extras
-dnf config-manager --enable appstream86 baseos86 extras86 powertools86</code></pre>
+dnf config-manager --enable appstream86 baseos86 extras86 devel86 powertools86</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -443,8 +464,8 @@ Provide    : kernel-devel = 4.18.0-372.32.1.el8_6</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_install_prerequisite_packages"><a class="anchor" href="#_install_prerequisite_packages"></a>Install Prerequisite Packages</h3>
+<div class="sect3">
+<h4 id="_prerequisite_packages"><a class="anchor" href="#_prerequisite_packages"></a>Prerequisite Packages</h4>
 <div class="paragraph">
 <p>Install prerequisite software tools on the build server:</p>
 </div>
@@ -474,7 +495,7 @@ and <code>kernel-devel</code> packages as dependencies.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Install the remaining dependecies for compiling the Lustre client</p>
+<p>Install the remaining dependecies for compiling the Lustre client:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -484,6 +505,8 @@ and <code>kernel-devel</code> packages as dependencies.</p>
     binutils-devel     \
     git                \
     json-c-devel       \
+    kernel-abi-stablelists \
+    kernel-devel       \
     kernel-debug-devel \
     kernel-rpm-macros  \
     libaio-devel       \
@@ -496,6 +519,8 @@ and <code>kernel-devel</code> packages as dependencies.</p>
     libssh-devel       \
     libtirpc-devel     \
     libuuid-devel      \
+    libyaml            \
+    libyaml-devel      \
     llvm-toolset       \
     pciutils-devel     \
     ncurses-devel      \
@@ -519,8 +544,104 @@ and <code>kernel-devel</code> packages as dependencies.</p>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_mofed_drivers"><a class="anchor" href="#_mofed_drivers"></a>MOFED Drivers</h4>
+<div class="paragraph">
+<p>If we&#8217;re compiling the Lustre client with MOFED InfiniBand support, we need to make sure we&#8217;ve built and installed MOFED drivers for the unpatched kernel we&#8217;re currently running. In our case for Rocky 8.6, this is <code>4.18.0-372.9.1.el8.x86_64</code>.</p>
+</div>
+<div class="paragraph">
+<p>View <a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED">Nvidia&#8217;s Installing Mellanox OFED</a> or my <a href="../linux/networking/infiniband.html#_mofed_installation" class="xref page">InfiniBand MOFED Installation notes</a> for more depth information. Below is a brief synopsis of the install process.</p>
+</div>
+<div class="paragraph">
+<p>Go to the <a href="https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/">Nvidia Download Center</a>, and download <code>5.4-3.7.5.0-LTS &#8594; RHEL/CentOS/Rocky &#8594; RHEL/Rocky 8.6 &#8594; MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64.tgz</code> to your build environment home.</p>
+</div>
+<div class="paragraph">
+<p>Untar it: <code>tar -xzvf MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64.tgz</code></p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a few ways to go about installing MOFED here. One option is to use the <code>mlnxofedinstall</code> script provided to install. The other is to use your package manager, in our case DNF, to install the RPMs as a local repo.</p>
+</div>
+<div class="paragraph">
+<p><strong>Using DNF</strong>:</p>
+</div>
+<div class="paragraph">
+<p>Create a new yum repo, enabled, with GPG check disabled.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/yum.repos.d/Mellanox-OFED.repo &lt;&lt; EOF
+[mlnx_ofed]
+name=MLNX_OFED Repository
+baseurl=file:///root/MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64/RPMS
+enabled=1
+gpgcheck=0
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running a <code>dnf search mlnx-ofed-</code> should show:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64]# dnf search mlnx-ofed-
+Rocky Linux 8 - Devel WARNING! FOR BUILDROOT AND KOJI USE                                                                                  2.1 MB/s | 4.3 MB     00:02
+Last metadata expiration check: 0:00:01 ago on Fri 04 Aug 2023 09:45:38 AM MDT.
+======================================================================== Name Matched: mlnx-ofed- =========================================================================
+mlnx-ofed-all.noarch : MLNX_OFED all installer package  (with KMP support)
+mlnx-ofed-all-user-only.noarch : MLNX_OFED all-user-only installer package  (User Space packages only)
+mlnx-ofed-basic.noarch : MLNX_OFED basic installer package  (with KMP support)
+mlnx-ofed-basic-user-only.noarch : MLNX_OFED basic-user-only installer package  (User Space packages only)
+mlnx-ofed-bluefield.noarch : MLNX_OFED bluefield installer package  (with KMP support)
+mlnx-ofed-bluefield-user-only.noarch : MLNX_OFED bluefield-user-only installer package  (User Space packages only)
+mlnx-ofed-dpdk.noarch : MLNX_OFED dpdk installer package  (with KMP support)
+mlnx-ofed-dpdk-upstream-libs.noarch : MLNX_OFED dpdk-upstream-libs installer package  (with KMP support)
+mlnx-ofed-dpdk-upstream-libs-user-only.noarch : MLNX_OFED dpdk-upstream-libs-user-only installer package  (User Space packages only)
+mlnx-ofed-dpdk-user-only.noarch : MLNX_OFED dpdk-user-only installer package  (User Space packages only)
+mlnx-ofed-eth-only-user-only.noarch : MLNX_OFED eth-only-user-only installer package  (User Space packages only)
+mlnx-ofed-guest.noarch : MLNX_OFED guest installer package  (with KMP support)
+mlnx-ofed-guest-user-only.noarch : MLNX_OFED guest-user-only installer package  (User Space packages only)
+mlnx-ofed-hpc.noarch : MLNX_OFED hpc installer package  (with KMP support)
+mlnx-ofed-hpc-user-only.noarch : MLNX_OFED hpc-user-only installer package  (User Space packages only)
+mlnx-ofed-hypervisor.noarch : MLNX_OFED hypervisor installer package  (with KMP support)
+mlnx-ofed-hypervisor-user-only.noarch : MLNX_OFED hypervisor-user-only installer package  (User Space packages only)
+mlnx-ofed-kernel-only.noarch : MLNX_OFED kernel-only installer package  (with KMP support)
+mlnx-ofed-vma.noarch : MLNX_OFED vma installer package  (with KMP support)
+mlnx-ofed-vma-eth.noarch : MLNX_OFED vma-eth installer package  (with KMP support)
+mlnx-ofed-vma-eth-user-only.noarch : MLNX_OFED vma-eth-user-only installer package  (User Space packages only)
+mlnx-ofed-vma-user-only.noarch : MLNX_OFED vma-user-only installer package  (User Space packages only)
+mlnx-ofed-vma-vpi.noarch : MLNX_OFED vma-vpi installer package  (with KMP support)
+mlnx-ofed-vma-vpi-user-only.noarch : MLNX_OFED vma-vpi-user-only installer package  (User Space packages only)
+mlnx-ofed-xlio.noarch : MLNX_OFED xlio installer package  (with KMP support)
+mlnx-ofed-xlio-user-only.noarch : MLNX_OFED xlio-user-only installer package  (User Space packages only)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install <code>mlnx-ofed-all</code> (with KMP support) using <code>dnf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install mlnx-ofed-all</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once this has finished, you should have installed all the required kernel modules and supporting packages that the Lustre build process needs to reference. It is not required to actually <em>load</em> the modules; they just need to be present. You can check their existence under <code>/usr/src/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64]# ls /usr/src/
+debug  kernels  mlnx-ofa_kernel-5.4  ofa_kernel  ofa_kernel-5.4</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Using the Install Script</strong>:</p>
+</div>
+<div class="paragraph">
+<p>TODO: This has not been explored enough to capture notes on.</p>
+</div>
+</div>
+</div>
 <div class="sect2">
-<h3 id="_clone_lustre_repository"><a class="anchor" href="#_clone_lustre_repository"></a>Clone Lustre Repository</h3>
+<h3 id="_building_client"><a class="anchor" href="#_building_client"></a>Building Client</h3>
 <div class="paragraph">
 <p>Clone the Lustre repository from whamcloud.</p>
 </div>
@@ -529,67 +650,55 @@ and <code>kernel-devel</code> packages as dependencies.</p>
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://review.whamcloud.com/fs/lustre-release</code></pre>
 </div>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_compiling_the_lustre_client"><a class="anchor" href="#_compiling_the_lustre_client"></a>Compiling the Lustre Client</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>THIS IS AS FAR AS I&#8217;VE GOTTEN FOR A CLEAN LUSTRE BUILD ANYTHING FURTHER NEEDS TO BE RE-DONE</p>
-</div>
-<div class="paragraph">
-<p>TODO: Clean up the following section and verify</p>
+<p>Prepare the Makefile:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install asciidoc audit-libs-devel automake bc binutils-devel \
-    bison device-mapper-devel elfutils-devel elfutils-libelf-devel expect \
-    flex gcc gcc-c++ git glib2 glib2-devel hmaccalc keyutils-libs-devel \
-    krb5-devel ksh libattr-devel libblkid-devel libselinux-devel libtool \
-    libuuid-devel libyaml-devel lsscsi make ncurses-devel net-snmp-devel \
-    net-tools newt-devel numactl-devel parted patchutils pciutils-devel \
-    perl-ExtUtils-Embed pesign redhat-rpm-config rpm-build \
-    systemd-devel tcl tcl-devel tk tk-devel wget xmlto yum-utils zlib-devel
-dnf install -y  kabi-dw ncurses-devel \
-    newt-devel numactl-devel openssl-devel   \
-    xmlto xz-devel elfutils-libelf-devel libcap-devel libcap-ng-devel \
-    llvm-toolset libyaml libyaml-devel  kernel-abi-whitelists
-checkout b2_15
-sh autogen.sh
-_TOPDIR=`rpm --eval %{_topdir}`
-cd $HOME/lustre-release
-make distclean
-./configure --enable-dist --disable-server --enable-client
-make dist
-mkdir -p $_TOPDIR/SOURCES/
-cp lustre-*.tar.gz $_TOPDIR/SOURCES/
-rpmbuild -bs --without servers lustre-dkms.spec
-rpmbuild --rebuild --without servers $_TOPDIR/SRPMS/lustre-client-dkms-*.src.rpm
-dnf install -y kernel-debug-devel dkms
-
-
-dnf install -y \
-    asciidoc audit-libs-devel automake bc \
-    binutils-devel bison device-mapper-devel elfutils-devel \
-    elfutils-libelf-devel expect flex gcc gcc-c++ git \
-    glib2 glib2-devel hmaccalc keyutils-libs-devel krb5-devel ksh \
-    libattr-devel libblkid-devel libselinux-devel libtool \
-    libuuid-devel libyaml-devel lsscsi make ncurses-devel \
-    net-snmp-devel net-tools newt-devel numactl-devel \
-    parted patchutils pciutils-devel perl-ExtUtils-Embed \
-    pesign python3-devel redhat-rpm-config rpm-build systemd-devel \
-    tcl tcl-devel tk tk-devel wget xmlto yum-utils zlib-devel</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh autogen.sh</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Configure the build for just building the client, and point it at your kernel/MOFED sources:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install kernel-devel rpm-build make libtool zlib-devel libselinux-devel openssl-devel</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./configure \
+    --disable-server \
+    --enable-client \
+    --with-linux=/usr/src/kernels/4.18.0-372.32.1.el8_6.x86_64 \
+    --with-o2ib=/usr/src/ofa_kernel/default</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_dkms_lustre_client_builds"><a class="anchor" href="#_dkms_lustre_client_builds"></a>DKMS Lustre Client Builds</h3>
-
+<div class="paragraph">
+<p><code>make</code> the RPMs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">make rpms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once it finishes, you should end up with all the RPMs and sources dumped into the <code>lustre-release</code> repo root:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 lustre-release]# ls ~/lustre-release/{*.rpm,*.tar.gz}
+/root/lustre-release/kmod-lustre-client-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/kmod-lustre-client-debuginfo-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/kmod-lustre-client-tests-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/kmod-lustre-client-tests-debuginfo-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-2.15.56_124_g3ebc8e0-1.src.rpm
+/root/lustre-release/lustre-2.15.56_124_g3ebc8e0.tar.gz
+/root/lustre-release/lustre-client-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-client-debuginfo-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-client-debugsource-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-client-devel-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-client-tests-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-client-tests-debuginfo-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
+/root/lustre-release/lustre-iokit-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

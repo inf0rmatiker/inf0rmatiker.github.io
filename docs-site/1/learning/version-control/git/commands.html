@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Linux Networking :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/linux-networking.html">
+    <title>Git :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/version-control/git/commands.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
+    <script>var uiRootPath = '../../../../../_'</script>
   </head>
   <body class="article">
 <header class="header">
@@ -18,11 +19,6 @@
         <span></span>
         <span></span>
       </button>
-    </div>
-    <div id="topbar-nav" class="navbar-menu">
-      <div class="navbar-end">
-        <a class="navbar-item" href="#">Home</a>
-      </div>
     </div>
   </nav>
 </header>
@@ -108,29 +104,29 @@
     <span class="nav-text">Linux</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="../../linux/rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../rpms.html">RPMs</a>
+    <a class="nav-link" href="../../linux/rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../tmux.html">Tmux</a>
+    <a class="nav-link" href="../../linux/tmux.html">Tmux</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="linux-networking.html">Linux</a>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="proxies.html">Proxies</a>
+    <a class="nav-link" href="../../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="ssh.html">SSH</a>
+    <a class="nav-link" href="../../linux/networking/ssh.html">SSH</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="infiniband.html">InfiniBand</a>
+    <a class="nav-link" href="../../linux/networking/infiniband.html">InfiniBand</a>
   </li>
 </ul>
   </li>
@@ -139,7 +135,7 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../storage/drives.html">Drives</a>
+    <a class="nav-link" href="../../linux/storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -177,10 +173,19 @@
     <span class="nav-text">Version Control</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+    <a class="nav-link" href="../github/github.html">GitHub</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Git</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="commands.html">Commands</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -227,126 +232,215 @@
   <ul>
     <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
-    <li>Linux</li>
-    <li>Networking</li>
-    <li><a href="linux-networking.html">Linux</a></li>
+    <li>Version Control</li>
+    <li>Git</li>
+    <li><a href="commands.html">Commands</a></li>
   </ul>
 </nav>
-<div class="edit-this-page"><a href="https://github.com/inf0rmatiker/inf0rmatiker.github.io/edit/master/modules/learning/pages/linux/networking/linux-networking.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Linux Networking</h1>
-<div class="sect1">
-<h2 id="_utilities"><a class="anchor" href="#_utilities"></a>Utilities</h2>
+<h1 class="page">Git</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Git is a widely-used, open-source tool for managing versions of a project.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ip</code></p>
+<p><a href="https://git-scm.com/">Git Site</a></p>
 </li>
 <li>
-<p><code>ifcfg</code></p>
+<p><a href="https://git-scm.com/doc">Git Documentation and Reference Guides</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_interfaces"><a class="anchor" href="#_interfaces"></a>Interfaces</h2>
+<h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Get Started Installing Git</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_bringing_interfaces_updown"><a class="anchor" href="#_bringing_interfaces_updown"></a>Bringing Interfaces Up/Down</h3>
+<h3 id="_shell_aliases"><a class="anchor" href="#_shell_aliases"></a>Shell Aliases</h3>
 <div class="paragraph">
-<p><a href="https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch05s02.html">Reference</a></p>
-</div>
-<div class="paragraph">
-<p>Two methods can be used to bring interfaces up or down.</p>
-</div>
-<div class="paragraph">
-<p>Using <code>ip</code></p>
+<p>Add these aliases to your <code>.bashrc</code> or <code>.zshrc</code> to make life easier:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc"># ip link set dev &lt;interface&gt; up
-# ip link set dev &lt;interface&gt; down</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Git
+alias clone="git clone"
+alias checkout="git checkout"
+alias update="git fetch &amp;&amp; git pull"
+alias push="git push"
+alias commit="git commit -a"
+alias add="git add"
+alias pull="git pull"
+alias status="git status"
+alias log="git log --all --decorate --oneline --graph"
+alias cherry-pick="git cherry-pick"
+export GITHUB_TOKEN="&lt;YOUR_GITHUB_ACCESS_TOKEN&gt;"
+export PAT=$GITHUB_TOKEN</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_set_global_git_user_nameemail"><a class="anchor" href="#_set_global_git_user_nameemail"></a>Set Global Git User Name/Email</h3>
 <div class="paragraph">
-<p>Examples:</p>
+<p><a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address#setting-your-commit-email-address-in-git">GitHub: Setting your commit email in Git</a></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip link set dev eth0 up
-ip link set dev eth0 down</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git config --global user.name "FIRST_NAME LAST_NAME"
+git config --global user.email "MY_NAME@example.com"</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_git_commit_signing"><a class="anchor" href="#_git_commit_signing"></a>Git Commit Signing</h3>
 <div class="paragraph">
-<p>Using <code>ifconfig`</code></p>
+<p>This section describes how to create a GPG key, and configure Git to use it to sign commits.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc"># /sbin/ifconfig &lt;interface&gt; up
-# /sbin/ifconfig &lt;interface&gt; down</code></pre>
-</div>
-</div>
+<div class="sect3">
+<h4 id="_gpg_key_creation"><a class="anchor" href="#_gpg_key_creation"></a>GPG Key Creation</h4>
 <div class="paragraph">
-<p>Examples:</p>
+<p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">GitHub: Generating a new GPG key</a></p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/sbin/ifconfig eth0 up
-/sbin/ifconfig eth0 down</code></pre>
+</div>
+<div class="sect3">
+<h4 id="_configure_git_to_use_your_gpg_key"><a class="anchor" href="#_configure_git_to_use_your_gpg_key"></a>Configure Git to Use Your GPG Key</h4>
+<div class="paragraph">
+<p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">GitHub: Telling Git about your signing key</a></p>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hostname"><a class="anchor" href="#_hostname"></a>Hostname</h2>
+<h2 id="_commands"><a class="anchor" href="#_commands"></a>Commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Set hostname using <code>hostnamectl</code></p>
+<p>Useful <code>git</code> commands for managing a repository.</p>
+</div>
+<div class="sect2">
+<h3 id="_sign_off_on_a_commit"><a class="anchor" href="#_sign_off_on_a_commit"></a>Sign-off on a Commit</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This is <em>different</em> from <em>signing</em> a commit.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a href="https://volunteer.coscup.org/docs/en/dev/how-to-signoff/">COSCUP Volunteer Docs: How to Sign-off Commits</a></p>
+</div>
+<div class="paragraph">
+<p>Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">hostnamectl set-hostname NAME</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Commit message.
+
+first_name last_name &lt;email_address&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Set hostname at boot time by editing the grub boot parameters and adding <code>hostname=NAME</code></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_proxies"><a class="anchor" href="#_proxies"></a>Proxies</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Set proxy environment for HPE LR1: See <a href="proxies.html" class="xref page">Proxies</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_firewalls"><a class="anchor" href="#_firewalls"></a>Firewalls</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Disable the <code>firewalld</code> firewall daemon:</p>
+<p>For example,</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl stop firewalld
-systemctl disable firewalld</code></pre>
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">Generate vendor dependencies at build-time
+
+* Remove vendor/ directory
+* Generate vendor/ during build
+* Gitignore vendor/ dir
+* Add go mod vendor to make build
+* Add go mod vendor to docker build
+* Use go mod download instead of vendor
+
+Signed-off-by: Caleb Carlson &lt;ccarlson355@gmail.com&gt;</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_delete_a_branch"><a class="anchor" href="#_delete_a_branch"></a>Delete a Branch</h3>
 <div class="paragraph">
-<p>Disable SELinux</p>
+<p>Delete a local branch:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">setenforce 0</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git branch --delete &lt;branchname&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Make sure you switch to another branch before doing this so you&#8217;re not stranded on a deleted branch.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(bugfix/SSM-4489) ✗ checkout master
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+➜  hpc-sp-kjplat-img git:(master) ✗ git branch --delete bugfix/SSM-4489
+warning: deleting branch 'bugfix/SSM-4489' that has been merged to
+         'refs/remotes/origin/bugfix/SSM-4489', but not yet merged to HEAD.
+Deleted branch bugfix/SSM-4489 (was 8d7abea).</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete the remote branch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git push origin --delete &lt;branchname&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(master) ✗ git push origin --delete kjplat-634
+To github.hpe.com:hpe/hpc-sp-kjplat-img.git
+ - [deleted]         kjplat-634</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also use the GitHub repository web UI to delete the remote branch.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../github/github.html#delete_a_branch" class="xref page">Delete a Remote Branch Using GitHub</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

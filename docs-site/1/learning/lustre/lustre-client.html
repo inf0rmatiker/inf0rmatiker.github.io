@@ -7,7 +7,6 @@
     <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/lustre/lustre-client.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
-    <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
 <header class="header">
@@ -19,6 +18,11 @@
         <span></span>
         <span></span>
       </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+      </div>
     </div>
   </nav>
 </header>
@@ -170,10 +174,13 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">GitHub</span>
+    <span class="nav-text">Version Control</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../github/github.html">GitHub</a>
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
   </li>
 </ul>
   </li>
@@ -183,18 +190,6 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
-  </li>
-</ul>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <button class="nav-item-toggle"></button>
-    <span class="nav-text">Git</span>
-<ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../git/configuration.html">Configuration</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../git/commands.html">Commands</a>
   </li>
 </ul>
   </li>
@@ -236,6 +231,7 @@
     <li><a href="lustre-client.html">Lustre Client</a></li>
   </ul>
 </nav>
+<div class="edit-this-page"><a href="https://github.com/inf0rmatiker/inf0rmatiker.github.io/edit/master/modules/learning/pages/lustre/lustre-client.adoc">Edit this Page</a></div>
 </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -248,6 +244,16 @@
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_using_the_lustre_client_repo"><a class="anchor" href="#_using_the_lustre_client_repo"></a>Using the Lustre Client Repo</h3>
+<div class="paragraph">
+<p>Here is where you can find all the publicly-available Lustre builds, for both server and client:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://downloads.whamcloud.com/public/lustre/">Lustre Whamcloud Downloads</a></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>Here we&#8217;ll be using Rocky Linux 8.6 as a base.</p>
 </div>
@@ -913,12 +919,25 @@ file: /mnt/lustre/test2, type: readwrite, PCC file: /0002/0000/13aa/0000/0002/00
 <h2 id="_client_benchmarks"><a class="anchor" href="#_client_benchmarks"></a>Client Benchmarks</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>Preliminary experimental benchmarks involving both PCC and non-PCC Lustre clients by Abhinav Vemulapalli:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../_attachments/lustre/lustre_pcc_findings.pdf" class="xref attachment">Lustre PCC Investigation and Findings</a></p>
+</li>
+<li>
+<p><a href="../_attachments/lustre/lustre_benchmarks.pdf" class="xref attachment">Lustre Benchmarking Notes</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Talk by John Fragalla regarding Lustre benchmarking:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/0/2327/files/2014/03/Fragalla-Xyratex_Lustre_PerformanceTuning_Fragalla_0314.pdf">Fragalla - Lustre Performance Tuning</a></p>
+<p><a href="https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/0/2327/files/2014/03/Fragalla-Xyratex_Lustre_PerformanceTuning_Fragalla_0314.pdf">John Fragalla - Lustre Performance Tuning</a></p>
 </li>
 </ul>
 </div>

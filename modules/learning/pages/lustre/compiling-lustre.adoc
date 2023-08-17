@@ -3,13 +3,18 @@
 :toc: auto
 :showtitle:
 
+Some references for compiling lustre:
+
 * https://wiki.lustre.org/Compiling_Lustre[Compiling Lustre Documentation]
 * https://wiki.whamcloud.com/pages/viewpage.action?pageId=258179277[Walk-through: Build Lustre MASTER on RHEL/Rocky linux 8.7 from Git]
 * https://wiki.whamcloud.com/display/PUB/Rebuilding+the+Lustre-client+rpms+for+a+new+kernel[Rebuilding the Lustre Client RPMs for a New Kernel]
 
-Here we'll be using Rocky Linux 8.6 Minimal as our base installation medium.
+== Compiling on Rocky 8.6 Host
 
-== Client
+Here we'll be using Rocky Linux 8.6 Minimal as our base installation medium, and will be compiling on the baremetal host OS.
+This will effectively allow us to compile Lustre for the OS/kernel installed.
+
+=== Client
 
 Here we'll explore how to compile the Lustre client.
 
@@ -18,7 +23,7 @@ Reference documentation:
 * https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(All_other_Builds)[Compiling Lustre Client (non-DKMS)]
 * https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(DKMS_Packages_only)[Compiling Lustre Client (DKMS)]
 
-=== Prerequisites and Dependencies
+==== Prerequisites and Dependencies
 
 There are quite a few prerequisites that need to be satisfied to get a proper build environment before we can compile anything.
 
@@ -344,7 +349,7 @@ debug  kernels  mlnx-ofa_kernel-5.4  ofa_kernel  ofa_kernel-5.4
 
 TODO: This has not been explored enough to capture notes on.
 
-=== Building Client
+==== Building Client
 
 Clone the Lustre repository from whamcloud.
 
@@ -397,3 +402,5 @@ Once it finishes, you should end up with all the RPMs and sources dumped into th
 /root/lustre-release/lustre-client-tests-debuginfo-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
 /root/lustre-release/lustre-iokit-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
 ----
+
+== Compiling within Rocky 8.6 Docker Container

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Lustre Server :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/lustre/lustre-server.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Lustre</li>
+    <li><a href="lustre-server.html">Lustre Server</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///Users/ccarlson/VSCode/inf0rmatiker.github.io/modules/learning/pages/lustre/lustre-server.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Lustre Server</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Installation, configuration, and management of a Lustre server cluster.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://lustre.ornl.gov/lustre101-courses/">ORNL Lustre 101 Courses</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://lustre.ornl.gov/lustre101-courses/C1/AdminEssentials.html">Lustre Administration Essentials</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://wiki.lustre.org/Installing_the_Lustre_Software">Installing Lustre</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_terminology"><a class="anchor" href="#_terminology"></a>Terminology</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>MDT: Metadata Target</p>
+</li>
+<li>
+<p>MDS: Metadata Server</p>
+</li>
+<li>
+<p>MGT: Management Target</p>
+</li>
+<li>
+<p>MGS: Management Service</p>
+</li>
+<li>
+<p>OST: Object Storage Target</p>
+</li>
+<li>
+<p>OSS: Object Storage Service</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we&#8217;ll be using Rocky Linux 8.6 as a base.</p>
+</div>
+<div class="paragraph">
+<p>First, set your HTTP/s proxy so you can reach the greater internet:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/environment&lt;&lt; EOF
+#Proxies for LR1
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="localhost,127.0.0.1,.us.cray.com,.americas.cray.com,.dev.cray.com,.eag.rdlabs.hpecorp.net"
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, create a new repo file for the following repos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Lustre server pieces</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Patched kernel, kernel modules, and utilities built with MOFED Infiniband support</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>e2fsprogs for Lustre</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Normally <a href="https://en.wikipedia.org/wiki/E2fsprogs">e2fsprogs</a> is a set of utilities for maintaining ext2, ext3, and ext4 filesystems</p>
+</li>
+<li>
+<p>Lustre has their own set built for managing Lustre filesystems</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Lustre client pieces</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Modules built with MOFED Infiniband support</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/yum.repos.d/lustre.repo&lt;&lt; EOF
+[lustre-server]
+name=rl8.6-ib - Lustre
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.1-ib/MOFED-5.6-2.0.9.0/el8.6/server/
+gpgcheck=0
+
+[e2fsprogs]
+name=rl8.6-ib - Ldiskfs
+baseurl=https://downloads.whamcloud.com/public/e2fsprogs/latest/el8/
+gpgcheck=0
+
+[lustre-client]
+name=rl8.6-ib - Lustre
+baseurl=https://downloads.whamcloud.com/public/lustre/lustre-2.15.1-ib/MOFED-5.6-2.0.9.0/el8.6/client/
+gpgcheck=0
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now that you&#8217;ve added these repos, install the following packages using <code>dnf</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>epel</code>: Extra packages for Enterprise Linux, needed as a dependency in Lustre install</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install epel-release e2fsprogs lustre -y</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reboot for changes to take effect, new patched kernel to be loaded, etc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">reboot</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Load the IP over Infiniband (<code>ipoib</code>) module, allowing us to assign our Infiniband device an IP address.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe ib_ipoib</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install <a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/OpenSM">Infiniband-compliant Subnet Manager</a> <code>opensm</code>.
+The Infiniband switch we are connected to is an <em>unmanaged</em> switch, so the switch can&#8217;t be the Subnet Manager.
+So, <em>somewhere</em> on the Infiniband network we need a Subnet Manager to manage the network. This can be done on the first node,
+or on a dedicated management node.</p>
+</div>
+<div class="paragraph">
+<p>If we had a managed Infiniband switch we could run the Subnet Manager there.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+How to do this with a Managed Switch&#8230;&#8203; TODO
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y opensm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Load the <a href="https://docs.kernel.org/infiniband/user_mad.html">Infiniband Userspace MAD</a> (Management Datagrams) module.
+This is needed for Open Subnet Manager in the following step.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe ib_umad</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Start the <a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/OpenSM">Infiniband-compliant Subnet Manager</a> <code>opensm</code> systemd service</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl start opensm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Assign a static IP address to the <code>ib0</code> device, and set the link state to <code>UP</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip addr add 192.168.0.103/24 dev ib0
+ip link set dev ib0 up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Load the <a href="https://wiki.lustre.org/Lustre_Networking_(LNET)_Overview">LNET</a> module</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe -v lnet</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Load the lustre server modules</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe -v lustre</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+A better way to do this persistently is to set the following fields in <code>/etc/sysconfig/network-scripts/ifcfg-ib0</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">ONBOOT=yes
+BOOTPROTO=none
+IPADDR=192.168.0.103
+NETMASK=255.255.255.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A prerequisite for this is to have the <code>ib_ipoib</code> module loaded, which can be done by adding an entry to <code>/etc/modules-load.d/</code>.
+While we&#8217;re here we can also add on-boot modprobing for <code>lnet</code> and <code>lustre</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo ib_ipoib &gt; /etc/modules-load.d/ipoib.conf
+echo lnet &gt; /etc/modules-load.d/lnet.conf
+echo lustre &gt; /etc/modules-load.d/lustre.conf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Configure LNET, and add the <code>ib0</code> physical interface as the <code>o2ib</code> network</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bring up the LNET network</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl network up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point we should have the following modules loaded and visible via <code>lsmod</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-03 ~]# lsmod | grep -i mlx
+mlx5_ib               454656  0
+ib_uverbs             155648  1 mlx5_ib
+ib_core               438272  8 rdma_cm,ib_ipoib,ko2iblnd,iw_cm,ib_umad,ib_uverbs,mlx5_ib,ib_cm
+mlx5_core            1912832  1 mlx5_ib
+mlxfw                  28672  1 mlx5_core
+pci_hyperv_intf        16384  1 mlx5_core
+tls                   102400  1 mlx5_core
+psample                20480  1 mlx5_core
+mlxdevm               180224  1 mlx5_core
+mlx_compat             16384  11 rdma_cm,ib_ipoib,mlxdevm,ko2iblnd,iw_cm,ib_umad,ib_core,ib_uverbs,mlx5_ib,ib_cm,mlx5_core</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-03 ~]# lsmod | grep -i ib
+ko2iblnd              237568  1
+rdma_cm               118784  1 ko2iblnd
+lnet                  704512  7 osc,ko2iblnd,obdclass,ptlrpc,lmv,lustre
+libcfs                266240  11 fld,lnet,osc,fid,ko2iblnd,obdclass,ptlrpc,lov,mdc,lmv,lustre
+ib_umad                28672  6
+ib_ipoib              155648  0
+ib_cm                 114688  2 rdma_cm,ib_ipoib
+nft_fib_inet           16384  1
+nft_fib_ipv4           16384  1 nft_fib_inet
+nft_fib_ipv6           16384  1 nft_fib_inet
+nft_fib                16384  3 nft_fib_ipv6,nft_fib_ipv4,nft_fib_inet
+nf_tables             180224  235 nft_ct,nft_reject_inet,nft_fib_ipv6,nft_fib_ipv4,nft_chain_nat,nf_tables_set,nft_reject,nft_fib,nft_fib_inet
+libcrc32c              16384  4 nf_conntrack,nf_nat,nf_tables,xfs
+mlx5_ib               454656  0
+ib_uverbs             155648  1 mlx5_ib
+ib_core               438272  8 rdma_cm,ib_ipoib,ko2iblnd,iw_cm,ib_umad,ib_uverbs,mlx5_ib,ib_cm
+mlx5_core            1912832  1 mlx5_ib
+mlx_compat             16384  11 rdma_cm,ib_ipoib,mlxdevm,ko2iblnd,iw_cm,ib_umad,ib_core,ib_uverbs,mlx5_ib,ib_cm,mlx5_core</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-03 ~]# lsmod | grep -i lustre
+lustre               1040384  0
+lmv                   204800  1 lustre
+mdc                   282624  1 lustre
+lov                   344064  2 mdc,lustre
+ptlrpc               2478080  7 fld,osc,fid,lov,mdc,lmv,lustre
+obdclass             3624960  8 fld,osc,fid,ptlrpc,lov,mdc,lmv,lustre
+lnet                  704512  7 osc,ko2iblnd,obdclass,ptlrpc,lmv,lustre
+libcfs                266240  11 fld,lnet,osc,fid,ko2iblnd,obdclass,ptlrpc,lov,mdc,lmv,lustre</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_lustre_filesystem_creation"><a class="anchor" href="#_lustre_filesystem_creation"></a>Lustre Filesystem Creation</h3>
+<div class="paragraph">
+<p>Create MGT on <code>/dev/sdb</code>, make a directory under <code>/mnt</code> for it, then mount <code>/dev/sdb</code> to the directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkfs.lustre --mgs /dev/sdb
+mkdir /mnt/mgt
+mount -t lustre /dev/sdb /mnt/mgt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create MDT on <code>/dev/sdc</code>, make a directory under <code>/mnt</code> for it, then mount <code>/dev/sdc</code> to the directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkfs.lustre --fsname=lustre --mgsnode=192.168.0.103@o2ib --mdt --index=0 /dev/sdc
+mkdir /mnt/mdt
+mount -t lustre /dev/sdc /mnt/mdt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create OST on <code>/dev/sdd</code>, make a directory under <code>/mnt</code> for it, then mount <code>/dev/sdd</code> to the directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkfs.lustre --fsname=lustre --ost --mgsnode=192.168.0.103@o2ib --index=0 /dev/sdd
+mkdir /mnt/ost0
+mount -t lustre /dev/sdd /mnt/ost0</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

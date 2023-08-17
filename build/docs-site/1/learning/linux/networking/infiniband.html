@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>InfiniBand :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/infiniband.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Networking</li>
+    <li><a href="infiniband.html">InfiniBand</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="file:///Users/ccarlson/VSCode/inf0rmatiker.github.io/modules/learning/pages/linux/networking/infiniband.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">InfiniBand</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Details and notes for IB management, commands, notes, configuration, and installation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_learning"><a class="anchor" href="#_learning"></a>Learning</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/InfiniBand">Wikipedia - InfiniBand</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_infiniband_and_rdma_networks">RedHat - Understanding InfiniBand and RDMA technologies</a></p>
+</li>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-infiniband_and_rdma_related_software_packages">RedHat - InfiniBand and RMDA related software packages</a></p>
+</li>
+<li>
+<p><a href="https://people.redhat.com/dledford/infiniband_get_started.html">RedHat - Getting Started with InfiniBand</a></p>
+</li>
+<li>
+<p><a href="https://www.rohitzambre.com/blog/2018/2/9/for-the-rdma-novice-libfabric-libibverbs-infiniband-ofed-mofed">For the RDMA novice: libfabric, libibverbs, InfiniBand, OFED, MOFED?</a></p>
+</li>
+<li>
+<p><a href="https://github.com/ofiwg/ofi-guide/blob/master/OFIGuide.md">OpenFabrics Interface (OFI) Guide</a></p>
+</li>
+<li>
+<p><a href="https://www.rdmamojo.com/2014/11/22/working-rdma-using-mellanox-ofed/">RDMAmojo - Working with RDMA using Mellanox OFED</a></p>
+</li>
+<li>
+<p><a href="https://www.csm.ornl.gov/workshops/openshmem2014/documents/presentations_and_tutorials/Tutorials/Verbs%20programming%20tutorial-final.pdf">Mellanox Verbs Programming Tutorial Presetnation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_subnet_manager"><a class="anchor" href="#_subnet_manager"></a>Subnet Manager</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/networking/display/MLNXOSv381000/Subnet+Manager">Subnet Manager</a></p>
+</div>
+<div class="paragraph">
+<p>The Subnet Manager is an entity running either on a <em>managed</em> switch, node, or somewhere in the fabric, and is responsible for discovering and configuring all the InfiniBand fabric devices to enable traffic flow between those devices.</p>
+</div>
+<div class="sect2">
+<h3 id="_opensm"><a class="anchor" href="#_opensm"></a>OpenSM</h3>
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/OpenSM">OpenSM</a></p>
+</div>
+<div class="paragraph">
+<p><code>opensm</code> is an InfiniBand compliant Subnet Manager and Subnet Administrator that runs on top of the Mellanox OFED stack.</p>
+</div>
+<div class="sect3">
+<h4 id="_installing_opensm"><a class="anchor" href="#_installing_opensm"></a>Installing <code>opensm</code></h4>
+<div class="paragraph">
+<p>In order for <code>opensm</code> to function, you need to first enable <code>ib_umad</code> so <code>opensm</code> can use <a href="https://docs.kernel.org/infiniband/user_mad.html">Userspace MADs</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe ib_umad</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, install <code>opensm</code> via <code>dnf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y opensm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And start the daemon via <code>systemctl</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl start opensm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify it&#8217;s running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-03 ~]# systemctl status opensm
+● opensmd.service - LSB: Activates/Deactivates InfiniBand Subnet Manager
+   Loaded: loaded (/etc/rc.d/init.d/opensmd; generated)
+   Active: active (running) since Fri 2023-06-30 20:28:27 MDT; 6s ago
+     Docs: man:systemd-sysv-generator(8)
+  Process: 16797 ExecStart=/etc/rc.d/init.d/opensmd start (code=exited, status=0/SUCCESS)
+ Main PID: 16806 (opensm)
+    Tasks: 144 (limit: 821428)
+   Memory: 15.6M
+   CGroup: /system.slice/opensmd.service
+           ├─16806 /usr/sbin/opensm --daemon
+           └─16809 osm_crashd
+
+Jun 30 20:28:26 mawenzi-03 systemd[1]: Starting LSB: Activates/Deactivates InfiniBand Subnet Manager...
+Jun 30 20:28:26 mawenzi-03 OpenSM[16806]: /var/log/opensm.log log file opened
+Jun 30 20:28:26 mawenzi-03 OpenSM[16806]: OpenSM 5.11.0.MLNX20220418.fd3d650
+Jun 30 20:28:26 mawenzi-03 OpenSM[16806]: Entering DISCOVERING state
+Jun 30 20:28:26 mawenzi-03 OpenSM[16806]: Entering STANDBY state
+Jun 30 20:28:27 mawenzi-03 opensmd[16797]: Starting IB Subnet Manager.
+Jun 30 20:28:27 mawenzi-03 opensmd[16952]: Starting IB Subnet Manager.
+Jun 30 20:28:27 mawenzi-03 opensmd[16952]: hich: no ibdiagm.sh in (/sbi
+Jun 30 20:28:27 mawenzi-03 opensmd[16797]: hich: no
+Jun 30 20:28:27 mawenzi-03 systemd[1]: Started LSB: Activates/Deactivates InfiniBand Subnet Manager.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mellanox_ofed_mofed"><a class="anchor" href="#_mellanox_ofed_mofed"></a>Mellanox OFED (MOFED)</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mofed_utilities"><a class="anchor" href="#_mofed_utilities"></a>MOFED Utilities</h3>
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/networking/display/MFT4130/Mellanox+Firmware+Tools+%28MFT%29+Documentation">Mellanox Firmware Tools</a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/pages/viewpage.action?pageId=19810998"><code>mlxfwmanager</code></a>: Firmware Update and Query Tool</p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/MFT4170/mlxlink+Utility"><code>mlxlink</code></a>: The mlxlink tool is used to check and debug link status and issues related to them. The tool can be used on different links and cables (passive, active, transceiver and backplane).</p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/MFT4130/Using+mlxconfig"><code>mlxconfig</code></a>: Allows the user to change some of the device configurations without having to create and burn a new firmware</p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/pages/viewpage.action?pageId=19811030"><code>mlxfwreset</code></a>: The tool provides the following functionality in order to load new firmware:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Query the device for the supported reset-level and reset-type</p>
+</li>
+<li>
+<p>Perform reset operation on the device</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/MFTV4133/mlxcables+-+Mellanox+Cables+Tool"><code>mlxcables</code></a>: Mellanox Cables Tool</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mofed_kernel_module_relationships"><a class="anchor" href="#_mofed_kernel_module_relationships"></a>MOFED Kernel Module Relationships</h3>
+<div class="paragraph">
+<p>This describes the various modules of MLNX_OFED relations with the other Linux Kernel modules.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://enterprise-support.nvidia.com/s/article/mellanox-linux-driver-modules-relationship&#8212;&#8203;mlnx-ofed-x">Mellanox Linux Driver Modules Relationship (MLNX_OFED)</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mofed_installation"><a class="anchor" href="#_mofed_installation"></a>MOFED Installation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/">Linux Drivers</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED">Installing MOFED</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this example we&#8217;ll be installing MOFED for Rocky Linux 8.6.</p>
+</div>
+<div class="paragraph">
+<p>Go to <a href="https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/">Nvidia Mellanox Download center</a>, and download the <code>.iso</code> for Rocky 8.6:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/networking/rocky_mofed_install.png" alt="MOFED Download Center">
+</div>
+</div>
+<div class="paragraph">
+<p>Once you have it on your target system, mount it to <code>/mnt</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mount -o ro,loop MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64.iso /mnt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, gather all the needed dependencies for the install script</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install perl gcc-gfortran python36 tk lsof tcl tcsh pkgconf-pkg-config pciutils</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, run the install script itself</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/mnt/mlnxofedinstall</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once that has finished installing, restart the <code>openibd</code> service</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/etc/init.d/openibd restart</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verifying_installation"><a class="anchor" href="#_verifying_installation"></a>Verifying Installation</h3>
+<div class="paragraph">
+<p>Install the Infiniband Diagnostics utility package</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install infiniband-diags</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make sure all the right modules are loaded with <code>lsmod</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# lsmod | grep -P "(ib_|_ib|mlx|rdma)"
+rdma_ucm               32768  0
+rdma_cm               118784  1 rdma_ucm
+iw_cm                  53248  1 rdma_cm
+ib_ipoib              151552  0
+ib_cm                  57344  2 rdma_cm,ib_ipoib
+ib_umad                28672  0
+mlx5_ib               430080  0
+mlx5_core            1789952  1 mlx5_ib
+mlxdevm               176128  1 mlx5_core
+ib_uverbs             151552  2 rdma_ucm,mlx5_ib
+ib_core               421888  8 rdma_cm,ib_ipoib,iw_cm,ib_umad,rdma_ucm,ib_uverbs,mlx5_ib,ib_cm
+mlx_compat             16384  11 rdma_cm,ib_ipoib,mlxdevm,iw_cm,ib_umad,ib_core,rdma_ucm,ib_uverbs,mlx5_ib,ib_cm,mlx5_core
+psample                20480  1 mlx5_core
+mlxfw                  28672  1 mlx5_core
+tls                   102400  1 mlx5_core
+pci_hyperv_intf        16384  1 mlx5_core
+nft_fib_inet           16384  1
+nft_fib_ipv4           16384  1 nft_fib_inet
+nft_fib_ipv6           16384  1 nft_fib_inet
+nft_fib                16384  3 nft_fib_ipv6,nft_fib_ipv4,nft_fib_inet
+nf_tables             180224  235 nft_ct,nft_reject_inet,nft_fib_ipv6,nft_fib_ipv4,nft_chain_nat,nf_tables_set,nft_reject,nft_fib,nft_fib_inet</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run <code>ibstat</code> to view local card info</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# ibstat
+CA 'mlx5_0'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.35.2000
+	Hardware version: 0
+	Node GUID: 0x9440c9ffffb33b60
+	System image GUID: 0x9440c9ffffb33b60
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 100
+		Base lid: 8
+		LMC: 0
+		SM lid: 1
+		Capability mask: 0xa659e848
+		Port GUID: 0x9440c9ffffb33b60
+		Link layer: InfiniBand
+CA 'mlx5_1'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.35.2000
+	Hardware version: 0
+	Node GUID: 0x9440c9ffff88dd98
+	System image GUID: 0x9440c9ffff88dd98
+	Port 1:
+		State: Down
+		Physical state: Disabled
+		Rate: 10
+		Base lid: 65535
+		LMC: 0
+		SM lid: 0
+		Capability mask: 0xa659e848
+		Port GUID: 0x9440c9ffff88dd98
+		Link layer: InfiniBand</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we can see 2 single-port CX-6 cards, one that&#8217;s disconnected (<code>mlx5_1</code>) and doesn&#8217;t have anything plugged in, and one that is fully
+connected (<code>mlx5_0</code>) to the InfiniBand switch. We can also see the Local ID (LID) of the port, <code>8</code>, and the Subnet Manager (SM) LID of <code>1</code>.</p>
+</div>
+<div class="paragraph">
+<p>Next, we can run <code>iblinkinfo</code> to view information about the whole InfiniBand fabric. Note our own node, <code>mawenzi-06</code>, at the bottom.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# iblinkinfo
+CA: mawenzi-05 mlx5_0:
+      0x9440c9ffffb33bdc      7    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    9[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-07 mlx5_0:
+      0x9440c9ffffb32bd4      6    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3   13[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-01 mlx5_0:
+      0x9440c9ffffb34bd0      1    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    1[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-04 mlx5_0:
+      0x9440c9ffffb31bc4      5    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    7[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-03 mlx5_0:
+      0x9440c9ffffb35b44      2    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    5[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-02 mlx5_0:
+      0x9440c9ffffb34bf4      4    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    3[  ] "SwitchIB Mellanox Technologies" ( )
+Switch: 0x248a07030074dd50 SwitchIB Mellanox Technologies:
+           3    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       1    1[  ] "mawenzi-01 mlx5_0" ( )
+           3    2[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    3[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       4    1[  ] "mawenzi-02 mlx5_0" ( )
+           3    4[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    5[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       2    1[  ] "mawenzi-03 mlx5_0" ( )
+           3    6[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    7[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       5    1[  ] "mawenzi-04 mlx5_0" ( )
+           3    8[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    9[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       7    1[  ] "mawenzi-05 mlx5_0" ( )
+           3   10[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   11[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       8    1[  ] "mawenzi-06 HCA-1" ( )
+           3   12[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   13[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       6    1[  ] "mawenzi-07 mlx5_0" ( )
+           3   14[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   15[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   16[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   17[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   18[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   19[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   20[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   21[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   22[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   23[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   24[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   25[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   26[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   27[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   28[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   29[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   30[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   31[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   32[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   33[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   34[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   35[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   36[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+CA: mawenzi-06 HCA-1:
+      0x9440c9ffffb33b60      8    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3   11[  ] "SwitchIB Mellanox Technologies" ( )</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Refer to most <a href="#_infiniband_utilities">InfiniBand utilities</a> or <a href="#_utilities">MOFED utilities</a> for other diagnostic utilities.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_card_configuration"><a class="anchor" href="#_card_configuration"></a>Card Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we&#8217;ll be using a Mellanox ConnectX-6 card for this set of examples. Make sure that you&#8217;ve <a href="#_installation">installed MOFED</a> and have loaded all the required modules.</p>
+</div>
+<div class="sect2">
+<h3 id="_enable_card_on_boot"><a class="anchor" href="#_enable_card_on_boot"></a>Enable Card on Boot</h3>
+<div class="paragraph">
+<p>Edit <code>/etc/sysconfig/network-scripts/ifcfg-ib0</code>, enabling <code>ONBOOT</code> and disabling DHCP as boot protocol</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sed -i -e 's/ONBOOT=no/ONBOOT=yes/g' -e 's/BOOTPROTO=dhcp/BOOTPROTO=none/g' /etc/sysconfig/network-scripts/ifcfg-ib0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, <code>reboot</code> the node.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_update_firmware"><a class="anchor" href="#_update_firmware"></a>Update Firmware</h3>
+<div class="paragraph">
+<p>Find PCI ID using <code>lspci</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# lspci | grep Mellanox
+03:00.0 Infiniband controller: Mellanox Technologies MT28908 Family [ConnectX-6]
+87:00.0 Infiniband controller: Mellanox Technologies MT28908 Family [ConnectX-6]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>03:00.0</code> and <code>87:00.0</code> are the PCI device names of the two cards we have on the system.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hpe_branded_firmware_updates"><a class="anchor" href="#_hpe_branded_firmware_updates"></a>HPE-Branded Firmware Updates</h3>
+<div class="paragraph">
+<p>Check if the cards are HPE-branded, using <code>lspci</code> in verbose mode with selected device.
+Under <code>Vital Product Data</code>, note the entry: <code>Product Name: HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter</code>. This means that we can&#8217;t do a firmware update using generic files downloaded from Mellanox website; instead we&#8217;ll
+have to use ones from HPE. Use the product info to find the right fabric firmware image here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://hpc-fabrics-home.in.rdlabs.hpecorp.net/mellanox.htm#InfiniBand%20HCA">HPC Fabrics Mellanox InfiniBand</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Ctrl+F for the <code>Part number: P24250-001</code> that comes from the following <code>lspci</code> output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 ~]# lspci -vv -s 85:00.0
+85:00.0 Infiniband controller: Mellanox Technologies MT28908 Family [ConnectX-6]
+	Subsystem: Mellanox Technologies Device 0068
+	Physical Slot: 1
+	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx+
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast &gt;TAbort- &lt;TAbort- &lt;MAbort- &gt;SERR- &lt;PERR- INTx-
+	Latency: 0, Cache Line Size: 64 bytes
+	Interrupt: pin A routed to IRQ 157
+	NUMA node: 0
+	IOMMU group: 28
+	Region 0: Memory at ac000000 (64-bit, prefetchable) [size=32M]
+	Expansion ROM at ab400000 [virtual] [disabled] [size=1M]
+	Capabilities: [60] Express (v2) Endpoint, MSI 00
+		DevCap:	MaxPayload 512 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+			ExtTag+ AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 75.000W
+		DevCtl:	CorrErr- NonFatalErr+ FatalErr+ UnsupReq-
+			RlxdOrd+ ExtTag+ PhantFunc- AuxPwr- NoSnoop+ FLReset-
+			MaxPayload 512 bytes, MaxReadReq 4096 bytes
+		DevSta:	CorrErr+ NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-
+		LnkCap:	Port #0, Speed 16GT/s, Width x16, ASPM not supported
+			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+		LnkSta:	Speed 16GT/s (ok), Width x16 (ok)
+			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+		DevCap2: Completion Timeout: Range ABC, TimeoutDis+ NROPrPrP- LTR-
+			 10BitTagComp+ 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+			 FRS- TPHComp- ExtTPHComp-
+			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
+			 AtomicOpsCtl: ReqEn+
+		LnkCap2: Supported Link Speeds: 2.5-16GT/s, Crosslink- Retimer+ 2Retimers+ DRS-
+		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+			 Compliance De-emphasis: -6dB
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+ EqualizationPhase1+
+			 EqualizationPhase2+ EqualizationPhase3+ LinkEqualizationRequest-
+			 Retimer- 2Retimers- CrosslinkRes: unsupported
+	Capabilities: [48] Vital Product Data
+		Product Name: HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+		Read-only fields:
+			[PN] Part number: P24250-001
+			[EC] Engineering changes: A5
+			[V2] Vendor specific: P24250-001
+			[SN] Serial number: IL203002KT
+			[V3] Vendor specific: 60c190dc0ccdea1180009440c9b31bc4
+			[VA] Vendor specific: MLX:MN=MLNX:CSKU=V2:UUID=V3:PCI=V0:MODL=CX653105A
+			[V0] Vendor specific: PCIeGen4 x16
+			[VU] Vendor specific: IL203002KTMLNXS0D0F0
+			[RV] Reserved: checksum good, 1 byte(s) reserved
+		End
+	Capabilities: [9c] MSI-X: Enable+ Count=64 Masked-
+		Vector table: BAR=0 offset=00002000
+		PBA: BAR=0 offset=00003000
+	Capabilities: [c0] Vendor Specific Information: Len=18 &lt;?&gt;
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0-,D1-,D2-,D3hot-,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [100 v1] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP- SDES- TLP+ FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC+ UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		CEMsk:	RxErr+ BadTLP+ BadDLLP+ Rollover+ Timeout+ AdvNonFatalErr+
+		AERCap:	First Error Pointer: 08, ECRCGenCap+ ECRCGenEn+ ECRCChkCap+ ECRCChkEn+
+			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+	Capabilities: [150 v1] Alternative Routing-ID Interpretation (ARI)
+		ARICap:	MFVC- ACS-, Next Function: 0
+		ARICtl:	MFVC- ACS-, Function Group: 0
+	Capabilities: [1c0 v1] Secondary PCI Express
+		LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+		LaneErrStat: 0
+	Capabilities: [320 v1] Lane Margining at the Receiver &lt;?&gt;
+	Capabilities: [370 v1] Physical Layer 16.0 GT/s &lt;?&gt;
+	Capabilities: [420 v1] Data Link Feature &lt;?&gt;
+	Kernel driver in use: mlx5_core
+	Kernel modules: mlx5_core</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Go to the <em>Firmware</em> page, track down the latest GA directory, and get the <code>.bin</code> firmware file. <a href="http://15.213.147.156/HPC_Fabric/Mellanox/Mellanox%20HDR/HPE%20InfiniBand%20HDR_Ethernet%20200Gb%201-port%20MCX653105A-HDAT%20QSFP56%20x16%20Adapter%20P23664-B21%20(Satima%20II-1P)/20.37.1700%20GA/">Example</a>.
+Once you have a file like <code>fw-ConnectX6-rel-20_37_1700-MCX653105A-HDA_HPE_Ax-UEFI-14.30.13-FlexBoot-3.7.102.signed.bin</code> in place
+in the current working directory, run <code>mlxfwmanager</code>. This will detect any cards and available firmware updates:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 ~]# mlxfwmanager
+Querying Mellanox devices firmware ...
+
+Device #1:
+----------
+
+  Device Type:      ConnectX6
+  Part Number:      MCX653105A-HDA_HPE_Ax
+  Description:      HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+  PSID:             MT_0000000451
+  PCI Device Name:  0000:85:00.0
+  Base GUID:        9440c9ffffb31bc4
+  Versions:         Current        Available
+     FW             20.35.1012     20.37.1700
+     PXE            3.6.0804       3.7.0102
+     UEFI           14.28.0015     14.30.0013
+
+  Status:           Update required
+
+---------
+Found 1 device(s) requiring firmware update. Please use -u flag to perform the update.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run <code>mlxfwmanager -u</code> in the directory with the <code>.bin</code> firmware image file to update the card(s):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 ~]# mlxfwmanager -u
+Querying Mellanox devices firmware ...
+
+Device #1:
+----------
+
+  Device Type:      ConnectX6
+  Part Number:      MCX653105A-HDA_HPE_Ax
+  Description:      HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+  PSID:             MT_0000000451
+  PCI Device Name:  0000:85:00.0
+  Base GUID:        9440c9ffffb31bc4
+  Versions:         Current        Available
+     FW             20.35.1012     20.37.1700
+     PXE            3.6.0804       3.7.0102
+     UEFI           14.28.0015     14.30.0013
+
+  Status:           Update required
+
+---------
+Found 1 device(s) requiring firmware update...
+
+Perform FW update? [y/N]: y
+Device #1: Updating FW ...
+FSMST_INITIALIZE -   OK
+Writing Boot image component -   OK
+Done
+
+Restart needed for updates to take effect.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Reboot once the update has succeeded.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_infiniband_utilities"><a class="anchor" href="#_infiniband_utilities"></a>InfiniBand Utilities</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You may need to <code>modprobe ib_umad</code> before using some of these tools.</p>
+</div>
+<div class="paragraph">
+<p><code>iblinkinfo</code> will show info about <em>all</em> of the links on the fabric. Local IDs (LIDs), speeds, etc.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Comes from the <code>infiniband-diags</code> repo.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# iblinkinfo
+CA: mawenzi-06 HCA-1:
+      0x9440c9ffffb33b60      8    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3   11[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-05 mlx5_0:
+      0x9440c9ffffb33bdc      7    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    9[  ] "SwitchIB Mellanox Technologies" ( )
+CA: localhost mlx5_0:
+      0x9440c9ffffb31bc4      5    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    7[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-03 mlx5_0:
+      0x9440c9ffffb35b44      2    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    5[  ] "SwitchIB Mellanox Technologies" ( )
+CA: mawenzi-02 mlx5_0:
+      0x9440c9ffffb34bf4      4    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    3[  ] "SwitchIB Mellanox Technologies" ( )
+Switch: 0x248a07030074dd50 SwitchIB Mellanox Technologies:
+           3    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       1    1[  ] "mawenzi-01 mlx5_0" ( )
+           3    2[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    3[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       4    1[  ] "mawenzi-02 mlx5_0" ( )
+           3    4[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    5[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       2    1[  ] "mawenzi-03 mlx5_0" ( )
+           3    6[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    7[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       5    1[  ] "localhost mlx5_0" ( )
+           3    8[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3    9[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       7    1[  ] "mawenzi-05 mlx5_0" ( )
+           3   10[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   11[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       8    1[  ] "mawenzi-06 HCA-1" ( )
+           3   12[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   13[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   14[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   15[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   16[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   17[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   18[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   19[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   20[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   21[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   22[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   23[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   24[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   25[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   26[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   27[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   28[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   29[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   30[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   31[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   32[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   33[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   34[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   35[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+           3   36[  ] ==(                Down/ Polling)==&gt;             [  ] "" ( )
+CA: mawenzi-01 mlx5_0:
+      0x9440c9ffffb34bd0      1    1[  ] ==( 4X      25.78125 Gbps Active/  LinkUp)==&gt;       3    1[  ] "SwitchIB Mellanox Technologies" ( )</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ibswitches</code>: Shows information about the InfiniBand switches on the fabric</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Comes from the <code>infiniband-diags</code> repo.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# ibswitches
+Switch	: 0x248a07030074dd50 ports 36 "SwitchIB Mellanox Technologies" base port 0 lid 3 lmc 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ibstat</code>: Shows information about the local InfiniBand devices, or rather NICs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# ibstat
+CA 'mlx5_0'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.37.1700
+	Hardware version: 0
+	Node GUID: 0x9440c9ffffb34bd0
+	System image GUID: 0x9440c9ffffb34bd0
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 100
+		Base lid: 1
+		LMC: 0
+		SM lid: 2
+		Capability mask: 0xa651e848
+		Port GUID: 0x9440c9ffffb34bd0
+		Link layer: InfiniBand
+CA 'mlx5_1'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.37.1700
+	Hardware version: 0
+	Node GUID: 0x9440c9ffffb35b4c
+	System image GUID: 0x9440c9ffffb35b4c
+	Port 1:
+		State: Down
+		Physical state: Disabled
+		Rate: 10
+		Base lid: 65535
+		LMC: 0
+		SM lid: 0
+		Capability mask: 0xa651e848
+		Port GUID: 0x9440c9ffffb35b4c
+		Link layer: InfiniBand</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tasks"><a class="anchor" href="#_tasks"></a>Tasks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Show information about a Mellanox card link</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# mlxlink -d mlx5_0
+
+Operational Info
+----------------
+State                           : Active
+Physical state                  : LinkUp
+Speed                           : IB-EDR
+Width                           : 4x
+FEC                             : Standard LL RS-FEC - RS(271,257)
+Loopback Mode                   : No Loopback
+Auto Negotiation                : ON
+
+Supported Info
+--------------
+Enabled Link Speed              : 0x00000027 (EDR,QDR,DDR,SDR)
+Supported Cable Speed           : 0x0000003f (EDR,FDR,FDR10,QDR,DDR,SDR)
+
+Troubleshooting Info
+--------------------
+Status Opcode                   : 0
+Group Opcode                    : N/A
+Recommendation                  : No issue was observed.
+
+Tool Information
+----------------
+Firmware Version                : 20.37.1700
+amBER Version                   : 2.02
+MFT Version                     : mft 4.21.0-102</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Query Mellanox HCA configuration</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# mlxconfig -d 87:00.0 query
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         87:00.0
+
+Configurations:                                      Next Boot
+         MEMIC_BAR_SIZE                              0
+         MEMIC_SIZE_LIMIT                            _256KB(1)
+         HOST_CHAINING_MODE                          DISABLED(0)
+         HOST_CHAINING_CACHE_DISABLE                 False(0)
+         HOST_CHAINING_DESCRIPTORS                   Array[0..7]
+         HOST_CHAINING_TOTAL_BUFFER_SIZE             Array[0..7]
+         FLEX_PARSER_PROFILE_ENABLE                  0
+         FLEX_IPV4_OVER_VXLAN_PORT                   0
+         ROCE_NEXT_PROTOCOL                          254
+         ESWITCH_HAIRPIN_DESCRIPTORS                 Array[0..7]
+         ESWITCH_HAIRPIN_TOT_BUFFER_SIZE             Array[0..7]
+         PF_BAR2_SIZE                                0
+         ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>View HCA link type (IB or ETH)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# mlxconfig -d 87:00.0 query | grep LINK_TYPE
+         LINK_TYPE_P1                                IB(1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Flip HCA from InfiniBand to Ethernet</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>IB</code> is <code>1</code>, <code>ETH</code> is <code>2</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">yes | mlxconfig -d 87:00.0 set LINK_TYPE_P1=2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use Mellanox Firmware Manager to query device firmware</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# mlxfwmanager
+Querying Mellanox devices firmware ...
+
+Device #1:
+----------
+
+  Device Type:      ConnectX6
+  Part Number:      MCX653105A-HDA_HPE_Ax
+  Description:      HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+  PSID:             MT_0000000451
+  PCI Device Name:  0000:03:00.0
+  Base GUID:        9440c9ffff88dd98
+  Versions:         Current        Available
+     FW             20.35.1012     N/A
+     PXE            3.6.0804       N/A
+     UEFI           14.28.0015     N/A
+
+  Status:           No matching image found
+
+Device #2:
+----------
+
+  Device Type:      ConnectX6
+  Part Number:      MCX653105A-HDA_HPE_Ax
+  Description:      HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+  PSID:             MT_0000000451
+  PCI Device Name:  0000:87:00.0
+  Base GUID:        9440c9ffffb33b60
+  Versions:         Current        Available
+     FW             20.35.1012     N/A
+     PXE            3.6.0804       N/A
+     UEFI           14.28.0015     N/A
+
+  Status:           No matching image found
+  ----</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setting_infiniband_device_static_ip_address"><a class="anchor" href="#_setting_infiniband_device_static_ip_address"></a>Setting InfiniBand Device Static IP Address</h3>
+<div class="paragraph">
+<p>Before you assign an IP address or edit the ONBOOT settings for the InfiniBand interfaces, they will show up like the <code>ib1</code> entry below in the <code>ip a</code> output.
+After you&#8217;ve assigned an IP address, netmask, and set the card to be enabled on boot it will show up like the <code>ib0</code> entry.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: ens10f0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 14:02:ec:da:9e:50 brd ff:ff:ff:ff:ff:ff
+    inet 10.214.133.192/21 brd 10.214.135.255 scope global dynamic noprefixroute ens10f0
+       valid_lft 70351sec preferred_lft 70351sec
+    inet6 fe80::1602:ecff:feda:9e50/64 scope link
+       valid_lft forever preferred_lft forever
+3: ens10f1: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether 14:02:ec:da:9e:51 brd ff:ff:ff:ff:ff:ff
+4: ib0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:94:40:c9:ff:ff:b3:3b:60 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 192.168.0.106/24 brd 192.168.0.255 scope global noprefixroute ib0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::9640:c9ff:ffb3:3b60/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+5: ib1: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 4092 qdisc mq state DOWN group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:94:40:c9:ff:ff:88:dd:98 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To do this, you need to make sure you have the <code>ib_ipoib</code> module installed and loaded, this handles the IP over InfiniBand protocol in the kernel.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">modprobe ib_ipoib</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want this module to be loaded on every boot by default:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo ib_ipoib &gt; /etc/modules-load.d/ipoib.conf</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, edit the <code>/etc/sysconfig/network-scripts/ifcfg-ib1</code> interface config script file. Before it should look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ib1
+# Generated by parse-kickstart
+TYPE="Infiniband"
+DEVICE="ib1"
+UUID="4707d11c-af1e-4981-9814-fb5d621de178"
+ONBOOT="no"
+BOOTPROTO="dhcp"
+IPV6INIT="yes"
+IPV6_AUTOCONF="yes"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the following fields:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ONBOOT=yes</code> : Enables the card on boot</p>
+</li>
+<li>
+<p><code>BOOTPROTO=none</code> : Tells the card not to use DHCP on boot, since we&#8217;re doing a static IP address assignment</p>
+</li>
+<li>
+<p><code>IPADDR=192.168.0.106</code> : The IP address you want the card to have. You may want to create a private subnet for this.</p>
+</li>
+<li>
+<p><code>NETMASK=255.255.255.0</code> : Netmask according the subnet the card is on.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example of what the <code>ib0</code> card network script file looks like from the above example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# cat /etc/sysconfig/network-scripts/ifcfg-ib0
+# Generated by parse-kickstart
+TYPE=InfiniBand
+DEVICE=ib0
+UUID=4819df4c-37ef-4aed-b6db-3c19a82c6201
+ONBOOT=yes
+BOOTPROTO=none
+IPADDR=192.168.0.106
+NETMASK=255.255.255.0
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+CONNECTED_MODE=no
+PROXY_METHOD=none
+BROWSER_ONLY=no
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+NAME="System ib0"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can set the IP address via <code>ip addr</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip addr add 192.168.0.103/24 dev ib0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then, enable the device using <code>ip link</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ip link set dev ib0 up</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

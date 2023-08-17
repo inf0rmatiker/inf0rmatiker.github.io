@@ -7,6 +7,10 @@
 
 === Using the Lustre Client Repo
 
+Here is where you can find all the publicly-available Lustre builds, for both server and client:
+
+* https://downloads.whamcloud.com/public/lustre/[Lustre Whamcloud Downloads]
+
 Here we'll be using Rocky Linux 8.6 as a base.
 
 First, set your HTTP/s proxy information in your environment so you can reach the greater internet:
@@ -568,9 +572,14 @@ You can view the PCC file by looking under the PCC path `/mnt/pcc`:
 
 == Client Benchmarks
 
+Preliminary experimental benchmarks involving both PCC and non-PCC Lustre clients by Abhinav Vemulapalli:
+
+* xref:docs-site:learning:attachment$lustre/lustre_pcc_findings.pdf[Lustre PCC Investigation and Findings]
+* xref:docs-site:learning:attachment$lustre/lustre_benchmarks.pdf[Lustre Benchmarking Notes]
+
 Talk by John Fragalla regarding Lustre benchmarking:
 
-* https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/0/2327/files/2014/03/Fragalla-Xyratex_Lustre_PerformanceTuning_Fragalla_0314.pdf[Fragalla - Lustre Performance Tuning]
+* https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/0/2327/files/2014/03/Fragalla-Xyratex_Lustre_PerformanceTuning_Fragalla_0314.pdf[John Fragalla - Lustre Performance Tuning]
 
 === Non-PCC Benchmarks
 

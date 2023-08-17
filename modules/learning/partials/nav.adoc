@@ -35,12 +35,9 @@
 * BMC Management
 ** xref:docs-site:learning:bmc-management/bmc-management.adoc[BMC Management]
 
-* GitHub
-** xref:docs-site:learning:github/github.adoc[GitHub]
+* Version Control
+** xref:docs-site:learning:version-control/git/git.adoc[Git]
+** xref:docs-site:learning:version-control/github/github.adoc[GitHub]
 
 * Algorithms
 ** xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]
-
-* Git
-** xref:docs-site:learning:git/configuration.adoc[Configuration]
-** xref:docs-site:learning:git/commands.adoc[Commands]

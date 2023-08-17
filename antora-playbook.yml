@@ -10,7 +10,7 @@ content:
       branches: [HEAD]
 ui:
   bundle:
-    url: ./ui-bundle.zip
+    url: https://github.com/inf0rmatiker/antora-site-ui/raw/master/build/ui-bundle.zip
     snapshot: true
   supplemental_files:
   - path: ui.yaml

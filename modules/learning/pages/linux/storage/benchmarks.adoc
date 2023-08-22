@@ -1,0 +1,155 @@
+= Storage Benchmarking
+
+:toc: auto
+:showtitle:
+
+This document covers persistent storage benchmarking tools and guides for both filesystems and physical drives.
+
+== dd
+
+Disk/Data Duplicator (dd) is a tool for copying raw data from one source to another and measuring performance.
+
+* https://linux.die.net/man/1/dd[dd Manpage]
+* https://www.baeldung.com/linux/dd-command[Baeldung - dd Command]
+
+Example: Copy 50GiB of zeroes, written in 4KiB blocks, to networked Lustre filesystem `/mnt/lustre/testfile`:
+
+[,console]
+----
+[root@mawenzi-06 fio]# dd if=/dev/zero of=/mnt/lustre/testfile bs=4k iflag=fullblock,count_bytes count=50G
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 48.2738 s, 1.1 GB/s
+----
+
+NOTE: Depending on your disk and filesystem speed, this may take a minute or so to complete.
+
+Example: Run the same benchmark as before, this time sending the output to the local ext4 filesystem under `/root/`:
+
+[,console]
+----
+[root@mawenzi-06 fio]# dd if=/dev/zero of=$HOME/testfile bs=4k iflag=fullblock,count_bytes count=50G
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 36.7742 s, 1.5 GB/s
+----
+
+See how the speed increased since we're just 
+
+== `fio`
+
+Flexible I/O (`fio`) is a benchmarking tool to simulate a given I/O workload, and measure metrics on the performance.
+
+* https://fio.readthedocs.io/en/latest/fio_doc.html[`fio` Docs]
+* https://github.com/axboe/fio[`fio` GitHub Repo]
+
+=== `fio` Installation
+
+Clone the Git repo:
+
+[,bash]
+----
+git clone https://github.com/axboe/fio.git
+----
+
+then, build the source and install:
+
+[,bash]
+----
+./configure
+make
+make install
+----
+
+Verify the installation:
+
+[,console]
+----
+[root@mawenzi-06 fio]# fio --version
+fio-3.35-116-gb311
+----
+
+=== `fio` Usage
+
+https://fio.readthedocs.io/en/latest/fio_doc.html#command-line-options[`fio` Command-Line Options]
+
+In our first example we'll test the read speed of our 8GiB `testfile`, with the following options:
+
+* `--name=benchmark1`: Call this benchmark `benchmark1`
+* `--rw=read`: We're doing a read benchmark, not write
+* `--size=8g`: Read 8GiB of the file.
+* `--blocksize=4096`: Read the file in 4096-byte blocks
+* `--direct=1`: Use non-buffered I/O, usually `O_DIRECT`. Instead of reading cached data from RAM, this forces direct disk access.
+* `--numjobs=16`: Spawn 16 independent threads or processes.
+
+[,bash]
+----
+fio --name=benchmark1 --filename=$HOME/benchmarks/testfile --rw=read --size=8g --blocksize=4096 --direct=1 --numjobs=16
+----
+
+Example:
+
+[,console]
+----
+[root@mawenzi-06 benchmarks]# fio --name benchmark1 --filename=$HOME/benchmarks/testfile --rw=read --size=8g --blocksize=4096 --direct=1 --numjobs=16
+benchmark1: (g=0): rw=read, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+fio-3.35-116-gb311
+Starting 16 processes
+Jobs: 12 (f=12): [_(2),R(5),_(1),R(4),_(1),R(3)][100.0%][r=600MiB/s][r=154k IOPS][eta 00m:00s]
+benchmark1: (groupid=0, jobs=1): err= 0: pid=86161: Mon Aug 21 15:55:15 2023
+  read: IOPS=12.7k, BW=49.6MiB/s (52.0MB/s)(8192MiB/165226msec)
+    clat (usec): min=31, max=536, avg=78.31, stdev=18.74
+     lat (usec): min=31, max=536, avg=78.37, stdev=18.74
+    clat percentiles (usec):
+     |  1.00th=[   64],  5.00th=[   65], 10.00th=[   65], 20.00th=[   67],
+     | 30.00th=[   67], 40.00th=[   68], 50.00th=[   71], 60.00th=[   81],
+     | 70.00th=[   82], 80.00th=[   84], 90.00th=[  101], 95.00th=[  116],
+     | 99.00th=[  153], 99.50th=[  167], 99.90th=[  208], 99.95th=[  229],
+     | 99.99th=[  265]
+   bw (  KiB/s): min=49760, max=52976, per=6.33%, avg=50800.87, stdev=471.92, samples=330
+   iops        : min=12440, max=13244, avg=12700.21, stdev=117.97, samples=330
+  lat (usec)   : 50=0.01%, 100=89.61%, 250=10.37%, 500=0.02%, 750=0.01%
+  cpu          : usr=0.92%, sys=4.80%, ctx=2097155, majf=0, minf=11
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=2097152,0,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+...
+...
+...
+...
+...
+...
+benchmark1: (groupid=0, jobs=1): err= 0: pid=86162: Mon Aug 21 15:55:15 2023
+  read: IOPS=12.7k, BW=49.5MiB/s (51.9MB/s)(8192MiB/165644msec)
+    clat (usec): min=29, max=509, avg=78.52, stdev=18.82
+     lat (usec): min=29, max=509, avg=78.58, stdev=18.82
+    clat percentiles (usec):
+     |  1.00th=[   64],  5.00th=[   65], 10.00th=[   66], 20.00th=[   67],
+     | 30.00th=[   68], 40.00th=[   68], 50.00th=[   71], 60.00th=[   81],
+     | 70.00th=[   82], 80.00th=[   84], 90.00th=[  101], 95.00th=[  116],
+     | 99.00th=[  155], 99.50th=[  169], 99.90th=[  210], 99.95th=[  229],
+     | 99.99th=[  262]
+   bw (  KiB/s): min=49400, max=52760, per=6.31%, avg=50673.21, stdev=515.47, samples=331
+   iops        : min=12350, max=13190, avg=12668.30, stdev=128.87, samples=331
+  lat (usec)   : 50=0.01%, 100=89.48%, 250=10.51%, 500=0.01%, 750=0.01%
+  cpu          : usr=0.90%, sys=4.67%, ctx=2097156, majf=0, minf=11
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+     issued rwts: total=2097152,0,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+   READ: bw=784MiB/s (822MB/s), 49.0MiB/s-49.6MiB/s (51.4MB/s-52.0MB/s), io=128GiB (137GB), run=165226-167263msec
+
+Disk stats (read/write):
+  nvme0n1: ios=33540245/3, sectors=268321960/19, merge=0/0, ticks=2523457/1, in_queue=2523457, util=100.00%
+----
+
+Here we can see that we go, on average, 822MB/s, roughly ~50MB/s per process.
+
+
+

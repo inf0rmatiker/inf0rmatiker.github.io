@@ -60,6 +60,7 @@ Kickstart Templates
 
 Example kickstart template:
 
+[,console]
 ----
 #version=RHEL8
 # Use graphical install

@@ -103,7 +103,8 @@ This describes the various modules of MLNX_OFED relations with the other Linux K
 
 === MOFED Installation
 
-* https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/[Linux Drivers]
+* https://linux.mellanox.com/public/repo/mlnx_ofed/[MOFED - Linux Repository]
+* https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/[MOFED - Download Wizard]
 * https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED[Installing MOFED]
 
 In this example we'll be installing MOFED for Rocky Linux 8.6.

@@ -585,7 +585,7 @@ Talk by John Fragalla regarding Lustre benchmarking:
 
 ==== dd
 
-https://linux.die.net/man/1/dd[dd Documentation]
+See xref:docs-site:learning:linux/storage/benchmarks.adoc#dd[dd documentation] for a better overview of this tool.
 
 Create a script `dd_benchmark.sh` with the following contents
 

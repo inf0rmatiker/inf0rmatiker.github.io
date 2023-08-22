@@ -1,0 +1,3 @@
+= Machine Learning
+
+Default template page for module to be replaced.

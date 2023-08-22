@@ -1,5 +1,8 @@
 = Linux Filesystem Management
 
+:toc: auto
+:showtitle:
+
 This document partains to default or generic filesystem operations. This does not include notes for high-performance object stores
 like Lustre, GPFS, DAOS, etc.
 
@@ -8,3 +11,60 @@ like Lustre, GPFS, DAOS, etc.
 ** xref:docs-site:learning:lustre/lustre-client.adoc[Lustre Client]
 ** xref:docs-site:learning:lustre/lustre-server.adoc[Lustre Server]
 ** xref:docs-site:learning:lustre/lustre-networking.adoc[Lustre Networking]
+
+== ext4 Filesystem
+
+This section covers common operations for creating and managing an ext4 filesystem. This is probably the most common filesystem you'll
+see in Linux, as it comes as default with most modern distributions, and is the underlying filesystem used by higher-level distributed
+filesystems like Lustre (when using `ldiskfs`).
+
+* https://opensource.com/article/17/5/introduction-ext4-filesystem[OpenSource - Introduction to EXT4 Filesystem]
+* https://en.wikipedia.org/wiki/Ext4[Wikipedia - ext4]
+
+=== Create ext4 Filesystem
+
+* https://linux.die.net/man/8/mkfs[`mkfs`]: Build a Linux filesystem
+** https://linux.die.net/man/8/mkfs.ext4[`mkfs.ext4`]: mke2fs - Create an ext2/ext3/ext4 filesystem
+
+This assumes you've already xref:docs-site:learning:linux/storage/drives.adoc[created a partition on a drive]. In our example
+we'll be using `/dev/nvme0n1p4`, a 100GiB partition on our NVMe drive.
+
+The simplest way to create an ext4 filesystem is by using `mkfs`:
+
+[,bash]
+----
+mkfs -t ext4 <partition>
+----
+
+Example:
+
+[,console]
+----
+[root@mawenzi-06 fio]# mkfs -t ext4 /dev/nvme0n1p4
+mke2fs 1.45.6 (20-Mar-2020)
+Discarding device blocks: done
+Creating filesystem with 26214400 4k blocks and 6553600 inodes
+Filesystem UUID: bbf80f17-5b33-4964-be8a-3c30e2c96e3c
+Superblock backups stored on blocks:
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+	4096000, 7962624, 11239424, 20480000, 23887872
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information: done
+----
+
+This formats the partition to be used as an ext4 filesystem. You'll now need to mount the partition so you can start using it.
+
+NOTE: `mkfs -t ext4` is just a wrapper/alias around the `mkfs.ext4` binary.
+
+=== Mount ext4 Filesystem
+
+Create a root directory for where you want to mount your ext4-formatted partition, then mount it there:
+
+[,bash]
+----
+mkdir $HOME/benchmarks
+mount -t ext4 /dev/nvme0n1p4 $HOME/benchmarks/
+----

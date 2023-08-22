@@ -2,6 +2,7 @@
 
 :toc: auto
 :showtitle:
+:source-highlighter: highlight.js
 
 Some references for compiling lustre:
 
@@ -403,4 +404,87 @@ Once it finishes, you should end up with all the RPMs and sources dumped into th
 /root/lustre-release/lustre-iokit-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
 ----
 
-== Compiling within Rocky 8.6 Docker Container
+== Compiling within a Rocky 8.6 Docker Container
+
+Create the following `Dockerfile`:
+
+[,dockerfile]
+----
+FROM rockylinux:8.6 AS rocky86
+
+# Switch out default 8.8 repos for archived 8.6 repos
+RUN rm -f /etc/yum.repos.d/*.repo
+COPY config/Rocky-86-Development.repo /etc/yum.repos.d/Rocky-86-Development.repo
+
+# Set up HPE proxy for DNF
+COPY config/dnf.conf /etc/dnf/dnf.conf
+
+# Install plugins-core so we can use things like dnf config-manager
+RUN dnf install -y dnf-plugins-core
+
+# Install Extra Packages for Enterprise Linux
+RUN dnf install -y epel-release
+
+# Pull in kernel-headers and kernel-devel packages as dependencies
+RUN dnf groupinstall -y "Development Tools"
+
+# Install dependencies needed to build Lustre client
+RUN dnf install -y     \
+    audit-libs-devel   \
+    bc                 \
+    binutils-devel     \
+    git                \
+    json-c-devel       \
+    kernel-abi-stablelists \
+    kernel-devel       \
+    kernel-debug-devel \
+    kernel-rpm-macros  \
+    libaio-devel       \
+    libattr-devel      \
+    libblkid-devel     \
+    libmount           \
+    libmount-devel     \
+    libnl3-devel       \
+    libselinux-devel   \
+    libssh-devel       \
+    libtirpc-devel     \
+    libuuid-devel      \
+    libyaml            \
+    libyaml-devel      \
+    llvm-toolset       \
+    pciutils-devel     \
+    ncurses-devel      \
+    openssl-devel      \
+    perl               \
+    perl-devel         \
+    python39           \
+    python3-devel      \
+    python3-docutils   \
+    redhat-lsb         \
+    texinfo            \
+    texinfo-tex
+
+# Update dnf
+RUN dnf update -y
+
+# Disable original default repos, enable new ones
+RUN dnf config-manager --disable appstream baseos extras
+RUN dnf config-manager --enable appstream86 baseos86 extras86 devel86 powertools86
+
+# Install Mellanox OFED
+COPY config/Mellanox_OFED.repo /etc/yum.repos.d/
+RUN dnf install -y mlnx-ofed-all
+
+WORKDIR /work
+
+# Clone lustre-release repo
+RUN https_proxy=http://proxy.houston.hpecorp.net:8080 git clone https://review.whamcloud.com/fs/lustre-release
+RUN cd lustre-release && sh autogen.sh && ./configure \
+    --disable-server \
+    --enable-client \
+    --with-linux=/usr/src/kernels/4.18.0-372.32.1.el8_6.x86_64 \
+    --with-o2ib=/usr/src/ofa_kernel/default
+RUN cd lustre-release && make rpms
+
+ENTRYPOINT ["/bin/bash"]
+----

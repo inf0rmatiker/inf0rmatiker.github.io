@@ -7,6 +7,19 @@
 
 == Interfaces
 
+=== List Ethernet Interfaces on Host
+
+Example:
+
+[,console]
+----
+[root@mawenzi-04 ~]# lspci | grep -i ethernet
+c6:00.0 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+c6:00.1 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+c6:00.2 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+c6:00.3 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+----
+
 === Bringing Interfaces Up/Down
 
 https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch05s02.html[Reference]

@@ -6,3 +6,7 @@ module:
 
 html:
 	npx antora --fetch antora-playbook.yml
+
+
+clean:
+	rm -rf build/

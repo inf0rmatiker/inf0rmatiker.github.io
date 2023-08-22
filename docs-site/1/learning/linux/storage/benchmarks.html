@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Git :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/version-control/git/git.html">
+    <title>Storage Benchmarking :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/storage/benchmarks.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -108,29 +108,29 @@
     <span class="nav-text">Linux</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="../rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/rpms.html">RPMs</a>
+    <a class="nav-link" href="../rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/tmux.html">Tmux</a>
+    <a class="nav-link" href="../tmux.html">Tmux</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="../networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="../networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/ssh.html">SSH</a>
+    <a class="nav-link" href="../networking/ssh.html">SSH</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/infiniband.html">InfiniBand</a>
+    <a class="nav-link" href="../networking/infiniband.html">InfiniBand</a>
   </li>
 </ul>
   </li>
@@ -138,14 +138,14 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/benchmarks.html">Benchmarks</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/drives.html">Drives</a>
+    <a class="nav-link" href="drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -182,11 +182,11 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Version Control</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="git.html">Git</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../github/github.html">GitHub</a>
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
   </li>
 </ul>
   </li>
@@ -245,8 +245,9 @@
   <ul>
     <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
-    <li>Version Control</li>
-    <li><a href="git.html">Git</a></li>
+    <li>Linux</li>
+    <li>Storage</li>
+    <li><a href="benchmarks.html">Benchmarks</a></li>
   </ul>
 </nav>
 </div>
@@ -255,152 +256,39 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Git</h1>
+<h1 class="page">Storage Benchmarking</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Git is a widely-used, open-source tool for managing versions of a project.</p>
+<p>This document covers persistent storage benchmarking tools and guides for both filesystems and physical drives.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dd"><a class="anchor" href="#_dd"></a>dd</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Disk/Data Duplicator (dd) is a tool for copying raw data from one source to another and measuring performance.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://git-scm.com/">Git Site</a></p>
+<p><a href="https://linux.die.net/man/1/dd">dd Manpage</a></p>
 </li>
 <li>
-<p><a href="https://git-scm.com/doc">Git Documentation and Reference Guides</a></p>
-</li>
-<li>
-<p><a href="https://en.wikipedia.org/wiki/Git">Wikipedia - Git</a></p>
+<p><a href="https://www.baeldung.com/linux/dd-command">Baeldung - dd Command</a></p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Get Started Installing Git</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_shell_aliases"><a class="anchor" href="#_shell_aliases"></a>Shell Aliases</h3>
-<div class="paragraph">
-<p>Add these aliases to your <code>.bashrc</code> or <code>.zshrc</code> to make life easier:</p>
+<p>Example: Copy 50GiB of zeroes, written in 4KiB blocks, to networked Lustre filesystem <code>/mnt/lustre/testfile</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Git
-alias clone="git clone"
-alias checkout="git checkout"
-alias update="git fetch &amp;&amp; git pull"
-alias push="git push"
-alias commit="git commit -a"
-alias add="git add"
-alias pull="git pull"
-alias status="git status"
-alias log="git log --all --decorate --oneline --graph"
-alias cherry-pick="git cherry-pick"
-export GITHUB_TOKEN="&lt;YOUR_GITHUB_ACCESS_TOKEN&gt;"
-export PAT=$GITHUB_TOKEN</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_set_global_git_user_nameemail"><a class="anchor" href="#_set_global_git_user_nameemail"></a>Set Global Git User Name/Email</h3>
-<div class="paragraph">
-<p><a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address#setting-your-commit-email-address-in-git">GitHub: Setting your commit email in Git</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git config --global user.name "FIRST_NAME LAST_NAME"
-git config --global user.email "MY_NAME@example.com"</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_git_commit_signing"><a class="anchor" href="#_git_commit_signing"></a>Git Commit Signing</h3>
-<div class="paragraph">
-<p>This section describes how to create a GPG key, and configure Git to use it to sign commits.</p>
-</div>
-<div class="sect3">
-<h4 id="_gpg_key_creation"><a class="anchor" href="#_gpg_key_creation"></a>GPG Key Creation</h4>
-<div class="paragraph">
-<p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">GitHub: Generating a new GPG key</a></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_configure_git_to_use_your_gpg_key"><a class="anchor" href="#_configure_git_to_use_your_gpg_key"></a>Configure Git to Use Your GPG Key</h4>
-<div class="paragraph">
-<p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">GitHub: Telling Git about your signing key</a></p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_commands"><a class="anchor" href="#_commands"></a>Commands</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Useful <code>git</code> commands for managing a repository.</p>
-</div>
-<div class="sect2">
-<h3 id="_sign_off_on_a_commit"><a class="anchor" href="#_sign_off_on_a_commit"></a>Sign-off on a Commit</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This is <em>different</em> from <em>signing</em> a commit.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><a href="https://volunteer.coscup.org/docs/en/dev/how-to-signoff/">COSCUP Volunteer Docs: How to Sign-off Commits</a></p>
-</div>
-<div class="paragraph">
-<p>Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Commit message.
-
-first_name last_name &lt;email_address&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For example,</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">Generate vendor dependencies at build-time
-
-* Remove vendor/ directory
-* Generate vendor/ during build
-* Gitignore vendor/ dir
-* Add go mod vendor to make build
-* Add go mod vendor to docker build
-* Use go mod download instead of vendor
-
-Signed-off-by: Caleb Carlson &lt;ccarlson355@gmail.com&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_delete_a_branch"><a class="anchor" href="#_delete_a_branch"></a>Delete a Branch</h3>
-<div class="paragraph">
-<p>Delete a local branch:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git branch --delete &lt;branchname&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 fio]# dd if=/dev/zero of=/mnt/lustre/testfile bs=4k iflag=fullblock,count_bytes count=50G
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 48.2738 s, 1.1 GB/s</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -410,82 +298,173 @@ Signed-off-by: Caleb Carlson &lt;ccarlson355@gmail.com&gt;</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Make sure you switch to another branch before doing this so you&#8217;re not stranded on a deleted branch.
+Depending on your disk and filesystem speed, this may take a minute or so to complete.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Example:</p>
+<p>Example: Run the same benchmark as before, this time sending the output to the local ext4 filesystem under <code>/root/</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(bugfix/SSM-4489) ✗ checkout master
-Switched to branch 'master'
-Your branch is up to date with 'origin/master'.
-➜  hpc-sp-kjplat-img git:(master) ✗ git branch --delete bugfix/SSM-4489
-warning: deleting branch 'bugfix/SSM-4489' that has been merged to
-         'refs/remotes/origin/bugfix/SSM-4489', but not yet merged to HEAD.
-Deleted branch bugfix/SSM-4489 (was 8d7abea).</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 fio]# dd if=/dev/zero of=$HOME/testfile bs=4k iflag=fullblock,count_bytes count=50G
+13107200+0 records in
+13107200+0 records out
+53687091200 bytes (54 GB, 50 GiB) copied, 36.7742 s, 1.5 GB/s</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Delete the remote branch:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git push origin --delete &lt;branchname&gt;</code></pre>
+<p>See how the speed increased since we&#8217;re just</p>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_fio"><a class="anchor" href="#_fio"></a><code>fio</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(master) ✗ git push origin --delete kjplat-634
-To github.hpe.com:hpe/hpc-sp-kjplat-img.git
- - [deleted]         kjplat-634</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can also use the GitHub repository web UI to delete the remote branch.</p>
+<p>Flexible I/O (<code>fio</code>) is a benchmarking tool to simulate a given I/O workload, and measure metrics on the performance.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../github/github.html#delete_a_branch" class="xref page">Delete a Remote Branch Using GitHub</a></p>
+<p><a href="https://fio.readthedocs.io/en/latest/fio_doc.html"><code>fio</code> Docs</a></p>
+</li>
+<li>
+<p><a href="https://github.com/axboe/fio"><code>fio</code> GitHub Repo</a></p>
 </li>
 </ul>
 </div>
+<div class="sect2">
+<h3 id="_fio_installation"><a class="anchor" href="#_fio_installation"></a><code>fio</code> Installation</h3>
+<div class="paragraph">
+<p>Clone the Git repo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/axboe/fio.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>then, build the source and install:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./configure
+make
+make install</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify the installation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 fio]# fio --version
+fio-3.35-116-gb311</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_push_repo_to_new_upstream"><a class="anchor" href="#_push_repo_to_new_upstream"></a>Push Repo to New Upstream</h3>
+<h3 id="_fio_usage"><a class="anchor" href="#_fio_usage"></a><code>fio</code> Usage</h3>
 <div class="paragraph">
-<p>If you&#8217;ve cloned out a repo from one source, like GitLab, and would like to push it to a blank GitHub repo,
-you can do so easily by adding an <code>upstream</code> remote to your Git workflow.</p>
+<p><a href="https://fio.readthedocs.io/en/latest/fio_doc.html#command-line-options"><code>fio</code> Command-Line Options</a></p>
 </div>
 <div class="paragraph">
-<p><a href="https://docs.gitlab.com/ee/user/project/repository/forking_workflow.html">Git Forking Workflow</a></p>
+<p>In our first example we&#8217;ll test the read speed of our 8GiB <code>testfile</code>, with the following options:</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
-<p>Add an upstream</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git remote add upstream git@github.com:inf0rmatiker/antora-site-ui.git</code></pre>
-</div>
-</div>
+<p><code>--name=benchmark1</code>: Call this benchmark <code>benchmark1</code></p>
 </li>
 <li>
-<p>Push your master or main branch to your new upstream</p>
+<p><code>--rw=read</code>: We&#8217;re doing a read benchmark, not write</p>
+</li>
+<li>
+<p><code>--size=8g</code>: Read 8GiB of the file.</p>
+</li>
+<li>
+<p><code>--blocksize=4096</code>: Read the file in 4096-byte blocks</p>
+</li>
+<li>
+<p><code>--direct=1</code>: Use non-buffered I/O, usually <code>O_DIRECT</code>. Instead of reading cached data from RAM, this forces direct disk access.</p>
+</li>
+<li>
+<p><code>--numjobs=16</code>: Spawn 16 independent threads or processes.</p>
+</li>
+</ul>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git push upstream master</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">fio --name=benchmark1 --filename=$HOME/benchmarks/testfile --rw=read --size=8g --blocksize=4096 --direct=1 --numjobs=16</code></pre>
 </div>
 </div>
-</li>
-</ol>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 benchmarks]# fio --name benchmark1 --filename=$HOME/benchmarks/testfile --rw=read --size=8g --blocksize=4096 --direct=1 --numjobs=16
+benchmark1: (g=0): rw=read, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=psync, iodepth=1
+...
+fio-3.35-116-gb311
+Starting 16 processes
+Jobs: 12 (f=12): [_(2),R(5),_(1),R(4),_(1),R(3)][100.0%][r=600MiB/s][r=154k IOPS][eta 00m:00s]
+benchmark1: (groupid=0, jobs=1): err= 0: pid=86161: Mon Aug 21 15:55:15 2023
+  read: IOPS=12.7k, BW=49.6MiB/s (52.0MB/s)(8192MiB/165226msec)
+    clat (usec): min=31, max=536, avg=78.31, stdev=18.74
+     lat (usec): min=31, max=536, avg=78.37, stdev=18.74
+    clat percentiles (usec):
+     |  1.00th=[   64],  5.00th=[   65], 10.00th=[   65], 20.00th=[   67],
+     | 30.00th=[   67], 40.00th=[   68], 50.00th=[   71], 60.00th=[   81],
+     | 70.00th=[   82], 80.00th=[   84], 90.00th=[  101], 95.00th=[  116],
+     | 99.00th=[  153], 99.50th=[  167], 99.90th=[  208], 99.95th=[  229],
+     | 99.99th=[  265]
+   bw (  KiB/s): min=49760, max=52976, per=6.33%, avg=50800.87, stdev=471.92, samples=330
+   iops        : min=12440, max=13244, avg=12700.21, stdev=117.97, samples=330
+  lat (usec)   : 50=0.01%, 100=89.61%, 250=10.37%, 500=0.02%, 750=0.01%
+  cpu          : usr=0.92%, sys=4.80%, ctx=2097155, majf=0, minf=11
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, &gt;=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%
+     issued rwts: total=2097152,0,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+...
+...
+...
+...
+...
+...
+benchmark1: (groupid=0, jobs=1): err= 0: pid=86162: Mon Aug 21 15:55:15 2023
+  read: IOPS=12.7k, BW=49.5MiB/s (51.9MB/s)(8192MiB/165644msec)
+    clat (usec): min=29, max=509, avg=78.52, stdev=18.82
+     lat (usec): min=29, max=509, avg=78.58, stdev=18.82
+    clat percentiles (usec):
+     |  1.00th=[   64],  5.00th=[   65], 10.00th=[   66], 20.00th=[   67],
+     | 30.00th=[   68], 40.00th=[   68], 50.00th=[   71], 60.00th=[   81],
+     | 70.00th=[   82], 80.00th=[   84], 90.00th=[  101], 95.00th=[  116],
+     | 99.00th=[  155], 99.50th=[  169], 99.90th=[  210], 99.95th=[  229],
+     | 99.99th=[  262]
+   bw (  KiB/s): min=49400, max=52760, per=6.31%, avg=50673.21, stdev=515.47, samples=331
+   iops        : min=12350, max=13190, avg=12668.30, stdev=128.87, samples=331
+  lat (usec)   : 50=0.01%, 100=89.48%, 250=10.51%, 500=0.01%, 750=0.01%
+  cpu          : usr=0.90%, sys=4.67%, ctx=2097156, majf=0, minf=11
+  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, &gt;=64=0.0%
+     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &gt;=64=0.0%
+     issued rwts: total=2097152,0,0,0 short=0,0,0,0 dropped=0,0,0,0
+     latency   : target=0, window=0, percentile=100.00%, depth=1
+
+Run status group 0 (all jobs):
+   READ: bw=784MiB/s (822MB/s), 49.0MiB/s-49.6MiB/s (51.4MB/s-52.0MB/s), io=128GiB (137GB), run=165226-167263msec
+
+Disk stats (read/write):
+  nvme0n1: ios=33540245/3, sectors=268321960/19, merge=0/0, ticks=2523457/1, in_queue=2523457, util=100.00%</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we can see that we go, on average, 822MB/s, roughly ~50MB/s per process.</p>
 </div>
 </div>
 </div>

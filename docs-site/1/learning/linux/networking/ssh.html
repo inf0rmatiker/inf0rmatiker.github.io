@@ -139,6 +139,12 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../storage/drives.html">Drives</a>
   </li>
 </ul>
@@ -190,6 +196,18 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
   </li>
 </ul>
   </li>
@@ -259,6 +277,40 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Create or edit <code>~/.ssh/config</code></p>
+</div>
+<div class="sect2">
+<h3 id="_create_new_ssh_key"><a class="anchor" href="#_create_new_ssh_key"></a>Create New SSH Key</h3>
+<div class="paragraph">
+<p><a href="https://www.unixtutorial.org/how-to-generate-ed25519-ssh-key/">How to Generate an ED25519 SSH Key</a></p>
+</div>
+<div class="paragraph">
+<p>Using <code>ssh-keygen</code>, this creates a key of type ED25519 with the comment "<a href="mailto:caleb.carlson@hpe.com">caleb.carlson@hpe.com</a>"</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 ~]# ssh-keygen -t ed25519 -C "caleb.carlson@hpe.net"
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/root/.ssh/id_ed25519): /root/.ssh/caleb_id_ed25519
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/caleb_id_ed25519.
+Your public key has been saved in /root/.ssh/caleb_id_ed25519.pub.
+The key fingerprint is:
+SHA256:lcDVKRifBA8/kqXOEilbUjovBtX5stABHSuXtOLBjJ0 caleb.carlson@hpe.net
+The key's randomart image is:
++--[ED25519 256]--+
+|    o+++==+. .   |
+|   * ===o@.oo    |
+|  o E.Oo+ O.     |
+|   o.%o+.o .     |
+|    =.ooS        |
+|   . ...         |
+|                 |
+|                 |
+|                 |
++----[SHA256]-----+</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_github"><a class="anchor" href="#_github"></a>GitHub</h3>

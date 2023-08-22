@@ -3,11 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Git Commands :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/git/commands.html">
+    <title>Machine Learning :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/machine-learning/machine-learning.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
-    <script>var uiRootPath = '../../../../_'</script>
   </head>
   <body class="article">
 <header class="header">
@@ -19,6 +18,11 @@
         <span></span>
         <span></span>
       </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
     </div>
   </nav>
 </header>
@@ -135,6 +139,12 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
   </li>
 </ul>
@@ -170,10 +180,13 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">GitHub</span>
+    <span class="nav-text">Version Control</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../github/github.html">GitHub</a>
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
   </li>
 </ul>
   </li>
@@ -188,13 +201,13 @@
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Git</span>
+    <span class="nav-text">Machine Learning</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="configuration.html">Configuration</a>
-  </li>
   <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="commands.html">Commands</a>
+    <a class="nav-link" href="machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="determinedai.html">Determined AI</a>
   </li>
 </ul>
   </li>
@@ -232,8 +245,8 @@
   <ul>
     <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
-    <li>Git</li>
-    <li><a href="commands.html">Commands</a></li>
+    <li>Machine Learning</li>
+    <li><a href="machine-learning.html">Machine Learning</a></li>
   </ul>
 </nav>
 </div>
@@ -242,127 +255,9 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Git Commands</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Machine Learning</h1>
 <div class="paragraph">
-<p>Useful <code>git</code> commands for managing a repository.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sign_off_on_a_commit"><a class="anchor" href="#_sign_off_on_a_commit"></a>Sign-off on a Commit</h2>
-<div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This is <em>different</em> from <em>signing</em> a commit.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p><a href="https://volunteer.coscup.org/docs/en/dev/how-to-signoff/">COSCUP Volunteer Docs: How to Sign-off Commits</a></p>
-</div>
-<div class="paragraph">
-<p>Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Commit message.
-
-first_name last_name &lt;email_address&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For example,</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">Generate vendor dependencies at build-time
-
-* Remove vendor/ directory
-* Generate vendor/ during build
-* Gitignore vendor/ dir
-* Add go mod vendor to make build
-* Add go mod vendor to docker build
-* Use go mod download instead of vendor
-
-Signed-off-by: Caleb Carlson &lt;ccarlson355@gmail.com&gt;</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_delete_a_branch"><a class="anchor" href="#_delete_a_branch"></a>Delete a Branch</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Delete a local branch:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git branch --delete &lt;branchname&gt;</code></pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Make sure you switch to another branch before doing this so you&#8217;re not stranded on a deleted branch.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(bugfix/SSM-4489) ✗ checkout master
-Switched to branch 'master'
-Your branch is up to date with 'origin/master'.
-➜  hpc-sp-kjplat-img git:(master) ✗ git branch --delete bugfix/SSM-4489
-warning: deleting branch 'bugfix/SSM-4489' that has been merged to
-         'refs/remotes/origin/bugfix/SSM-4489', but not yet merged to HEAD.
-Deleted branch bugfix/SSM-4489 (was 8d7abea).</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Delete the remote branch:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git push origin --delete &lt;branchname&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  hpc-sp-kjplat-img git:(master) ✗ git push origin --delete kjplat-634
-To github.hpe.com:hpe/hpc-sp-kjplat-img.git
- - [deleted]         kjplat-634</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can also use the GitHub repository web UI to delete the remote branch.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="../github/github.html#delete_a_branch" class="xref page">Delete a Remote Branch Using GitHub</a></p>
-</li>
-</ul>
-</div>
-</div>
+<p>Default template page for module to be replaced.</p>
 </div>
 </article>
   </div>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Determined AI :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/machine-learning/determinedai.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson - Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Caleb Carlson - Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Blog</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../blog/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Security</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../security/security.html">Security</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Caleb Carlson - Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Caleb Carlson - Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
+    <li>Learning</li>
+    <li>Machine Learning</li>
+    <li><a href="determinedai.html">Determined AI</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Determined AI</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page documents how to manage and use a Determined AI cluster for running experiments.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.determined.ai/latest/index.html">Determined AI</a></p>
+</li>
+<li>
+<p><a href="https://docs.determined.ai/latest/interfaces/cli-ug.html"><code>det</code> CLI</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installing_determined_cli"><a class="anchor" href="#_installing_determined_cli"></a>Installing Determined CLI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.determined.ai/latest/interfaces/cli-ug.html#installation">Determined - CLI Installation</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3.9 -m venv dvenv    # create virtual environment - only need to do once
+source dvenv/bin/activate  # connect to virtual environment - will do this every time
+pip install determined     # install cli client bits - only need to do once (unless changing versions)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check the Determined version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">(dvenv) [ccarlson@mlds-login ~]$ det version
+client:
+  version: 0.24.0
+master:
+  cluster_id: fcef5677-7415-4cbf-8d1d-a548cc140652
+  cluster_name: mlds-hou-det
+  master_id: 26ac5d72-6486-4069-96e2-270a72f9d606
+  sso_providers: null
+  telemetry:
+    enabled: false
+    otel_enabled: false
+    otel_endpoint: ''
+  version: 0.24.0
+master_address: 10.182.1.43</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the <code>DET_MASTER</code> environment variable for your shell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export DET_MASTER=&lt;master IP&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_login_to_determined"><a class="anchor" href="#_login_to_determined"></a>Login to Determined</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You&#8217;ll need to login to your Determined user to start using the cluster.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">det user login &lt;username&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;ll be prompted for your password, and will be logged in thereafter.</p>
+</div>
+<div class="paragraph">
+<p>You can logout using <code>det user logout</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_experiments"><a class="anchor" href="#_experiments"></a>Experiments</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use <code>det experiment list</code> to list all the experiments that your user has launched recently. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">(dvenv) [ccarlson@mlds-login ~]$ det experiment list
+   ID | Owner    | Name                      | Parent ID   | State     | Progress   | Started                  | Ended                    | Resource Pool
+------+----------+---------------------------+-------------+-----------+------------+--------------------------+--------------------------+-----------------
+ 2159 | ccarlson | mnist_pytorch_distributed |             | COMPLETED | 100.0%     | 2023-08-21 19:13:24+0000 | 2023-08-21 19:14:03+0000 | T4
+ 2160 | ccarlson | mnist_pytorch_distributed |             | COMPLETED | 100.0%     | 2023-08-21 19:17:04+0000 | 2023-08-21 19:17:25+0000 | T4
+ 2162 | ccarlson | mnist_pytorch_distributed |             | COMPLETED | 100.0%     | 2023-08-21 19:22:20+0000 | 2023-08-21 19:22:51+0000 | T4
+ 2163 | ccarlson | mnist_pytorch_distributed |             | COMPLETED | 100.0%     | 2023-08-21 19:23:21+0000 | 2023-08-21 19:23:51+0000 | T4
+ 2164 | ccarlson | mnist_pytorch_distributed |             | CANCELED  | 0.0%       | 2023-08-21 19:31:49+0000 | 2023-08-21 19:35:27+0000 | T4</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_workspaces"><a class="anchor" href="#_workspaces"></a>Workspaces</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>List the workspaces you&#8217;re a member of using <code>det workspace list</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">(dvenv) [ccarlson@mlds-login mnist_pytorch]$ det workspace list
+   ID | Name    |   # Projects | Agent Uid   | Agent Gid   | Agent User   | Agent Group   | Default Compute Pool   | Default Aux Pool
+------+---------+--------------+-------------+-------------+--------------+---------------+------------------------+--------------------
+   27 | Storage |            1 |             |             |              |               |                        |</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In our example above, we&#8217;re a member of the <code>Storage</code> workspace.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_projects"><a class="anchor" href="#_projects"></a>Projects</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>List the projects you&#8217;re a member of using <code>det project list &lt;workspace&gt;</code>, and providing the workspace name.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">(dvenv) [ccarlson@mlds-login mnist_pytorch]$ det project list storage
+   ID | Name            | Description   |   # Experiments |   # Active Experiments
+------+-----------------+---------------+-----------------+------------------------
+   57 | StorageProjects |               |               5 |                      0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In our example above, we&#8217;re a member of the <code>Storage</code> workspace, and have access to the <code>StorageProject</code> project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_your_first_experiment"><a class="anchor" href="#_run_your_first_experiment"></a>Run Your First Experiment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this short guide we&#8217;ll cover getting started running a basic PyTorch MNIST classification training/validation experiment
+on your distributed Determined cluster.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.determined.ai/latest/tutorials/pytorch-mnist-local-qs.html">Run Your First Experiment in Determined</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Where you have your CLI installed and your Python virtual environment activated, download the example MNIST experiment tarball,
+untar it, and move into the untarred directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">wget https://docs.determined.ai/latest/_downloads/61c6df286ba829cb9730a0407275ce50/mnist_pytorch.tgz
+tar -xzvf mnist_pytorch.tgz
+cd mnist_pytorch</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should have the following files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">adaptive.yaml
+const.yaml
+data.py
+dist_random.yaml
+distributed.yaml
+layers.py
+model_def.py
+README.md</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>distributed.yaml</code> is the distributed experiment configuration file. Out of the box, this is what&#8217;s in it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: mnist_pytorch_distributed
+data:
+  url: https://s3-us-west-2.amazonaws.com/determined-ai-test-data/pytorch_mnist.tar.gz
+hyperparameters:
+  learning_rate: 1.0
+  global_batch_size: 512
+  n_filters1: 32
+  n_filters2: 64
+  dropout1: 0.25
+  dropout2: 0.5
+resources:
+  slots_per_trial: 8
+searcher:
+  name: single
+  metric: validation_loss
+  max_length:
+      batches: 117  #60,000 training images with batch size 512 (batch size 64 per GPU)
+  smaller_is_better: true
+entrypoint: model_def:MNistTrial</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll want to make some changes to this in order to be able to actually run the experiment.</p>
+</div>
+<div class="paragraph">
+<p>Namely, the workspace and project will need to be specified in the configuration file, otherwise, we will not be able to submit the
+job to the master. Add these values to the end of the file</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">workspace: &lt;WorkspaceName&gt;
+project: &lt;ProjectName&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In our case, we&#8217;ll be using our <code>Storage</code> workspace and <code>StorageProject</code> project, so we&#8217;ll use the following YAML file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">name: mnist_pytorch_distributed
+data:
+  url: https://s3-us-west-2.amazonaws.com/determined-ai-test-data/pytorch_mnist.tar.gz
+hyperparameters:
+  learning_rate: 1.0
+  global_batch_size: 512
+  n_filters1: 32
+  n_filters2: 64
+  dropout1: 0.25
+  dropout2: 0.5
+resources:
+  slots_per_trial: 8
+searcher:
+  name: single
+  metric: validation_loss
+  max_length:
+      batches: 117  #60,000 training images with batch size 512 (batch size 64 per GPU)
+  smaller_is_better: true
+entrypoint: model_def:MNistTrial
+workspace: Storage
+project: StorageProjects</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can now create/submit the experiment to the cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">(dvenv) [ccarlson@mlds-login mnist_pytorch]$ det experiment create distributed.yaml .
+Preparing files to send to master... 9.5KB and 8 files
+Created experiment 2191</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Navigate to your project dashboard in a browser, and you should see your experiment:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/machine-learning/det_project_ui.png" alt="Determined Project UI">
+</div>
+</div>
+<div class="paragraph">
+<p>Click on your experiment and you should see details regarding validation loss, metrics, etc:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/machine-learning/det_experiment_1.png" alt="Determined Experiment 1">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_run_distributed_command_in_determined"><a class="anchor" href="#_run_distributed_command_in_determined"></a>Run Distributed Command in Determined</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This runs a pod with a default image specified by the master configuration, and runs the command on a specified set of nodes.</p>
+</div>
+<div class="paragraph">
+<p><code>det run cmd echo hello</code></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>This page was built using the Antora default UI.</p>
+  <p>The source code for this UI is licensed under the terms of the MPL-2.0 license.</p>
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

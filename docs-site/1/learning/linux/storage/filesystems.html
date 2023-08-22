@@ -139,6 +139,12 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="drives.html">Drives</a>
   </li>
 </ul>
@@ -193,6 +199,18 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
 </ul>
@@ -226,7 +244,10 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
-    <li><a href="filesystems.html">Linux Filesystem Management</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Storage</li>
+    <li><a href="filesystems.html">Filesystems</a></li>
   </ul>
 </nav>
 </div>
@@ -236,6 +257,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Linux Filesystem Management</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>This document partains to default or generic filesystem operations. This does not include notes for high-performance object stores
 like Lustre, GPFS, DAOS, etc.</p>
@@ -262,6 +285,104 @@ like Lustre, GPFS, DAOS, etc.</p>
 </div>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ext4_filesystem"><a class="anchor" href="#_ext4_filesystem"></a>ext4 Filesystem</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section covers common operations for creating and managing an ext4 filesystem. This is probably the most common filesystem you&#8217;ll
+see in Linux, as it comes as default with most modern distributions, and is the underlying filesystem used by higher-level distributed
+filesystems like Lustre (when using <code>ldiskfs</code>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://opensource.com/article/17/5/introduction-ext4-filesystem">OpenSource - Introduction to EXT4 Filesystem</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Ext4">Wikipedia - ext4</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_create_ext4_filesystem"><a class="anchor" href="#_create_ext4_filesystem"></a>Create ext4 Filesystem</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://linux.die.net/man/8/mkfs"><code>mkfs</code></a>: Build a Linux filesystem</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://linux.die.net/man/8/mkfs.ext4"><code>mkfs.ext4</code></a>: mke2fs - Create an ext2/ext3/ext4 filesystem</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This assumes you&#8217;ve already <a href="drives.html" class="xref page">created a partition on a drive</a>. In our example
+we&#8217;ll be using <code>/dev/nvme0n1p4</code>, a 100GiB partition on our NVMe drive.</p>
+</div>
+<div class="paragraph">
+<p>The simplest way to create an ext4 filesystem is by using <code>mkfs</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkfs -t ext4 &lt;partition&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 fio]# mkfs -t ext4 /dev/nvme0n1p4
+mke2fs 1.45.6 (20-Mar-2020)
+Discarding device blocks: done
+Creating filesystem with 26214400 4k blocks and 6553600 inodes
+Filesystem UUID: bbf80f17-5b33-4964-be8a-3c30e2c96e3c
+Superblock backups stored on blocks:
+	32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+	4096000, 7962624, 11239424, 20480000, 23887872
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information: done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This formats the partition to be used as an ext4 filesystem. You&#8217;ll now need to mount the partition so you can start using it.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<code>mkfs -t ext4</code> is just a wrapper/alias around the <code>mkfs.ext4</code> binary.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mount_ext4_filesystem"><a class="anchor" href="#_mount_ext4_filesystem"></a>Mount ext4 Filesystem</h3>
+<div class="paragraph">
+<p>Create a root directory for where you want to mount your ext4-formatted partition, then mount it there:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir $HOME/benchmarks
+mount -t ext4 /dev/nvme0n1p4 $HOME/benchmarks/</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>

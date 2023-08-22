@@ -139,6 +139,12 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
   </li>
 </ul>
@@ -190,6 +196,18 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
   </li>
 </ul>
   </li>
@@ -705,9 +723,92 @@ debug  kernels  mlnx-ofa_kernel-5.4  ofa_kernel  ofa_kernel-5.4</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_compiling_within_rocky_8_6_docker_container"><a class="anchor" href="#_compiling_within_rocky_8_6_docker_container"></a>Compiling within Rocky 8.6 Docker Container</h2>
+<h2 id="_compiling_within_a_rocky_8_6_docker_container"><a class="anchor" href="#_compiling_within_a_rocky_8_6_docker_container"></a>Compiling within a Rocky 8.6 Docker Container</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Create the following <code>Dockerfile</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM rockylinux:8.6 AS rocky86
 
+# Switch out default 8.8 repos for archived 8.6 repos
+RUN rm -f /etc/yum.repos.d/*.repo
+COPY config/Rocky-86-Development.repo /etc/yum.repos.d/Rocky-86-Development.repo
+
+# Set up HPE proxy for DNF
+COPY config/dnf.conf /etc/dnf/dnf.conf
+
+# Install plugins-core so we can use things like dnf config-manager
+RUN dnf install -y dnf-plugins-core
+
+# Install Extra Packages for Enterprise Linux
+RUN dnf install -y epel-release
+
+# Pull in kernel-headers and kernel-devel packages as dependencies
+RUN dnf groupinstall -y "Development Tools"
+
+# Install dependencies needed to build Lustre client
+RUN dnf install -y     \
+    audit-libs-devel   \
+    bc                 \
+    binutils-devel     \
+    git                \
+    json-c-devel       \
+    kernel-abi-stablelists \
+    kernel-devel       \
+    kernel-debug-devel \
+    kernel-rpm-macros  \
+    libaio-devel       \
+    libattr-devel      \
+    libblkid-devel     \
+    libmount           \
+    libmount-devel     \
+    libnl3-devel       \
+    libselinux-devel   \
+    libssh-devel       \
+    libtirpc-devel     \
+    libuuid-devel      \
+    libyaml            \
+    libyaml-devel      \
+    llvm-toolset       \
+    pciutils-devel     \
+    ncurses-devel      \
+    openssl-devel      \
+    perl               \
+    perl-devel         \
+    python39           \
+    python3-devel      \
+    python3-docutils   \
+    redhat-lsb         \
+    texinfo            \
+    texinfo-tex
+
+# Update dnf
+RUN dnf update -y
+
+# Disable original default repos, enable new ones
+RUN dnf config-manager --disable appstream baseos extras
+RUN dnf config-manager --enable appstream86 baseos86 extras86 devel86 powertools86
+
+# Install Mellanox OFED
+COPY config/Mellanox_OFED.repo /etc/yum.repos.d/
+RUN dnf install -y mlnx-ofed-all
+
+WORKDIR /work
+
+# Clone lustre-release repo
+RUN https_proxy=http://proxy.houston.hpecorp.net:8080 git clone https://review.whamcloud.com/fs/lustre-release
+RUN cd lustre-release &amp;&amp; sh autogen.sh &amp;&amp; ./configure \
+    --disable-server \
+    --enable-client \
+    --with-linux=/usr/src/kernels/4.18.0-372.32.1.el8_6.x86_64 \
+    --with-o2ib=/usr/src/ofa_kernel/default
+RUN cd lustre-release &amp;&amp; make rpms
+
+ENTRYPOINT ["/bin/bash"]</code></pre>
+</div>
+</div>
 </div>
 </div>
 </article>

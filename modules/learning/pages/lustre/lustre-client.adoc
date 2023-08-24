@@ -583,9 +583,9 @@ Talk by John Fragalla regarding Lustre benchmarking:
 
 === Non-PCC Benchmarks
 
-==== dd
+==== `dd`
 
-See xref:docs-site:learning:linux/storage/benchmarks.adoc#dd[dd documentation] for a better overview of this tool.
+See xref:docs-site:learning:linux/storage/benchmarks.adoc#dd[`dd` documentation] for a better overview of this tool.
 
 Create a script `dd_benchmark.sh` with the following contents
 
@@ -623,6 +623,13 @@ Running this should produce the following:
 53687091200 bytes (54 GB, 50 GiB) copied, 136.06 s, 395 MB/s
 ----
 
+==== `fio`
+
+[,bash]
+----
+fio --name benchmark1 --filename=/lus/aiholus1/disk/ccarlson/testfile --rw=read --size=128g --blocksize=1024k --ioengine=libaio --direct=1 --numjobs=1
+----
+
 ==== IOzone
 
 https://www.iozone.org/[IOZone Documentation]
@@ -653,3 +660,13 @@ IOR options
 * `-F`: File-per-process, instead of single shared file
 * `-C`: Client-side read caching, force each MPI process to read the data written by its neighboring node
 * `-e`: Issue an fsync() call immediately after all of the write()s return to force the dirty pages we just wrote to flush out to Lustre
+
+== Benchmarks
+
+* Watch IB interfaces for network load
+* I/O patterns from a Lustre client perspective
+** `lctl` RPC stats/information dig out of `lctl` in debug mode
+** Lustre's sweetspot is large streaming I/O, not great for small files
+* View how PCC affects this stuff; looking at local devices
+* Get Fragalla engaged on MLDS platform
+* Get lnet config updated for max interfaces

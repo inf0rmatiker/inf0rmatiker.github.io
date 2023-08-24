@@ -1,0 +1,75 @@
+= Linux User Management
+
+:toc: auto
+:showtitle:
+
+== Create a User
+
+Use `useradd` to create a user.
+
+* https://man7.org/linux/man-pages/man8/useradd.8.html[`useradd`]
+
+Example:
+
+[,bash]
+----
+useradd ctesdahl
+----
+
+Optionally, you can specify the shell used for that user upon creation:
+
+[,bash]
+----
+useradd --shell=/usr/bin/zsh ctesdahl
+----
+
+You can also specify which groups the user will be a part of:
+
+[,bash]
+----
+useradd --groups=docker ctesdahl
+----
+
+== Change or Set User Password
+
+From `root` account, you can set another user's password:
+
+[,bash]
+----
+passwd ctesdahl
+----
+
+If you're just wanting to change the password on the current account:
+
+[,bash]
+----
+passwd
+----
+
+== Add User to Sudoers
+
+Edit the `/etc/sudoers` file:
+
+[,bash]
+----
+visudo
+----
+
+You should see existing sudoers, including `root`:
+
+----
+##
+## User privilege specification
+##
+root ALL=(ALL) ALL
+tmorneau ALL=(ALL) ALL
+dmatthews ALL=(ALL) ALL
+mattheda ALL=(ALL) ALL
+ccarlson ALL=(ALL) ALL
+----
+
+Add an entry for the new user:
+
+----
+ctesdahl ALL=(ALL) ALL
+----

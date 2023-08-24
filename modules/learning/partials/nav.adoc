@@ -18,6 +18,7 @@
 ** xref:docs-site:learning:linux/rocky-install.adoc[Rocky Linux Install]
 ** xref:docs-site:learning:linux/rpms.adoc[RPMs]
 ** xref:docs-site:learning:linux/tmux.adoc[Tmux]
+** xref:docs-site:learning:linux/user-management.adoc[User Management]
 ** Networking
 *** xref:docs-site:learning:linux/networking/linux-networking.adoc[Linux]
 *** xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]

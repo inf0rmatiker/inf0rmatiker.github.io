@@ -94,3 +94,5 @@ Thumbs.db
 # Exclude sensitive HPE-only information from git repo
 modules/hpe
 
+# Ignore output HTML/PDF files from antoradocs builds
+build/

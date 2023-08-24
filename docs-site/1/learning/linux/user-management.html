@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Custom Resource Definitions (CRDs) :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/crds.html">
+    <title>Linux User Management :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/user-management.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -62,17 +62,17 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="crds.html">CRDs</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-api-resources.html">Kubernetes Resources</a>
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-install.html">Kubernetes Install</a>
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kubectl.html">kubectl</a>
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
   </li>
 </ul>
   </li>
@@ -108,32 +108,32 @@
     <span class="nav-text">Linux</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+    <a class="nav-link" href="rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
+    <a class="nav-link" href="tmux.html">Tmux</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/user-management.html">User Management</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="user-management.html">User Management</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+    <a class="nav-link" href="networking/ssh.html">SSH</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
+    <a class="nav-link" href="networking/infiniband.html">InfiniBand</a>
   </li>
 </ul>
   </li>
@@ -142,13 +142,13 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="storage/filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+    <a class="nav-link" href="storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -248,8 +248,8 @@
   <ul>
     <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
-    <li>Kubernetes</li>
-    <li><a href="crds.html">CRDs</a></li>
+    <li>Linux</li>
+    <li><a href="user-management.html">User Management</a></li>
   </ul>
 </nav>
 </div>
@@ -258,77 +258,99 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Custom Resource Definitions (CRDs)</h1>
-<div id="preamble">
+<h1 class="page">Linux User Management</h1>
+<div class="sect1">
+<h2 id="_create_a_user"><a class="anchor" href="#_create_a_user"></a>Create a User</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This page contains commonly used Kubernetes CRD definitions, templates, examples, and links to original API documentation.</p>
+<p>Use <code>useradd</code> to create a user.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://man7.org/linux/man-pages/man8/useradd.8.html"><code>useradd</code></a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd ctesdahl</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Optionally, you can specify the shell used for that user upon creation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --shell=/usr/bin/zsh ctesdahl</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also specify which groups the user will be a part of:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --groups=docker ctesdahl</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_etcdcluster"><a class="anchor" href="#_etcdcluster"></a>EtcdCluster</h2>
+<h2 id="_change_or_set_user_password"><a class="anchor" href="#_change_or_set_user_password"></a>Change or Set User Password</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/coreos/etcd-operator">GitHub: coreos/etcd-operator [ARCHIVED</a>]</p>
+<p>From <code>root</code> account, you can set another user&#8217;s password:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: etcd.database.coreos.com/v1beta2
-kind: EtcdCluster
-metadata:
-  annotations:
-    cray.io/service: ssm-base-management-deployment-group-manager
-    etcd.database.coreos.com/scope: clusterwide
-    meta.helm.sh/release-name: ssm-base-management-deployment-group-manager
-    meta.helm.sh/release-namespace: services
-  labels:
-    app.kubernetes.io/instance: ssm-base-management-deployment-group-manager
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ssm-base-management-deployment-group-manager-etcd
-    helm.sh/base-chart: cray-service-2.6.0
-    helm.sh/chart: ssm-base-management-deployment-group-manager-1.3.1
-  name: ssm-base-management-deployment-group-manager-etcd
-  namespace: services
-spec:
-  pod:
-    ClusterDomain: ""
-    affinity:
-      podAntiAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-        - labelSelector:
-            matchExpressions:
-            - key: etcd_cluster
-              operator: In
-              values:
-              - ssm-base-management-deployment-group-manager-etcd
-          topologyKey: kubernetes.io/hostname
-    annotations:
-      sidecar.istio.io/inject: "false"
-    busyboxImage: dtr.dev.cray.com/library/busybox:1.28.0-glibc
-    etcdEnv:
-    - name: ETCD_AUTO_COMPACTION_RETENTION
-      value: "1"
-    - name: ETCD_AUTO_COMPACTION_MODE
-      value: periodic
-    - name: ETCD_HEARTBEAT_INTERVAL
-      value: "4200"
-    - name: ETCD_ELECTION_TIMEOUT
-      value: "21000"
-    - name: ETCD_MAX_SNAPSHOTS
-      value: "5"
-    - name: ETCD_SNAPSHOT_COUNT
-      value: "10000"
-    persistentVolumeClaimSpec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 3Gi
-    resources: {}
-  repository: dtr.dev.cray.com/coreos/etcd
-  size: 3
-  version: 3.3.22</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd ctesdahl</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re just wanting to change the password on the current account:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_add_user_to_sudoers"><a class="anchor" href="#_add_user_to_sudoers"></a>Add User to Sudoers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Edit the <code>/etc/sudoers</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">visudo</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see existing sudoers, including <code>root</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">##
+## User privilege specification
+##
+root ALL=(ALL) ALL
+tmorneau ALL=(ALL) ALL
+dmatthews ALL=(ALL) ALL
+mattheda ALL=(ALL) ALL
+ccarlson ALL=(ALL) ALL</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add an entry for the new user:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">ctesdahl ALL=(ALL) ALL</code></pre>
 </div>
 </div>
 </div>

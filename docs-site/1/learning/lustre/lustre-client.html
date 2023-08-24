@@ -117,6 +117,9 @@
     <a class="nav-link" href="../linux/tmux.html">Tmux</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
@@ -961,9 +964,9 @@ file: /mnt/lustre/test2, type: readwrite, PCC file: /0002/0000/13aa/0000/0002/00
 <div class="sect2">
 <h3 id="_non_pcc_benchmarks"><a class="anchor" href="#_non_pcc_benchmarks"></a>Non-PCC Benchmarks</h3>
 <div class="sect3">
-<h4 id="_dd"><a class="anchor" href="#_dd"></a>dd</h4>
+<h4 id="_dd"><a class="anchor" href="#_dd"></a><code>dd</code></h4>
 <div class="paragraph">
-<p>See <a href="../linux/storage/benchmarks.html#dd" class="xref page">dd documentation</a> for a better overview of this tool.</p>
+<p>See <a href="../linux/storage/benchmarks.html#dd" class="xref page"><code>dd</code> documentation</a> for a better overview of this tool.</p>
 </div>
 <div class="paragraph">
 <p>Create a script <code>dd_benchmark.sh</code> with the following contents</p>
@@ -1002,6 +1005,14 @@ done</code></pre>
 13107200+0 records in
 13107200+0 records out
 53687091200 bytes (54 GB, 50 GiB) copied, 136.06 s, 395 MB/s</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fio"><a class="anchor" href="#_fio"></a><code>fio</code></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">fio --name benchmark1 --filename=/lus/aiholus1/disk/ccarlson/testfile --rw=read --size=128g --blocksize=1024k --ioengine=libaio --direct=1 --numjobs=1</code></pre>
 </div>
 </div>
 </div>
@@ -1072,6 +1083,40 @@ done</code></pre>
 </ul>
 </div>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_benchmarks"><a class="anchor" href="#_benchmarks"></a>Benchmarks</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Watch IB interfaces for network load</p>
+</li>
+<li>
+<p>I/O patterns from a Lustre client perspective</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>lctl</code> RPC stats/information dig out of <code>lctl</code> in debug mode</p>
+</li>
+<li>
+<p>Lustre&#8217;s sweetspot is large streaming I/O, not great for small files</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>View how PCC affects this stuff; looking at local devices</p>
+</li>
+<li>
+<p>Get Fragalla engaged on MLDS platform</p>
+</li>
+<li>
+<p>Get lnet config updated for max interfaces</p>
+</li>
+</ul>
 </div>
 </div>
 </div>

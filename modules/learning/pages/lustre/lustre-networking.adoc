@@ -16,6 +16,8 @@ Original Lustre documentation is linked below.
 
 == LNET Configuration
 
+* https://fast.dpdk.org/doc/perf/DPDK_19_08_Mellanox_NIC_AMD_performance_report.pdf[Mellanox - Optimizations]
+
 This section assumes you're using an already-configured Infiniband fabric with IP over InfiniBand (IPoIB).
 To see how to do this prerequisite step, view the xref:docs-site:learning:linux/networking/infiniband.adoc[InfiniBand Documentation].
 
@@ -59,3 +61,350 @@ net:
           interfaces:
               0: ib0
 ----
+
+=== Client LNET Optimizations
+
+* *Network Checksums*: These are used to protect against network corruption, but on a reliable, high-speed network like Slingshot or InfiniBand,
+there is little use for this. You'll want to disable this if it's not already. It's disabled (`0`) by default.
++
+[,bash]
+----
+lctl set_param osc.<filesystem_name>*.checksums=0
+----
+** You can check the checksum settings using the following example:
++
+[,console]
+----
+[ccarlson@n01 ~]$ sudo lctl get_param osc.aiholus1*.checksums
+osc.aiholus1-OST0000-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0001-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0002-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0003-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0004-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0005-osc-ffffa1584d9b1800.checksums=0
+----
+* *Max RPCs In-Flight*: This indicates the maximum number of remote procedural calls on the LNET. By default, this is `8`. For high-speed networks,
+increase this to `64`.
++
+[,bash]
+----
+lctl set_param mdc.<filesystem_name>*.max_rpcs_in_flight=64
+----
+** You can check the max RPCs in-flight using the following example:
++
+[,console]
+----
+[ccarlson@n01 ~]$ sudo lctl get_param osc.aiholus1*.max_rpcs_in_flight
+osc.aiholus1-OST0000-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0001-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0002-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0003-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0004-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0005-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+[ccarlson@n01 ~]$ sudo lctl get_param mdc.aiholus1*.max_rpcs_in_flight
+mdc.aiholus1-MDT0000-mdc-ffffa1584d9b1800.max_rpcs_in_flight=64
+mdc.aiholus1-MDT0001-mdc-ffffa1584d9b1800.max_rpcs_in_flight=64
+----
+* *Max Pages per RPC*: Defines the maximum RPC size sent from the client to the server. Default depends on Lustre version installed, but
+is around 256 (1MB) for Lustre 2.12, and 4096 (16MB) for Lustre 2.15. We'll want this at `1024`.
++
+[,bash]
+----
+lctl set_param osc.<filesystem_name>*.max_pages_per_rpc=1024
+lctl set_param mdc.<filesystem_name>*.max_pages_per_rpc=256
+----
+* *Max Dirty MB*: Defines the max amount of dirty data (MB) in client memory that hasn't yet been written, this can be increased based on the client's memory
+capabilities. Default is `2000`.
++
+[,bash]
+----
+lctl set_param osc.<filesystem_name>*.max_dirty_mb=2000
+lctl set_param mdc.<filesystem_name>*.max_dirty_mb=2000
+----
+* *Max Read-Ahead MB*: Defines max data that can be pre-fetched by the client if a sequential read is detected on a file. Default is `64MiB`. We'll want to set this to `512MiB`.
++
+[,bash]
+----
+lctl set_param llite.<filesystem_name>*.max_read_ahead_mb=512
+lctl set_param llite.<filesystem_name>*.max_read_ahead_per_file_mb=512
+----
+
+=== Delete LNET Network
+
+Example existing LNET configuration:
+
+[,console]
+----
+net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: tcp
+      local NI(s):
+        - nid: 10.10.5.1@tcp
+          status: up
+----
+
+Delete the `tcp` network:
+
+[,bash]
+----
+lnetctl net del --net tcp
+----
+
+=== Persist LNET Configuration Between Boots
+
+If you want your LNET configuration to persist after a reboot, you'll need to write it to a persistent file, `/etc/lnet.conf`.
+
+Export an existing LNET configuration to `/etc/lnet.conf`:
+
+[,bash]
+----
+lnetctl export >> /etc/lnet.conf
+----
+
+=== Multirail Configuration
+
+If you have multiple InfiniBand Channel Adapters, you'll want to configure LNET to use them in a multirail configuration.
+This example shows all four ConnectX-6 cards being used.
+An example of a multirail LNET configuration might look like the following:
+
+[,console]
+----
+[ccarlson@n01 ior-4.0.0rc1]$ sudo lnetctl net show
+net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: o2ib
+      local NI(s):
+        - nid: 10.10.5.1@o2ib
+          status: up
+          interfaces:
+              0: ib0
+        - nid: 10.10.5.21@o2ib
+          status: up
+          interfaces:
+              0: ib1
+        - nid: 10.10.5.41@o2ib
+          status: up
+          interfaces:
+              0: ib2
+        - nid: 10.10.5.61@o2ib
+          status: up
+          interfaces:
+              0: ib3
+----
+
+==== IB Device ARP Settings
+
+Multiple network interfaces on the same node may cause issues with the OS returning the wrong hardware address for a requested IP.
+Because `o2iblnd` uses IPoIB, we can get the wrong address, degrading performance.
+
+* https://wiki.lustre.org/LNet_Router_Config_Guide#ARP_flux_issue_for_MR_node[ARP Flux Issue for MR Node]
+
+Below is an example where we have four Mellanox InfiniBand ConnectX-6 cards on a system, each with their own IP address. We'll need to turn off ARP broadcasting on these:
+
+[,console]
+----
+[ccarlson@n01 ~]$ ip a | grep ib
+4: ib0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:d4:9a brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.1/16 brd 10.10.255.255 scope global noprefixroute ib0
+15: ib1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:74:66 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.21/16 brd 10.10.255.255 scope global noprefixroute ib1
+16: ib2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:74:2e brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.41/16 brd 10.10.255.255 scope global noprefixroute ib2
+17: ib3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:c4:7e brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.61/16 brd 10.10.255.255 scope global noprefixroute ib3
+----
+
+Use the following script to disable ARP broadcasting on all four cards:
+
+[,bash]
+----
+#!/bin/bash
+
+# Check we are running as root
+USER_ID=$(id -u)
+if [[ $USER_ID -ne 0 ]]; then
+  echo "Must run as root user"
+  exit 1
+fi
+
+SUBNET="10.10"
+SUBNET_MASK="16"
+IB0_IP="10.10.5.1"
+IB1_IP="10.10.5.21"
+IB2_IP="10.10.5.41"
+IB3_IP="10.10.5.61"
+
+#Setting ARP so it doesn't broadcast
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.ib0.arp_ignore=1
+sysctl -w net.ipv4.conf.ib0.arp_filter=0
+sysctl -w net.ipv4.conf.ib0.arp_announce=2
+sysctl -w net.ipv4.conf.ib0.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib1.arp_ignore=1
+sysctl -w net.ipv4.conf.ib1.arp_filter=0
+sysctl -w net.ipv4.conf.ib1.arp_announce=2
+sysctl -w net.ipv4.conf.ib1.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib2.arp_ignore=1
+sysctl -w net.ipv4.conf.ib2.arp_filter=0
+sysctl -w net.ipv4.conf.ib2.arp_announce=2
+sysctl -w net.ipv4.conf.ib2.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib3.arp_ignore=1
+sysctl -w net.ipv4.conf.ib3.arp_filter=0
+sysctl -w net.ipv4.conf.ib3.arp_announce=2
+sysctl -w net.ipv4.conf.ib3.rp_filter=0
+
+ip neigh flush dev ib0
+ip neigh flush dev ib1
+ip neigh flush dev ib2
+ip neigh flush dev ib3
+
+echo 200 ib0 >> /etc/iproute2/rt_tables
+echo 201 ib1 >> /etc/iproute2/rt_tables
+echo 202 ib2 >> /etc/iproute2/rt_tables
+echo 203 ib3 >> /etc/iproute2/rt_tables
+
+ip route add $SUBNET/$SUBNET_MASK dev ib0 proto kernel scope link src $IB0_IP table ib0
+ip route add $SUBNET/$SUBNET_MASK dev ib1 proto kernel scope link src $IB1_IP table ib1
+ip route add $SUBNET/$SUBNET_MASK dev ib2 proto kernel scope link src $IB2_IP table ib2
+ip route add $SUBNET/$SUBNET_MASK dev ib3 proto kernel scope link src $IB3_IP table ib3
+
+ip rule add from $IB0_IP table ib0
+ip rule add from $IB1_IP table ib1
+ip rule add from $IB2_IP table ib2
+ip rule add from $IB3_IP table ib3
+
+ip route flush cache
+----
+
+==== PCIe Relaxed Ordering
+
+If you're using multiple IB CAs in a multirail configuration, you'll need to set the PCI device ordering to relaxed instead of the default, which is strict. This "allows switches in the path between the Requester and Completer to reorder some transactions just received before others that were previously enqueued to reorder transactions" xref:references[[1\]]. Read more about PCI Relaxed Ordering mechanisms here:
+
+* https://learning.oreilly.com/library/view/pci-express-system/0321156307/0321156307_ch08lev1sec7.html#:~:text=The%20concept%20of%20Relaxed%20Ordering,others%20that%20were%20previously%20enqueued[PCI Express Relaxed Ordering]
+
+The following script can be run to set relaxed ordering on all discovered Mellanox devices using the Mellanox Software Tools (`mst`) devices.
+
+[,bash]
+----
+#!/bin/bash
+
+# Sets device ordering to relaxed for multirail InfiniBand.
+
+# Check we are running as root
+USER_ID=$(id -u)
+if [[ $USER_ID -ne 0 ]]; then
+  echo "Must run as root user"
+  exit 1
+fi
+
+# Start Mellanox Software Tools (MST)
+mst start
+
+# See what cards are available
+MST_DEVICES=$(find /dev/mst/ -name "*pciconf*" | sort)
+MADE_CHANGE=0
+for MST_DEVICE in $MST_DEVICES; do
+  echo "Checking $MST_DEVICE..."
+  ORDERING=$(mlxconfig -d $MST_DEVICE q | grep "PCI_WR_ORDERING" | xargs | awk '{print $2}')
+  echo "$MST_DEVICE PCI write ordering: $ORDERING"
+  if [[ $ORDERING == *"0"* ]]; then
+    echo "Ordering set to strict. Setting to relaxed..."
+    mlxconfig -y -d $MST_DEVICE s PCI_WR_ORDERING=1
+    MADE_CHANGE=1
+  else
+    echo "Ordering already set to relaxed. Skipping."
+  fi
+done
+
+[[ $MADE_CHANGE -eq 1 ]] && echo "Made changes to PCI device ordering. Reboot the system for them to take effect." || echo "No changes made."
+
+----
+
+Example output:
+
+[,console]
+----
+[ccarlson@n01 ~]$ sudo ./set_relaxed_ordering.sh
+[sudo] password for ccarlson:
+Starting MST (Mellanox Software Tools) driver set
+Loading MST PCI module - Success
+[warn] mst_pciconf is already loaded, skipping
+Create devices
+Unloading MST PCI module (unused) - Success
+Checking /dev/mst/mt4123_pciconf0...
+/dev/mst/mt4123_pciconf0 PCI write ordering: force_relax(1)
+Ordering already set to relaxed. Skipping.
+Checking /dev/mst/mt4123_pciconf1...
+/dev/mst/mt4123_pciconf1 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf1
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Checking /dev/mst/mt4123_pciconf2...
+/dev/mst/mt4123_pciconf2 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf2
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Checking /dev/mst/mt4123_pciconf3...
+/dev/mst/mt4123_pciconf3 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf3
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Made changes to PCI device ordering. Reboot the system for them to take effect.
+----
+
+== References
+
+[[references]]
+[1] T. Shanley, D. Anderson, R. Budruk, MindShare, Inc, _PCI Express System Architecture_, Addison-Wesley Professional, 2003. [E-book] Available: https://learning.oreilly.com/library/view/pci-express-system/0321156307/

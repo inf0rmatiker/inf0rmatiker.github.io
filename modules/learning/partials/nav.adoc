@@ -6,6 +6,7 @@
 ** xref:docs-site:learning:kubernetes/kubectl.adoc[kubectl]
 
 * Lustre
+** xref:docs-site:learning:lustre/benchmarks.adoc[Benchmarks]
 ** xref:docs-site:learning:lustre/compiling-lustre.adoc[Compiling Lustre]
 ** xref:docs-site:learning:lustre/lustre-client.adoc[Lustre Client]
 ** xref:docs-site:learning:lustre/lustre-server.adoc[Lustre Server]
@@ -15,7 +16,10 @@
 ** xref:docs-site:learning:security/security.adoc[Security]
 
 * Linux
-** xref:docs-site:learning:linux/rocky-install.adoc[Rocky Linux Install]
+
+** Installs
+*** xref:docs-site:learning:linux/installs/rocky-install.adoc[Rocky Linux Install]
+*** xref:docs-site:learning:linux/installs/opensuse-install.adoc[OpenSUSE Linux Install]
 ** xref:docs-site:learning:linux/rpms.adoc[RPMs]
 ** xref:docs-site:learning:linux/tmux.adoc[Tmux]
 ** xref:docs-site:learning:linux/user-management.adoc[User Management]

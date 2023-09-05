@@ -150,6 +150,3 @@ Disk stats (read/write):
 ----
 
 Here we can see that we go, on average, 822MB/s, roughly ~50MB/s per process.
-
-
-

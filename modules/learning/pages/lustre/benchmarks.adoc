@@ -1,0 +1,137 @@
+= Lustre Filesystem Benchmarks
+
+:toc: auto
+:showtitle:
+
+== FIO
+
+https://fio.readthedocs.io/en/latest/fio_doc.html[FIO Documentation]
+
+Usage:
+
+[,console]
+----
+fio --name benchmark1 --directory=/lus/aiholus1/disk/ccarlson/ --group_reporting --rw=read --size=16g --iodepth=128 --blocksize=1024k --direct=1 --numjobs=128 --ioengine=libaio | tee results_max2.out
+----
+
+== IOR
+
+Documentation:
+
+* https://wiki.lustre.org/IOR[IOR Documentation]
+* https://wiki.lustre.org/IOR#Download_and_Compile_IOR[Download and Compile IOR]
+* https://ior.readthedocs.io/en/latest/userDoc/options.html[IOR Command Options]
+
+=== Installation
+
+Install the dependencies:
+
+[,bash]
+----
+dnf install -y wget tar git openmpi openmpi-devel automake kernel-devel gcc
+----
+
+Put `openmpi` on your `PATH` variable:
+
+[,bash]
+----
+export PATH=$PATH:/usr/lib64/openmpi/bin/
+----
+
+Clone the `ior` repo:
+
+[,bash]
+----
+git clone https://github.com/hpc/ior
+cd ior/
+----
+
+Load the `openmpi` module:
+
+[,bash]
+----
+module load mpi/openmpi-x86_64
+----
+
+Next, bootstrap, configure and make the IOR software:
+
+[,bash]
+----
+./bootstrap
+./configure
+make clean && make
+----
+
+Stop the firewall daemon and turn off SELinux:
+
+[,bash]
+----
+systemctl stop firewalld
+setenforce 0
+----
+
+Add the built `ior` binary to your `PATH` variable:
+
+[,bash]
+----
+export PATH="$PATH:$HOME/ior/src/ior"
+----
+
+=== Usage
+
+1. Login to one of the compute nodes as the benchmark user
+2. Create a host file for the `mpirun` command, containing the list of Lustre clients that will be used for the benchmark. Each line in the file represents a machine and the number of slots (usually equal to the number of CPU cores). For example:
++
+[,bash]
+----
+for i in $(seq -f "%02g" 1 4); do
+  echo "n"$i" slots=128"
+done > $HOME/hostfile
+----
++
+This results in a file like the following:
++
+----
+n01 slots=128
+n02 slots=128
+n03 slots=128
+n04 slots=128
+----
++
+* The first column of the host file contains the name of the nodes. This can also be an IP address if the /etc/hosts file or DNS is not set up.
+* The second column is used to represent the number of CPU cores.
+
+3. Run a quick test using `mpirun` to launch the benchmark and verify that the environment is set up correctly. For example:
++
+[,bash]
+----
+mpirun --hostfile $HOME/hostfile --map-by node -np $(cat $HOME/hostfile | wc -l) hostname
+----
+
+If this is working, you can move on to using the IOR tool. I use the following `benchmark.sh` script to make benchmarks easier 
+to execute by just changing some variables:
+
+[,bash]
+----
+#!/bin/bash
+
+IOR_BIN="$HOME/ior/src/ior"
+MACHINE_FILE="machinefile.txt"
+TOTAL_SLOTS=128
+BLOCKSIZE_PER_TASK="32g"
+TRANSFER_SIZE="64m"
+TEST_DIRECTORY="/lus/aiholus1/flash/ccarlson"
+TEST_FILE="testfile"
+
+set -ex
+
+mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+        $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE
+----
+
+==== Sequential Write Benchmarks
+
+[,console]
+----
+
+----

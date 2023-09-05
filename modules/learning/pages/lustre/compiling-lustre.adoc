@@ -488,3 +488,55 @@ RUN cd lustre-release && make rpms
 
 ENTRYPOINT ["/bin/bash"]
 ----
+
+Build it with:
+
+[,bash]
+----
+docker build -t rocky .
+----
+
+Run the built image, and verify the RPMs are built in the workspace:
+
+[,bash]
+----
+docker run -it --name=rocky rocky
+----
+
+== Compiling within an OpenSUSE 15.5 Docker Container
+
+Create the following `zypper` repofile for Mellanox OFED:
+
+[,bash]
+----
+cat >> /etc/zypp/repos.d/Mellanox-OFED.repo << EOF
+[mlnx_ofed_5.8-3.0.7.0_base]
+name=Mellanox Technologies sles15sp5-$basearch mlnx_ofed 5.8-3.0.7.0 GA
+baseurl=http://linux.mellanox.com/public/repo/mlnx_ofed/5.8-3.0.7.0/sles15sp5/$basearch
+enabled=1
+autorefresh=1
+path=/
+type=rpm-md
+keeppackages=0
+EOF
+----
+
+Create the following `Dockerfile`:
+
+[,dockerfile]
+----
+FROM opensuse-leap:15.5 AS oss-leap-155
+
+RUN zypper install -y vim tar git python39
+
+RUN zypper install -y \
+    kernel-default-devel \
+    kernel-devel \
+    kernel-syms \
+    kernel-source
+
+RUN zypper install -y libyaml-devel libmount-devel
+    
+
+ENTRYPOINT ["/usr/bin/bash"]
+----

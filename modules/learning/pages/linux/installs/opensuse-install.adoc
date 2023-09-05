@@ -1,0 +1,100 @@
+= OpenSUSE Linux Installation
+
+:showtitle:
+:toc: auto
+
+Install openSUSE (OSS) Leap 15.5 from HTTP web server using xref:docs-site:learning:bmc-management/bmc-management.adoc#virtual-media-mount[virtual media mount from iLo]
+
+* http://sp06.hpc.amslabs.hpecorp.net:8080/Rocky-8.6-x86_64-dvd1.iso
+
+You can find the Leap distribution downloads here:
+
+* https://download.opensuse.org/distribution/leap/[openSUSE Leap Distribution Downloads]
+
+See original OSS install documentation:
+
+* https://en.opensuse.org/SDB:Network_installation[Network Installation]
+
+== VNC/GUI Install Guide
+
+Once you've booted the live CD, you'll need to manually walk through the process of configuring your OSS Leap 15.3 distribution.
+In this guide we're just using the node's iLo BMC HTML5 console to walk through the installation process.
+
+Choose "Installation".
+
+image::docs-site:learning:image$linux/1_oss_start_install_screen.png[OSS Start Install Screen]
+
+You should see it go through loading basic drivers, hardware detection, etc.
+
+image::docs-site:learning:image$linux/2_oss_loading_basic_drivers.png[Load Basic Drivers]
+
+After this is done, it moves to initialize basic networking configuration.
+
+image::docs-site:learning:image$linux/3_oss_initializing_network_config.png[Init Network Config]
+
+Eventually, it will ask you what type of installation we want. We're going to be using a headless server setup,
+so choose `Server`:
+
+image::docs-site:learning:image$linux/4_oss_system_role.png[System Role]
+
+Next, it's will suggest a partitioning scheme based on what it sees already on the disks.
+
+image::docs-site:learning:image$linux/5_oss_suggested_partitioning.png[Suggested Partitioning]
+
+We want to choose our own partitions, though, so choose "Guided Setup". It will then ask you to select your hard disk.
+
+image::docs-site:learning:image$linux/6_oss_select_hard_disks_1.png[Select Hard Disks 1]
+
+Choose the `/dev/nvme0n1` drive and click "Next". It will then ask what partitions you want to create and what you want 
+to do about existing partitions. We want to remove them; we're starting from a clean slate.
+
+image::docs-site:learning:image$linux/7_oss_select_hard_disks_2.png[Select Hard Disks 2]
+
+It should then ask you if you want to enable LVM, choose yes, and it will then ask you what filesystem type you want your
+partitions to be. Here we chose EXT4, but it's up to you if you want that or BTRFS.
+
+image::docs-site:learning:image$linux/8_oss_filesystem_options.png[Filesystem Options]
+
+Lastly, it will show you a list of what it's going to do in order to set up your installation disk. Review this and click "Next".
+
+image::docs-site:learning:image$linux/9_oss_final_partitioning.png[Final Partitioning]
+
+Select your timezone.
+
+image::docs-site:learning:image$linux/10_oss_timezone.png[Timezone]
+
+Set up a local user if you want. Here we opted to just stick with the `root` user.
+
+image::docs-site:learning:image$linux/11_oss_local_users.png[Local Users]
+
+Configure a password for the `root` user.
+
+image::docs-site:learning:image$linux/12_oss_root_user.png[Root User]
+
+Review the final installation settings, then launch the install.
+
+image::docs-site:learning:image$linux/13_oss_installation_settings.png[Installation Settings]
+
+Your install should take a few minutes.
+
+image::docs-site:learning:image$linux/14_oss_performing_installation.png[Performing Installation]
+
+Once the installation finishes, the system will reboot, and you'll be given a login screen.
+
+## Manual Proxy Configuration
+
+https://www.suse.com/support/kb/doc/?id=000017441[SUSE Linux Enterprise: How to setup a Proxy manually]
+
+## Global proxy configuration
+
+The global configuration file should look like the example below (please adjust TCP/IP addresses and Port numbers to match the environment)
+ 
+Please edit `/etc/sysconfig/proxy` with the following proxy values:
+ 
+----
+PROXY_ENABLED="yes"
+HTTP_PROXY="http://192.168.0.1:3128"
+HTTPS_PROXY="http://192.168.0.1:3128"
+FTP_PROXY="http://192.168.0.1:3128"
+NO_PROXY="localhost, 127.0.0.1"
+----

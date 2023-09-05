@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Linux User Management :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/user-management.html">
+    <title>Lustre Filesystem Benchmarks :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/lustre/benchmarks.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -80,20 +80,20 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Lustre</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../lustre/benchmarks.html">Benchmarks</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../lustre/compiling-lustre.html">Compiling Lustre</a>
+    <a class="nav-link" href="compiling-lustre.html">Compiling Lustre</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../lustre/lustre-client.html">Lustre Client</a>
+    <a class="nav-link" href="lustre-client.html">Lustre Client</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../lustre/lustre-server.html">Lustre Server</a>
+    <a class="nav-link" href="lustre-server.html">Lustre Server</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../lustre/lustre-networking.html">Lustre Networking</a>
+    <a class="nav-link" href="lustre-networking.html">Lustre Networking</a>
   </li>
 </ul>
   </li>
@@ -115,37 +115,37 @@
     <span class="nav-text">Installs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="installs/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="installs/opensuse-install.html">OpenSUSE Linux Install</a>
+    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="rpms.html">RPMs</a>
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="tmux.html">Tmux</a>
+    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="user-management.html">User Management</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/user-management.html">User Management</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/ssh.html">SSH</a>
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/infiniband.html">InfiniBand</a>
+    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
   </li>
 </ul>
   </li>
@@ -154,13 +154,13 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/drives.html">Drives</a>
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -260,8 +260,8 @@
   <ul>
     <li><a href="../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
-    <li>Linux</li>
-    <li><a href="user-management.html">User Management</a></li>
+    <li>Lustre</li>
+    <li><a href="benchmarks.html">Benchmarks</a></li>
   </ul>
 </nav>
 </div>
@@ -270,99 +270,182 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Linux User Management</h1>
+<h1 class="page">Lustre Filesystem Benchmarks</h1>
 <div class="sect1">
-<h2 id="_create_a_user"><a class="anchor" href="#_create_a_user"></a>Create a User</h2>
+<h2 id="_fio"><a class="anchor" href="#_fio"></a>FIO</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Use <code>useradd</code> to create a user.</p>
+<p><a href="https://fio.readthedocs.io/en/latest/fio_doc.html">FIO Documentation</a></p>
+</div>
+<div class="paragraph">
+<p>Usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">fio --name benchmark1 --directory=/lus/aiholus1/disk/ccarlson/ --group_reporting --rw=read --size=16g --iodepth=128 --blocksize=1024k --direct=1 --numjobs=128 --ioengine=libaio | tee results_max2.out</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ior"><a class="anchor" href="#_ior"></a>IOR</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Documentation:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://man7.org/linux/man-pages/man8/useradd.8.html"><code>useradd</code></a></p>
+<p><a href="https://wiki.lustre.org/IOR">IOR Documentation</a></p>
+</li>
+<li>
+<p><a href="https://wiki.lustre.org/IOR#Download_and_Compile_IOR">Download and Compile IOR</a></p>
+</li>
+<li>
+<p><a href="https://ior.readthedocs.io/en/latest/userDoc/options.html">IOR Command Options</a></p>
 </li>
 </ul>
 </div>
+<div class="sect2">
+<h3 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h3>
 <div class="paragraph">
-<p>Example:</p>
+<p>Install the dependencies:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y wget tar git openmpi openmpi-devel automake kernel-devel gcc</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Optionally, you can specify the shell used for that user upon creation:</p>
+<p>Put <code>openmpi</code> on your <code>PATH</code> variable:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --shell=/usr/bin/zsh ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export PATH=$PATH:/usr/lib64/openmpi/bin/</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can also specify which groups the user will be a part of:</p>
+<p>Clone the <code>ior</code> repo:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --groups=docker ctesdahl</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_change_or_set_user_password"><a class="anchor" href="#_change_or_set_user_password"></a>Change or Set User Password</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>From <code>root</code> account, you can set another user&#8217;s password:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/hpc/ior
+cd ior/</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you&#8217;re just wanting to change the password on the current account:</p>
+<p>Load the <code>openmpi</code> module:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_add_user_to_sudoers"><a class="anchor" href="#_add_user_to_sudoers"></a>Add User to Sudoers</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Edit the <code>/etc/sudoers</code> file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">visudo</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">module load mpi/openmpi-x86_64</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should see existing sudoers, including <code>root</code>:</p>
+<p>Next, bootstrap, configure and make the IOR software:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">##
-## User privilege specification
-##
-root ALL=(ALL) ALL
-tmorneau ALL=(ALL) ALL
-dmatthews ALL=(ALL) ALL
-mattheda ALL=(ALL) ALL
-ccarlson ALL=(ALL) ALL</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./bootstrap
+./configure
+make clean &amp;&amp; make</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Add an entry for the new user:</p>
+<p>Stop the firewall daemon and turn off SELinux:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">ctesdahl ALL=(ALL) ALL</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl stop firewalld
+setenforce 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Add the built <code>ior</code> binary to your <code>PATH</code> variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export PATH="$PATH:$HOME/ior/src/ior"</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_usage"><a class="anchor" href="#_usage"></a>Usage</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Login to one of the compute nodes as the benchmark user</p>
+</li>
+<li>
+<p>Create a host file for the <code>mpirun</code> command, containing the list of Lustre clients that will be used for the benchmark. Each line in the file represents a machine and the number of slots (usually equal to the number of CPU cores). For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">for i in $(seq -f "%02g" 1 4); do
+  echo "n"$i" slots=128"
+done &gt; $HOME/hostfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This results in a file like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">n01 slots=128
+n02 slots=128
+n03 slots=128
+n04 slots=128</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first column of the host file contains the name of the nodes. This can also be an IP address if the /etc/hosts file or DNS is not set up.</p>
+</li>
+<li>
+<p>The second column is used to represent the number of CPU cores.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Run a quick test using <code>mpirun</code> to launch the benchmark and verify that the environment is set up correctly. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mpirun --hostfile $HOME/hostfile --map-by node -np $(cat $HOME/hostfile | wc -l) hostname</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If this is working, you can move on to using the IOR tool. I use the following <code>benchmark.sh</code> script to make benchmarks easier
+to execute by just changing some variables:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+IOR_BIN="$HOME/ior/src/ior"
+MACHINE_FILE="machinefile.txt"
+TOTAL_SLOTS=128
+BLOCKSIZE_PER_TASK="32g"
+TRANSFER_SIZE="64m"
+TEST_DIRECTORY="/lus/aiholus1/flash/ccarlson"
+TEST_FILE="testfile"
+
+set -ex
+
+mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+        $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sequential_write_benchmarks"><a class="anchor" href="#_sequential_write_benchmarks"></a>Sequential Write Benchmarks</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"></code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

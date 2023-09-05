@@ -81,6 +81,9 @@
     <span class="nav-text">Lustre</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="compiling-lustre.html">Compiling Lustre</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -108,7 +111,16 @@
     <span class="nav-text">Linux</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../linux/rpms.html">RPMs</a>
@@ -297,6 +309,13 @@
 <div class="sect1">
 <h2 id="_lnet_configuration"><a class="anchor" href="#_lnet_configuration"></a>LNET Configuration</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://fast.dpdk.org/doc/perf/DPDK_19_08_Mellanox_NIC_AMD_performance_report.pdf">Mellanox - Optimizations</a></p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>This section assumes you&#8217;re using an already-configured Infiniband fabric with IP over InfiniBand (IPoIB).
 To see how to do this prerequisite step, view the <a href="../linux/networking/infiniband.html" class="xref page">InfiniBand Documentation</a>.</p>
@@ -345,6 +364,407 @@ net:
           interfaces:
               0: ib0</code></pre>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_client_lnet_optimizations"><a class="anchor" href="#_client_lnet_optimizations"></a>Client LNET Optimizations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Network Checksums</strong>: These are used to protect against network corruption, but on a reliable, high-speed network like Slingshot or InfiniBand,
+there is little use for this. You&#8217;ll want to disable this if it&#8217;s not already. It&#8217;s disabled (<code>0</code>) by default.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl set_param osc.&lt;filesystem_name&gt;*.checksums=0</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can check the checksum settings using the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[ccarlson@n01 ~]$ sudo lctl get_param osc.aiholus1*.checksums
+osc.aiholus1-OST0000-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0001-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0002-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0003-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0004-osc-ffffa1584d9b1800.checksums=0
+osc.aiholus1-OST0005-osc-ffffa1584d9b1800.checksums=0</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Max RPCs In-Flight</strong>: This indicates the maximum number of remote procedural calls on the LNET. By default, this is <code>8</code>. For high-speed networks,
+increase this to <code>64</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl set_param mdc.&lt;filesystem_name&gt;*.max_rpcs_in_flight=64</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>You can check the max RPCs in-flight using the following example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[ccarlson@n01 ~]$ sudo lctl get_param osc.aiholus1*.max_rpcs_in_flight
+osc.aiholus1-OST0000-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0001-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0002-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0003-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0004-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+osc.aiholus1-OST0005-osc-ffffa1584d9b1800.max_rpcs_in_flight=64
+[ccarlson@n01 ~]$ sudo lctl get_param mdc.aiholus1*.max_rpcs_in_flight
+mdc.aiholus1-MDT0000-mdc-ffffa1584d9b1800.max_rpcs_in_flight=64
+mdc.aiholus1-MDT0001-mdc-ffffa1584d9b1800.max_rpcs_in_flight=64</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>Max Pages per RPC</strong>: Defines the maximum RPC size sent from the client to the server. Default depends on Lustre version installed, but
+is around 256 (1MB) for Lustre 2.12, and 4096 (16MB) for Lustre 2.15. We&#8217;ll want this at <code>1024</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl set_param osc.&lt;filesystem_name&gt;*.max_pages_per_rpc=1024
+lctl set_param mdc.&lt;filesystem_name&gt;*.max_pages_per_rpc=256</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Max Dirty MB</strong>: Defines the max amount of dirty data (MB) in client memory that hasn&#8217;t yet been written, this can be increased based on the client&#8217;s memory
+capabilities. Default is <code>2000</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl set_param osc.&lt;filesystem_name&gt;*.max_dirty_mb=2000
+lctl set_param mdc.&lt;filesystem_name&gt;*.max_dirty_mb=2000</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Max Read-Ahead MB</strong>: Defines max data that can be pre-fetched by the client if a sequential read is detected on a file. Default is <code>64MiB</code>. We&#8217;ll want to set this to <code>512MiB</code>.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lctl set_param llite.&lt;filesystem_name&gt;*.max_read_ahead_mb=512
+lctl set_param llite.&lt;filesystem_name&gt;*.max_read_ahead_per_file_mb=512</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delete_lnet_network"><a class="anchor" href="#_delete_lnet_network"></a>Delete LNET Network</h3>
+<div class="paragraph">
+<p>Example existing LNET configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: tcp
+      local NI(s):
+        - nid: 10.10.5.1@tcp
+          status: up</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Delete the <code>tcp</code> network:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lnetctl net del --net tcp</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_persist_lnet_configuration_between_boots"><a class="anchor" href="#_persist_lnet_configuration_between_boots"></a>Persist LNET Configuration Between Boots</h3>
+<div class="paragraph">
+<p>If you want your LNET configuration to persist after a reboot, you&#8217;ll need to write it to a persistent file, <code>/etc/lnet.conf</code>.</p>
+</div>
+<div class="paragraph">
+<p>Export an existing LNET configuration to <code>/etc/lnet.conf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lnetctl export &gt;&gt; /etc/lnet.conf</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multirail_configuration"><a class="anchor" href="#_multirail_configuration"></a>Multirail Configuration</h3>
+<div class="paragraph">
+<p>If you have multiple InfiniBand Channel Adapters, you&#8217;ll want to configure LNET to use them in a multirail configuration.
+This example shows all four ConnectX-6 cards being used.
+An example of a multirail LNET configuration might look like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[ccarlson@n01 ior-4.0.0rc1]$ sudo lnetctl net show
+net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: o2ib
+      local NI(s):
+        - nid: 10.10.5.1@o2ib
+          status: up
+          interfaces:
+              0: ib0
+        - nid: 10.10.5.21@o2ib
+          status: up
+          interfaces:
+              0: ib1
+        - nid: 10.10.5.41@o2ib
+          status: up
+          interfaces:
+              0: ib2
+        - nid: 10.10.5.61@o2ib
+          status: up
+          interfaces:
+              0: ib3</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ib_device_arp_settings"><a class="anchor" href="#_ib_device_arp_settings"></a>IB Device ARP Settings</h4>
+<div class="paragraph">
+<p>Multiple network interfaces on the same node may cause issues with the OS returning the wrong hardware address for a requested IP.
+Because <code>o2iblnd</code> uses IPoIB, we can get the wrong address, degrading performance.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://wiki.lustre.org/LNet_Router_Config_Guide#ARP_flux_issue_for_MR_node">ARP Flux Issue for MR Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Below is an example where we have four Mellanox InfiniBand ConnectX-6 cards on a system, each with their own IP address. We&#8217;ll need to turn off ARP broadcasting on these:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[ccarlson@n01 ~]$ ip a | grep ib
+4: ib0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:d4:9a brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.1/16 brd 10.10.255.255 scope global noprefixroute ib0
+15: ib1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:74:66 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.21/16 brd 10.10.255.255 scope global noprefixroute ib1
+16: ib2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:74:2e brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.41/16 brd 10.10.255.255 scope global noprefixroute ib2
+17: ib3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:88:e9:a4:ff:ff:60:c4:7e brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    inet 10.10.5.61/16 brd 10.10.255.255 scope global noprefixroute ib3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following script to disable ARP broadcasting on all four cards:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+# Check we are running as root
+USER_ID=$(id -u)
+if [[ $USER_ID -ne 0 ]]; then
+  echo "Must run as root user"
+  exit 1
+fi
+
+SUBNET="10.10"
+SUBNET_MASK="16"
+IB0_IP="10.10.5.1"
+IB1_IP="10.10.5.21"
+IB2_IP="10.10.5.41"
+IB3_IP="10.10.5.61"
+
+#Setting ARP so it doesn't broadcast
+sysctl -w net.ipv4.conf.all.rp_filter=0
+sysctl -w net.ipv4.conf.ib0.arp_ignore=1
+sysctl -w net.ipv4.conf.ib0.arp_filter=0
+sysctl -w net.ipv4.conf.ib0.arp_announce=2
+sysctl -w net.ipv4.conf.ib0.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib1.arp_ignore=1
+sysctl -w net.ipv4.conf.ib1.arp_filter=0
+sysctl -w net.ipv4.conf.ib1.arp_announce=2
+sysctl -w net.ipv4.conf.ib1.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib2.arp_ignore=1
+sysctl -w net.ipv4.conf.ib2.arp_filter=0
+sysctl -w net.ipv4.conf.ib2.arp_announce=2
+sysctl -w net.ipv4.conf.ib2.rp_filter=0
+
+sysctl -w net.ipv4.conf.ib3.arp_ignore=1
+sysctl -w net.ipv4.conf.ib3.arp_filter=0
+sysctl -w net.ipv4.conf.ib3.arp_announce=2
+sysctl -w net.ipv4.conf.ib3.rp_filter=0
+
+ip neigh flush dev ib0
+ip neigh flush dev ib1
+ip neigh flush dev ib2
+ip neigh flush dev ib3
+
+echo 200 ib0 &gt;&gt; /etc/iproute2/rt_tables
+echo 201 ib1 &gt;&gt; /etc/iproute2/rt_tables
+echo 202 ib2 &gt;&gt; /etc/iproute2/rt_tables
+echo 203 ib3 &gt;&gt; /etc/iproute2/rt_tables
+
+ip route add $SUBNET/$SUBNET_MASK dev ib0 proto kernel scope link src $IB0_IP table ib0
+ip route add $SUBNET/$SUBNET_MASK dev ib1 proto kernel scope link src $IB1_IP table ib1
+ip route add $SUBNET/$SUBNET_MASK dev ib2 proto kernel scope link src $IB2_IP table ib2
+ip route add $SUBNET/$SUBNET_MASK dev ib3 proto kernel scope link src $IB3_IP table ib3
+
+ip rule add from $IB0_IP table ib0
+ip rule add from $IB1_IP table ib1
+ip rule add from $IB2_IP table ib2
+ip rule add from $IB3_IP table ib3
+
+ip route flush cache</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pcie_relaxed_ordering"><a class="anchor" href="#_pcie_relaxed_ordering"></a>PCIe Relaxed Ordering</h4>
+<div class="paragraph">
+<p>If you&#8217;re using multiple IB CAs in a multirail configuration, you&#8217;ll need to set the PCI device ordering to relaxed instead of the default, which is strict. This "allows switches in the path between the Requester and Completer to reorder some transactions just received before others that were previously enqueued to reorder transactions" <a href="#references">[1]</a>. Read more about PCI Relaxed Ordering mechanisms here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://learning.oreilly.com/library/view/pci-express-system/0321156307/0321156307_ch08lev1sec7.html#:~:text=The%20concept%20of%20Relaxed%20Ordering,others%20that%20were%20previously%20enqueued">PCI Express Relaxed Ordering</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following script can be run to set relaxed ordering on all discovered Mellanox devices using the Mellanox Software Tools (<code>mst</code>) devices.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+# Sets device ordering to relaxed for multirail InfiniBand.
+
+# Check we are running as root
+USER_ID=$(id -u)
+if [[ $USER_ID -ne 0 ]]; then
+  echo "Must run as root user"
+  exit 1
+fi
+
+# Start Mellanox Software Tools (MST)
+mst start
+
+# See what cards are available
+MST_DEVICES=$(find /dev/mst/ -name "*pciconf*" | sort)
+MADE_CHANGE=0
+for MST_DEVICE in $MST_DEVICES; do
+  echo "Checking $MST_DEVICE..."
+  ORDERING=$(mlxconfig -d $MST_DEVICE q | grep "PCI_WR_ORDERING" | xargs | awk '{print $2}')
+  echo "$MST_DEVICE PCI write ordering: $ORDERING"
+  if [[ $ORDERING == *"0"* ]]; then
+    echo "Ordering set to strict. Setting to relaxed..."
+    mlxconfig -y -d $MST_DEVICE s PCI_WR_ORDERING=1
+    MADE_CHANGE=1
+  else
+    echo "Ordering already set to relaxed. Skipping."
+  fi
+done
+
+[[ $MADE_CHANGE -eq 1 ]] &amp;&amp; echo "Made changes to PCI device ordering. Reboot the system for them to take effect." || echo "No changes made."</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[ccarlson@n01 ~]$ sudo ./set_relaxed_ordering.sh
+[sudo] password for ccarlson:
+Starting MST (Mellanox Software Tools) driver set
+Loading MST PCI module - Success
+[warn] mst_pciconf is already loaded, skipping
+Create devices
+Unloading MST PCI module (unused) - Success
+Checking /dev/mst/mt4123_pciconf0...
+/dev/mst/mt4123_pciconf0 PCI write ordering: force_relax(1)
+Ordering already set to relaxed. Skipping.
+Checking /dev/mst/mt4123_pciconf1...
+/dev/mst/mt4123_pciconf1 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf1
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Checking /dev/mst/mt4123_pciconf2...
+/dev/mst/mt4123_pciconf2 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf2
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Checking /dev/mst/mt4123_pciconf3...
+/dev/mst/mt4123_pciconf3 PCI write ordering: per_mkey(0)
+Ordering set to strict. Setting to relaxed...
+
+Device #1:
+----------
+
+Device type:    ConnectX6
+Name:           MCX653105A-HDA_HPE_Ax
+Description:    HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter
+Device:         /dev/mst/mt4123_pciconf3
+
+Configurations:                              Next Boot       New
+         PCI_WR_ORDERING                     per_mkey(0)     force_relax(1)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.
+Made changes to PCI device ordering. Reboot the system for them to take effect.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div id="references" class="paragraph">
+<p>[1] T. Shanley, D. Anderson, R. Budruk, MindShare, Inc, <em>PCI Express System Architecture</em>, Addison-Wesley Professional, 2003. [E-book] Available: <a href="https://learning.oreilly.com/library/view/pci-express-system/0321156307/" class="bare">https://learning.oreilly.com/library/view/pci-express-system/0321156307/</a></p>
 </div>
 </div>
 </div>

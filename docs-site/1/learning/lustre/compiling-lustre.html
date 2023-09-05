@@ -80,6 +80,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Lustre</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
+  </li>
   <li class="nav-item is-current-page" data-depth="3">
     <a class="nav-link" href="compiling-lustre.html">Compiling Lustre</a>
   </li>
@@ -108,7 +111,16 @@
     <span class="nav-text">Linux</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/rocky-install.html">Rocky Linux Install</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../linux/rpms.html">RPMs</a>
@@ -810,6 +822,65 @@ RUN cd lustre-release &amp;&amp; sh autogen.sh &amp;&amp; ./configure \
 RUN cd lustre-release &amp;&amp; make rpms
 
 ENTRYPOINT ["/bin/bash"]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Build it with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker build -t rocky .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Run the built image, and verify the RPMs are built in the workspace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run -it --name=rocky rocky</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compiling_within_an_opensuse_15_5_docker_container"><a class="anchor" href="#_compiling_within_an_opensuse_15_5_docker_container"></a>Compiling within an OpenSUSE 15.5 Docker Container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create the following <code>zypper</code> repofile for Mellanox OFED:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/zypp/repos.d/Mellanox-OFED.repo &lt;&lt; EOF
+[mlnx_ofed_5.8-3.0.7.0_base]
+name=Mellanox Technologies sles15sp5-$basearch mlnx_ofed 5.8-3.0.7.0 GA
+baseurl=http://linux.mellanox.com/public/repo/mlnx_ofed/5.8-3.0.7.0/sles15sp5/$basearch
+enabled=1
+autorefresh=1
+path=/
+type=rpm-md
+keeppackages=0
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create the following <code>Dockerfile</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM opensuse-leap:15.5 AS oss-leap-155
+
+RUN zypper install -y vim tar git python39
+
+RUN zypper install -y \
+    kernel-default-devel \
+    kernel-devel \
+    kernel-syms \
+    kernel-source
+
+RUN zypper install -y libyaml-devel libmount-devel
+
+
+ENTRYPOINT ["/usr/bin/bash"]</code></pre>
 </div>
 </div>
 </div>

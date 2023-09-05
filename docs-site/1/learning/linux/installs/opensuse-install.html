@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>SSH Helps :: Caleb Carlson - Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/ssh.html">
+    <title>OpenSUSE Linux Installation :: Caleb Carlson - Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/installs/opensuse-install.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -115,10 +115,10 @@
     <span class="nav-text">Installs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../installs/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="rocky-install.html">Rocky Linux Install</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="opensuse-install.html">OpenSUSE Linux Install</a>
   </li>
 </ul>
   </li>
@@ -136,16 +136,16 @@
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="linux-networking.html">Linux</a>
+    <a class="nav-link" href="../networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="proxies.html">Proxies</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="ssh.html">SSH</a>
+    <a class="nav-link" href="../networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="infiniband.html">InfiniBand</a>
+    <a class="nav-link" href="../networking/ssh.html">SSH</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../networking/infiniband.html">InfiniBand</a>
   </li>
 </ul>
   </li>
@@ -261,8 +261,8 @@
     <li><a href="../../../index.html">Caleb Carlson - Documentation</a></li>
     <li>Learning</li>
     <li>Linux</li>
-    <li>Networking</li>
-    <li><a href="ssh.html">SSH</a></li>
+    <li>Installs</li>
+    <li><a href="opensuse-install.html">OpenSUSE Linux Install</a></li>
   </ul>
 </nav>
 </div>
@@ -271,88 +271,192 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">SSH Helps</h1>
-<div class="sect1">
-<h2 id="_tunnel_to_port_on_mercury_client"><a class="anchor" href="#_tunnel_to_port_on_mercury_client"></a>Tunnel to port on Mercury Client</h2>
+<h1 class="page">OpenSUSE Linux Installation</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Install openSUSE (OSS) Leap 15.5 from HTTP web server using <a href="../../bmc-management/bmc-management.html#virtual-media-mount" class="xref page">virtual media mount from iLo</a></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>ssh -L &lt;local_port&gt;:localhost:&lt;host_port&gt; &lt;host&gt;</code></p>
+<p><a href="http://sp06.hpc.amslabs.hpecorp.net:8080/Rocky-8.6-x86_64-dvd1.iso" class="bare">http://sp06.hpc.amslabs.hpecorp.net:8080/Rocky-8.6-x86_64-dvd1.iso</a></p>
 </li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can find the Leap distribution downloads here:</p>
+</div>
+<div class="ulist">
+<ul>
 <li>
-<p>e.g. <code>ssh -L 8181:localhost:8080 root@172.26.142.102</code></p>
+<p><a href="https://download.opensuse.org/distribution/leap/">openSUSE Leap Distribution Downloads</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See original OSS install documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.opensuse.org/SDB:Network_installation">Network Installation</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_ssh_config"><a class="anchor" href="#_ssh_config"></a>SSH Config</h2>
+<h2 id="_vncgui_install_guide"><a class="anchor" href="#_vncgui_install_guide"></a>VNC/GUI Install Guide</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Create or edit <code>~/.ssh/config</code></p>
-</div>
-<div class="sect2">
-<h3 id="_create_new_ssh_key"><a class="anchor" href="#_create_new_ssh_key"></a>Create New SSH Key</h3>
-<div class="paragraph">
-<p><a href="https://www.unixtutorial.org/how-to-generate-ed25519-ssh-key/">How to Generate an ED25519 SSH Key</a></p>
+<p>Once you&#8217;ve booted the live CD, you&#8217;ll need to manually walk through the process of configuring your OSS Leap 15.3 distribution.
+In this guide we&#8217;re just using the node&#8217;s iLo BMC HTML5 console to walk through the installation process.</p>
 </div>
 <div class="paragraph">
-<p>Using <code>ssh-keygen</code>, this creates a key of type ED25519 with the comment "<a href="mailto:caleb.carlson@hpe.com">caleb.carlson@hpe.com</a>"</p>
+<p>Choose "Installation".</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/1_oss_start_install_screen.png" alt="OSS Start Install Screen">
+</div>
+</div>
+<div class="paragraph">
+<p>You should see it go through loading basic drivers, hardware detection, etc.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/2_oss_loading_basic_drivers.png" alt="Load Basic Drivers">
+</div>
+</div>
+<div class="paragraph">
+<p>After this is done, it moves to initialize basic networking configuration.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/3_oss_initializing_network_config.png" alt="Init Network Config">
+</div>
+</div>
+<div class="paragraph">
+<p>Eventually, it will ask you what type of installation we want. We&#8217;re going to be using a headless server setup,
+so choose <code>Server</code>:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/4_oss_system_role.png" alt="System Role">
+</div>
+</div>
+<div class="paragraph">
+<p>Next, it&#8217;s will suggest a partitioning scheme based on what it sees already on the disks.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/5_oss_suggested_partitioning.png" alt="Suggested Partitioning">
+</div>
+</div>
+<div class="paragraph">
+<p>We want to choose our own partitions, though, so choose "Guided Setup". It will then ask you to select your hard disk.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/6_oss_select_hard_disks_1.png" alt="Select Hard Disks 1">
+</div>
+</div>
+<div class="paragraph">
+<p>Choose the <code>/dev/nvme0n1</code> drive and click "Next". It will then ask what partitions you want to create and what you want
+to do about existing partitions. We want to remove them; we&#8217;re starting from a clean slate.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/7_oss_select_hard_disks_2.png" alt="Select Hard Disks 2">
+</div>
+</div>
+<div class="paragraph">
+<p>It should then ask you if you want to enable LVM, choose yes, and it will then ask you what filesystem type you want your
+partitions to be. Here we chose EXT4, but it&#8217;s up to you if you want that or BTRFS.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/8_oss_filesystem_options.png" alt="Filesystem Options">
+</div>
+</div>
+<div class="paragraph">
+<p>Lastly, it will show you a list of what it&#8217;s going to do in order to set up your installation disk. Review this and click "Next".</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/9_oss_final_partitioning.png" alt="Final Partitioning">
+</div>
+</div>
+<div class="paragraph">
+<p>Select your timezone.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/10_oss_timezone.png" alt="Timezone">
+</div>
+</div>
+<div class="paragraph">
+<p>Set up a local user if you want. Here we opted to just stick with the <code>root</code> user.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/11_oss_local_users.png" alt="Local Users">
+</div>
+</div>
+<div class="paragraph">
+<p>Configure a password for the <code>root</code> user.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/12_oss_root_user.png" alt="Root User">
+</div>
+</div>
+<div class="paragraph">
+<p>Review the final installation settings, then launch the install.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/13_oss_installation_settings.png" alt="Installation Settings">
+</div>
+</div>
+<div class="paragraph">
+<p>Your install should take a few minutes.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../../_images/linux/14_oss_performing_installation.png" alt="Performing Installation">
+</div>
+</div>
+<div class="paragraph">
+<p>Once the installation finishes, the system will reboot, and you&#8217;ll be given a login screen.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_manual_proxy_configuration"><a class="anchor" href="#_manual_proxy_configuration"></a>Manual Proxy Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.suse.com/support/kb/doc/?id=000017441">SUSE Linux Enterprise: How to setup a Proxy manually</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_global_proxy_configuration"><a class="anchor" href="#_global_proxy_configuration"></a>Global proxy configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The global configuration file should look like the example below (please adjust TCP/IP addresses and Port numbers to match the environment)</p>
+</div>
+<div class="paragraph">
+<p>Please edit <code>/etc/sysconfig/proxy</code> with the following proxy values:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-04 ~]# ssh-keygen -t ed25519 -C "caleb.carlson@hpe.net"
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/root/.ssh/id_ed25519): /root/.ssh/caleb_id_ed25519
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/caleb_id_ed25519.
-Your public key has been saved in /root/.ssh/caleb_id_ed25519.pub.
-The key fingerprint is:
-SHA256:lcDVKRifBA8/kqXOEilbUjovBtX5stABHSuXtOLBjJ0 caleb.carlson@hpe.net
-The key's randomart image is:
-+--[ED25519 256]--+
-|    o+++==+. .   |
-|   * ===o@.oo    |
-|  o E.Oo+ O.     |
-|   o.%o+.o .     |
-|    =.ooS        |
-|   . ...         |
-|                 |
-|                 |
-|                 |
-+----[SHA256]-----+</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_github"><a class="anchor" href="#_github"></a>GitHub</h3>
-<div class="paragraph">
-<p>Specify SSH IdentityFile to use for <code>.git</code> pulls/clones</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># GitHub
-Host github.com
-  HostName github.com
-  IdentityFile ~/.ssh/caleb_id_ecdsa</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_wildcard_matching"><a class="anchor" href="#_wildcard_matching"></a>Wildcard Matching</h3>
-<div class="paragraph">
-<p>Match anything that starts with <code>mawenzi-0</code>. Plug the full match into <code>%h</code>.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Host mawenzi-0*
-  HostName %h.hpc.amslabs.hpecorp.net
-  User root
-  IdentityFile ~/.ssh/caleb_id_ecdsa</code></pre>
-</div>
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">PROXY_ENABLED="yes"
+HTTP_PROXY="http://192.168.0.1:3128"
+HTTPS_PROXY="http://192.168.0.1:3128"
+FTP_PROXY="http://192.168.0.1:3128"
+NO_PROXY="localhost, 127.0.0.1"</code></pre>
 </div>
 </div>
 </div>

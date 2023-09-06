@@ -1,0 +1,5 @@
+* VU Meter
+** xref:docs-site:projects:vu-meter/vu-meter.adoc[VU Meter]
+
+* PC Exhaust
+** xref:docs-site:projects:pc-exhaust/pc-exhaust.adoc[PC Exhaust]

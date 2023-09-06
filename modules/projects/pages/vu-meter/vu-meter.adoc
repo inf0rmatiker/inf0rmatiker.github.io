@@ -28,13 +28,13 @@ to the amp. With the amplifier volume set to 38%, we get a reading of roughly 0.
 
 Here's a diagram of the circuit I have up until this point:
 
-image::docs-site:blog:image$vu-meter/vu_meter_osc_only.png[vu meter oscilloscope only]
+image::docs-site:projects:image$vu-meter/vu_meter_osc_only.png[vu meter oscilloscope only]
 
 Obviously we don't have the amp turned all the way up so we're not
 getting anywhere near 34V. Looking at this under an oscilloscope, we can see a clean sine wave at 60 Hz
 with an amplitude of roughly 200 mV:
 
-image::docs-site:blog:image$vu-meter/60_hz_clean.png[60 Hz clean sine wave]
+image::docs-site:projects:image$vu-meter/60_hz_clean.png[60 Hz clean sine wave]
 
 ### Rectifying the signal
 
@@ -46,11 +46,11 @@ input raw AC which has negative current. To remedy this, I've built a simple rec
 which should, _in theory_, take the negative side of the sine wave and invert it to become positive, something
 like this transformation:
 
-image::docs-site:blog:image$vu-meter/normal_sine_wave.png[normal sine wave]
+image::docs-site:projects:image$vu-meter/normal_sine_wave.png[normal sine wave]
 
 to, after rectification,
 
-image::docs-site:blog:image$vu-meter/abs_sine_wave.png[abs sine wave]
+image::docs-site:projects:image$vu-meter/abs_sine_wave.png[abs sine wave]
 
 Because the max voltage amplitude here is only 200 mV, we don't really need worry about adding
 a resistor dividing circuit yet to step down the voltage, as this well within the 0-3.3V range
@@ -59,24 +59,24 @@ we get some really weird behavior.
 
 Here's my circuit diagram after adding the rectifier circuit:
 
-image::docs-site:blog:image$vu-meter/vu_meter_with_rectifier.png[vu meter with rectifier]
+image::docs-site:projects:image$vu-meter/vu_meter_with_rectifier.png[vu meter with rectifier]
 
 And a physical view of my breadboard circuit:
 
-image::docs-site:blog:image$vu-meter/breadboard_1.png[breadboard 1]
+image::docs-site:projects:image$vu-meter/breadboard_1.png[breadboard 1]
 
 However, instead of getting a clean transformation like we should have seen in theory,
 I ended up getting this on the oscilloscope:
 
-image::docs-site:blog:image$vu-meter/osc_rectified_1.jpeg[osc rectified 1]
+image::docs-site:projects:image$vu-meter/osc_rectified_1.jpeg[osc rectified 1]
 
 Over a period of about 20 seconds, the signal gets worse and worse, and slowly devolves:
 
-image::docs-site:blog:image$vu-meter/osc_rectified_2.jpeg[osc rectified 2]
+image::docs-site:projects:image$vu-meter/osc_rectified_2.jpeg[osc rectified 2]
 
-image::docs-site:blog:image$vu-meter/osc_rectified_3.jpeg[osc rectified 3]
+image::docs-site:projects:image$vu-meter/osc_rectified_3.jpeg[osc rectified 3]
 
-image::docs-site:blog:image$vu-meter/osc_rectified_4.jpeg[osc rectified 4]
+image::docs-site:projects:image$vu-meter/osc_rectified_4.jpeg[osc rectified 4]
 
 Why is there so much noise after rectifying the signal? Why does it still drop below 0 Volts? We see readings of min -56 mV.
 Is this just what rectifiers do, add noise? Why would the signal go from ~630 mV peaks all the way down to consistently

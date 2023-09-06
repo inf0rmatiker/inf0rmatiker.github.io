@@ -1,9 +1,9 @@
 * xref:docs-site:ROOT:index.adoc[Overview]
 
-* Blog
+* Projects
 +
 --
-include::docs-site:blog:partial$nav.adoc[Blog]
+include::docs-site:projects:partial$nav.adoc[Blog]
 --
 
 * Learning

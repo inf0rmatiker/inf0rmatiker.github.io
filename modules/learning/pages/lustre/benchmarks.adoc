@@ -24,6 +24,10 @@ Documentation:
 
 === Installation
 
+This installation guide is for a RHEL-based system, commands might be slightly different for Ubuntu.
+
+* https://ior.readthedocs.io/en/latest/userDoc/install.html[`ior` Installation Documentation]
+
 Install the dependencies:
 
 [,bash]
@@ -60,6 +64,7 @@ Next, bootstrap, configure and make the IOR software:
 ./bootstrap
 ./configure
 make clean && make
+make install
 ----
 
 Stop the firewall daemon and turn off SELinux:

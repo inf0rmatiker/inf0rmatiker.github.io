@@ -9,7 +9,7 @@ print_usage() {
 
 # Ask user to input module name and category
 echo "Module name: " && read MODULE_NAME
-echo "Module category (i.e. learning, blog): " && read MODULE_CATEGORY
+echo "Module category (i.e. learning, projects): " && read MODULE_CATEGORY
 
 # Make sure category exists
 [[ ! -d modules/$MODULE_CATEGORY ]] && echo "Module category $MODULE_CATEGORY does not exist. Choose one of [$(ls modules | xargs)]" && exit 1

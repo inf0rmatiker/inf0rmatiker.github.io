@@ -12,9 +12,6 @@
 ** xref:docs-site:learning:lustre/lustre-server.adoc[Lustre Server]
 ** xref:docs-site:learning:lustre/lustre-networking.adoc[Lustre Networking]
 
-* Security
-** xref:docs-site:learning:security/security.adoc[Security]
-
 * Linux
 
 ** Installs
@@ -52,3 +49,6 @@
 * Machine Learning
 ** xref:docs-site:learning:machine-learning/machine-learning.adoc[Machine Learning]
 ** xref:docs-site:learning:machine-learning/determinedai.adoc[Determined AI]
+
+* REST APIs
+** xref:docs-site:learning:rest-apis/api-security.adoc[Secure Development]

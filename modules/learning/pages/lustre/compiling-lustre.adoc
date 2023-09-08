@@ -272,7 +272,7 @@ dnf update
 
 If we're compiling the Lustre client with MOFED InfiniBand support, we need to make sure we've built and installed MOFED drivers for the unpatched kernel we're currently running. In our case for Rocky 8.6, this is `4.18.0-372.9.1.el8.x86_64`.
 
-View https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED[Nvidia's Installing Mellanox OFED] or my xref:docs-site:learning:/linux/networking/infiniband#_mofed_installation[InfiniBand MOFED Installation notes] for more depth information. Below is a brief synopsis of the install process.
+View https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED[Nvidia's Installing Mellanox OFED] or my xref:docs-site:learning:/infiniband/infiniband#_mofed_installation[InfiniBand MOFED Installation notes] for more depth information. Below is a brief synopsis of the install process.
 
 Go to the https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/[Nvidia Download Center], and download `5.4-3.7.5.0-LTS -> RHEL/CentOS/Rocky -> RHEL/Rocky 8.6 -> MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64.tgz` to your build environment home.
 

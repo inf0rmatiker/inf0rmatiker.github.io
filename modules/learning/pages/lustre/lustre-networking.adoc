@@ -19,7 +19,7 @@ Original Lustre documentation is linked below.
 * https://fast.dpdk.org/doc/perf/DPDK_19_08_Mellanox_NIC_AMD_performance_report.pdf[Mellanox - Optimizations]
 
 This section assumes you're using an already-configured Infiniband fabric with IP over InfiniBand (IPoIB).
-To see how to do this prerequisite step, view the xref:docs-site:learning:linux/networking/infiniband.adoc[InfiniBand Documentation].
+To see how to do this prerequisite step, view the xref:docs-site:learning:infiniband/infiniband.adoc[InfiniBand Documentation].
 
 Configure LNET, and add the `ib0` physical interface as the `o2ib` network
 

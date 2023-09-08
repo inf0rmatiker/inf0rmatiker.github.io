@@ -16,7 +16,6 @@ Details and notes for IB management, commands, notes, configuration, and install
 * https://www.rdmamojo.com/2014/11/22/working-rdma-using-mellanox-ofed/[RDMAmojo - Working with RDMA using Mellanox OFED]
 * https://www.csm.ornl.gov/workshops/openshmem2014/documents/presentations_and_tutorials/Tutorials/Verbs%20programming%20tutorial-final.pdf[Mellanox Verbs Programming Tutorial Presetnation]
 
-
 == Subnet Manager
 
 https://docs.nvidia.com/networking/display/MLNXOSv381000/Subnet+Manager[Subnet Manager]

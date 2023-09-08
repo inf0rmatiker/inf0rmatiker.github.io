@@ -24,7 +24,6 @@
 *** xref:docs-site:learning:linux/networking/linux-networking.adoc[Linux]
 *** xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]
 *** xref:docs-site:learning:linux/networking/ssh.adoc[SSH]
-*** xref:docs-site:learning:linux/networking/infiniband.adoc[InfiniBand]
 ** Storage
 *** xref:docs-site:learning:linux/storage/benchmarks.adoc[Benchmarks]
 *** xref:docs-site:learning:linux/storage/filesystems.adoc[Filesystems]
@@ -47,8 +46,13 @@
 ** xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]
 
 * Machine Learning
+** xref:docs-site:learning:machine-learning/benchmarks.adoc[Benchmarks]
 ** xref:docs-site:learning:machine-learning/machine-learning.adoc[Machine Learning]
 ** xref:docs-site:learning:machine-learning/determinedai.adoc[Determined AI]
 
 * REST APIs
 ** xref:docs-site:learning:rest-apis/api-security.adoc[Secure Development]
+
+* InfiniBand
+** xref:docs-site:learning:infiniband/infiniband.adoc[InfiniBand]
+** xref:docs-site:learning:infiniband/monitoring.adoc[Fabric Monitoring]

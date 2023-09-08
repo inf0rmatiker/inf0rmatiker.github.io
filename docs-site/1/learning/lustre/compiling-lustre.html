@@ -144,9 +144,6 @@
   <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
   </li>
-  <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/infiniband.html">InfiniBand</a>
-  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
@@ -219,6 +216,9 @@
     <span class="nav-text">Machine Learning</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -232,6 +232,18 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
   </li>
 </ul>
   </li>
@@ -594,7 +606,7 @@ and <code>kernel-devel</code> packages as dependencies.</p>
 <p>If we&#8217;re compiling the Lustre client with MOFED InfiniBand support, we need to make sure we&#8217;ve built and installed MOFED drivers for the unpatched kernel we&#8217;re currently running. In our case for Rocky 8.6, this is <code>4.18.0-372.9.1.el8.x86_64</code>.</p>
 </div>
 <div class="paragraph">
-<p>View <a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED">Nvidia&#8217;s Installing Mellanox OFED</a> or my <a href="../linux/networking/infiniband.html#_mofed_installation" class="xref page">InfiniBand MOFED Installation notes</a> for more depth information. Below is a brief synopsis of the install process.</p>
+<p>View <a href="https://docs.nvidia.com/networking/display/MLNXOFEDv461000/Installing+Mellanox+OFED">Nvidia&#8217;s Installing Mellanox OFED</a> or my <a href="../infiniband/infiniband.html#_mofed_installation" class="xref page">InfiniBand MOFED Installation notes</a> for more depth information. Below is a brief synopsis of the install process.</p>
 </div>
 <div class="paragraph">
 <p>Go to the <a href="https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/">Nvidia Download Center</a>, and download <code>5.4-3.7.5.0-LTS &#8594; RHEL/CentOS/Rocky &#8594; RHEL/Rocky 8.6 &#8594; MLNX_OFED_LINUX-5.4-3.7.5.0-rhel8.6-x86_64.tgz</code> to your build environment home.</p>

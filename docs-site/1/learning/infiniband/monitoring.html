@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Monitoring InfiniBand Fabrics :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/infiniband/monitoring.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Documentation</a></li>
+    <li>Learning</li>
+    <li>InfiniBand</li>
+    <li><a href="monitoring.html">Fabric Monitoring</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Monitoring InfiniBand Fabrics</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document aims to cover strategies for monitoring InfiniBand fabrics.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_discovery"><a class="anchor" href="#_discovery"></a>Discovery</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before we start monitoring InfiniBand traffic on a host, we need to first understand the hardware configuration.</p>
+</div>
+<div class="paragraph">
+<p>Things we are interested in:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>How many <a href="https://www.nvidia.com/en-us/networking/infiniband-adapters/">Host Channel Adapters</a> (HCA) are there on the host?</p>
+</li>
+<li>
+<p>How many ports does each HCA have?</p>
+</li>
+<li>
+<p>What are the Local IDs (LIDs) of each HCA?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To view this information in a concise, human-readable format, run <code>ibstat</code> on the host as root. You should get output similar to the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# ibstat
+CA 'mlx5_0'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.33.1048
+	Hardware version: 0
+	Node GUID: 0x88e9a4ffff317104
+	System image GUID: 0x88e9a4ffff317104
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 200
+		Base lid: 152
+		LMC: 0
+		SM lid: 30
+		Capability mask: 0xa651e848
+		Port GUID: 0x88e9a4ffff317104
+		Link layer: InfiniBand
+CA 'mlx5_1'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.33.1048
+	Hardware version: 0
+	Node GUID: 0x88e9a4ffff3161a8
+	System image GUID: 0x88e9a4ffff3161a8
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 200
+		Base lid: 147
+		LMC: 0
+		SM lid: 30
+		Capability mask: 0xa651e848
+		Port GUID: 0x88e9a4ffff3161a8
+		Link layer: InfiniBand
+CA 'mlx5_2'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.33.1048
+	Hardware version: 0
+	Node GUID: 0x88e9a4ffff31714c
+	System image GUID: 0x88e9a4ffff31714c
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 200
+		Base lid: 154
+		LMC: 0
+		SM lid: 30
+		Capability mask: 0xa651e848
+		Port GUID: 0x88e9a4ffff31714c
+		Link layer: InfiniBand
+CA 'mlx5_3'
+	CA type: MT4119
+	Number of ports: 1
+	Firmware version: 16.33.1048
+	Hardware version: 0
+	Node GUID: 0x88e9a4ffff4299a4
+	System image GUID: 0x88e9a4ffff4299a4
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 100
+		Base lid: 0
+		LMC: 0
+		SM lid: 0
+		Capability mask: 0x00010000
+		Port GUID: 0x8ae9a4fffe4299a4
+		Link layer: Ethernet
+CA 'mlx5_4'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.33.1048
+	Hardware version: 0
+	Node GUID: 0x88e9a4ffff317168
+	System image GUID: 0x88e9a4ffff317168
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 200
+		Base lid: 155
+		LMC: 0
+		SM lid: 30
+		Capability mask: 0xa651e848
+		Port GUID: 0x88e9a4ffff317168
+		Link layer: InfiniBand</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this example, our system has 5 single-port ConnectX-6 HCAs, with the following LIDs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>mlx5_0</code>: <strong>152</strong></p>
+</li>
+<li>
+<p><code>mlx5_1</code>: <strong>147</strong></p>
+</li>
+<li>
+<p><code>mlx5_2</code>: <strong>154</strong></p>
+</li>
+<li>
+<p><code>mlx5_3</code>: <strong>0</strong></p>
+</li>
+<li>
+<p><code>mlx5_4</code>: <strong>155</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If everything has configured correctly <a href="infiniband.html#_mofed_installation" class="xref page">when MOFED was installed</a>,
+then you should see the cards also appearing under <code>/sys/class/infiniband</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# ls -l /sys/class/infiniband
+total 0
+lrwxrwxrwx 1 root root 0 Sep  6 13:17 mlx5_0 -&gt; ../../devices/pci0000:00/0000:00:01.1/0000:03:00.0/0000:04:04.0/0000:0e:00.0/infiniband/mlx5_0
+lrwxrwxrwx 1 root root 0 Sep  6 13:17 mlx5_1 -&gt; ../../devices/pci0000:40/0000:40:01.1/0000:43:00.0/0000:44:00.0/0000:45:00.0/infiniband/mlx5_1
+lrwxrwxrwx 1 root root 0 Sep  6 13:17 mlx5_2 -&gt; ../../devices/pci0000:80/0000:80:01.1/0000:83:00.0/0000:84:00.0/0000:85:00.0/infiniband/mlx5_2
+lrwxrwxrwx 1 root root 0 Sep  6 13:17 mlx5_3 -&gt; ../../devices/pci0000:a0/0000:a0:03.1/0000:a3:00.0/0000:a4:02.0/0000:b0:00.0/infiniband/mlx5_3
+lrwxrwxrwx 1 root root 0 Sep  6 13:17 mlx5_4 -&gt; ../../devices/pci0000:c0/0000:c0:01.1/0000:c3:00.0/0000:c4:00.0/0000:c5:00.0/infiniband/mlx5_4</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Underneath the device&#8217;s directory, you can find counter files to track real-time statistics about each port. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">/sys/class/infiniband/mlx5_0/ports/1/counters
+├── excessive_buffer_overrun_errors
+├── link_downed
+├── link_error_recovery
+├── local_link_integrity_errors
+├── multicast_rcv_packets
+├── multicast_xmit_packets
+├── port_rcv_constraint_errors
+├── port_rcv_data
+├── port_rcv_errors
+├── port_rcv_packets
+├── port_rcv_remote_physical_errors
+├── port_rcv_switch_relay_errors
+├── port_xmit_constraint_errors
+├── port_xmit_data
+├── port_xmit_discards
+├── port_xmit_packets
+├── port_xmit_wait
+├── symbol_error
+├── unicast_rcv_packets
+├── unicast_xmit_packets
+└── VL15_dropped</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Cracking open one of these files reveals a port counter value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/# cat /sys/class/infiniband/mlx5_0/ports/1/counters/port_rcv_packets
+280929405</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_port_counters_description"><a class="anchor" href="#_port_counters_description"></a>Port Counters Description</h3>
+<div class="paragraph">
+<p><a href="https://enterprise-support.nvidia.com/s/article/understanding-mlx5-linux-counters-and-status-parameters">Nvidia - Understanding mlx5 Linux Counters and Status Parameters</a></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Counter</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">InfiniBand Spec Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port_rcv_data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of data octets, divided by 4, (counting in double words, 32 bits), received on all VLs from the port.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PortRcvData</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port_rcv_packets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of packets (this may include packets containing Errors. This is 64 bit counter.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PortRcvPkts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port_xmit_data</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of data octets, divided by 4, (counting in double words, 32 bits), transmitted on all VLs from the port.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PortXmitData</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port_xmit_packets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of packets transmitted on all VLs from this port. This may include packets with errors.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PortXmitPkts</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">port_xmit_wait</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of ticks during which the port had data to transmit but no data was sent during the entire tick (either because of insufficient credits or because of lack of arbitration).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PortXmitWait</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monitoring_counters"><a class="anchor" href="#_monitoring_counters"></a>Monitoring Counters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As time goes on, these counters will be added to as packets are received or transmitted on the HCA port.
+We <em>could</em> write a tool to read these counters over time, but fortunately there are already tools
+out there that do reading, aggregation, and resetting of these counters into a nice format.</p>
+</div>
+<div class="sect2">
+<h3 id="_perfquery"><a class="anchor" href="#_perfquery"></a>Perfquery</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://linux.die.net/man/8/perfquery"><code>perfquery</code> Manpage</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One of the tools, <code>perfquery</code> comes with the <code>infiniband-diags</code> package which gets installed when you install the <code>rdma-core</code> module.</p>
+</div>
+<div class="paragraph">
+<p>This allows you to query port counters and reset them after reading, making interval-based queries much easier.</p>
+</div>
+<div class="sect3">
+<h4 id="_perfquery_usage"><a class="anchor" href="#_perfquery_usage"></a>Perfquery Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Usage: perfquery [options]  [&lt;lid|guid&gt; [[port(s)] [reset_mask]]]
+
+Options:
+  --extended, -x          show extended port counters
+  --xmtsl, -X             show Xmt SL port counters
+  --rcvsl, -S             show Rcv SL port counters
+  --xmtdisc, -D           show Xmt Discard Details
+  --rcverr, -E            show Rcv Error Details
+  --extended_speeds, -T   show port extended speeds counters
+  --oprcvcounters         show Rcv Counters per Op code
+  --flowctlcounters       show flow control counters
+  --vloppackets           show packets received per Op code per VL
+  --vlopdata              show data received per Op code per VL
+  --vlxmitflowctlerrors   show flow control update errors per VL
+  --vlxmitcounters        show ticks waiting to transmit counters per VL
+  --swportvlcong          show sw port VL congestion
+  --rcvcc                 show Rcv congestion control counters
+  --slrcvfecn             show SL Rcv FECN counters
+  --slrcvbecn             show SL Rcv BECN counters
+  --xmitcc                show Xmit congestion control counters
+  --vlxmittimecc          show VL Xmit Time congestion control counters
+  --smplctl, -c           show samples control
+  --all_ports, -a         show aggregated counters
+  --loop_ports, -l        iterate through each port
+  --reset_after_read, -r  reset counters after read
+  --Reset_only, -R        only reset counters
+  --config, -z &lt;config&gt;   use config file, default: /etc/infiniband-diags/ibdiag.conf
+  --Ca, -C &lt;ca&gt;           Ca name to use
+  --Port, -P &lt;port&gt;       Ca port number to use
+  --Lid, -L               use LID address argument
+  --Guid, -G              use GUID address argument
+  --timeout, -t &lt;ms&gt;      timeout in ms
+  --sm_port, -s &lt;lid&gt;     SM port lid
+  --m_key, -y &lt;key&gt;       M_Key to use in request
+  --errors, -e            show send and receive errors
+  --verbose, -v           increase verbosity level
+  --debug, -d             raise debug level
+  --help, -h              help message
+  --version, -V           show version
+
+Examples:
+  perfquery 		# read local port's performance counters
+  perfquery 32 1		# read performance counters from lid 32, port 1
+  perfquery -x 32 1	# read extended performance counters from lid 32, port 1
+  perfquery -a 32		# read performance counters from lid 32, all ports
+  perfquery -r 32 1	# read performance counters and reset
+  perfquery -x -r 32 1	# read extended performance counters and reset
+  perfquery -R 0x20 1	# reset performance counters of port 1 only
+  perfquery -x -R 0x20 1	# reset extended performance counters of port 1 only
+  perfquery -R -a 32	# reset performance counters of all ports
+  perfquery -R 32 2 0x0fff	# reset only error counters of port 2
+  perfquery -R 32 2 0xf000	# reset only non-error counters of port 2
+  perfquery -a 32 1-10	# read performance counters from lid 32, port 1-10, aggregate output
+  perfquery -l 32 1-10	# read performance counters from lid 32, port 1-10, output each port
+  perfquery -a 32 1,4,8	# read performance counters from lid 32, port 1, 4, and 8, aggregate output
+  perfquery -l 32 1,4,8	# read performance counters from lid 32, port 1, 4, and 8, output each port</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just executing <code>perfquery</code> by itself will return counter results for the <em>first HCA device/port it finds on the host</em>.
+This isn&#8217;t super helpful if we have multiple cards. Instead, we&#8217;ll want to specify a LID and port:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">perfquery &lt;device_lid&gt; &lt;device_port&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# perfquery 155 1
+# Port counters: Lid 155 port 1 (CapMask: 0x5A00)
+PortSelect:......................1
+CounterSelect:...................0x0000
+SymbolErrorCounter:..............0
+LinkErrorRecoveryCounter:........0
+LinkDownedCounter:...............0
+PortRcvErrors:...................0
+PortRcvRemotePhysicalErrors:.....0
+PortRcvSwitchRelayErrors:........0
+PortXmitDiscards:................0
+PortXmitConstraintErrors:........0
+PortRcvConstraintErrors:.........0
+CounterSelect2:..................0x00
+LocalLinkIntegrityErrors:........0
+ExcessiveBufferOverrunErrors:....0
+QP1Dropped:......................0
+VL15Dropped:.....................0
+PortXmitData:....................282509
+PortRcvData:.....................350990
+PortXmitPkts:....................4225
+PortRcvPkts:.....................5420
+PortXmitWait:....................0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A more powerful usage is to perform a <code>--reset_after_read</code>, to reset the counters back to 0 after we&#8217;ve read them.</p>
+</div>
+<div class="paragraph">
+<p>This lets us run perfquery on an interval-based loop, resetting after each read, getting statistics for the last interval.
+In this example we read the counters every second, filtering the results by just the received and transmitted packets and data.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>watch -n 1 'perfquery -r 152 1 | grep -P "Port(Xmit|Rcv)(Data|Pkts)"'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Every 1.0s: perfquery -r 152 1 | grep -P "Port...  o186i221: Thu Sep  7 20:26:06 2023
+
+PortXmitData:....................1008
+PortRcvData:.....................1452
+PortXmitPkts:....................14
+PortRcvPkts:.....................20</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is great for monitoring immediate activity on a single card, but on its own doesn&#8217;t track activity across multiple cards or aggregate information.
+Hence why I&#8217;ve built the following tool, IBmon, to use this under the hood and capture information to CSV files in a more post-processing-friendly way.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ibmon"><a class="anchor" href="#_ibmon"></a>IBmon</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/inf0rmatiker/omniscient/tree/master/monitoring/ibmon">IBmon - GitHub</a></p>
+</div>
+<div class="paragraph">
+<p>Clone the <a href="https://github.com/inf0rmatiker/omniscient">omniscient</a> repository so you can use the <code>ibmon.sh</code> and <code>aggregate.py</code> scripts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/inf0rmatiker/omniscient
+cd omniscient/monitoring/ibmon/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This collects interval-based snapshots of the port counters into a concise CSV file that you can load using a <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html">Pandas DataFrame</a>, then graph using <a href="https://matplotlib.org/">Matplotlib</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_ibmon_usage"><a class="anchor" href="#_ibmon_usage"></a>IBmon Usage</h3>
+<div class="paragraph">
+<p>To run the <code>ibmon.sh</code> script you&#8217;ll need to provide it with a few pieces of information as positional arguments:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ibmon.sh &lt;output_dir&gt; &lt;monitor_id&gt; &lt;snapshot_seconds&gt; &lt;total_snapshots&gt; &lt;ib_devices&gt; &lt;device_port&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>output_dir</code>: The directory you want the snapshot results to go to.</p>
+</li>
+<li>
+<p><code>monitor_id</code>: The unique ID of the monitor session. This could be either a number, date string, or UUID&#8201;&#8212;&#8201;really whatever you want.</p>
+</li>
+<li>
+<p><code>snapshot_seconds</code>: The interval between snapshots in seconds. Default is usually <code>1</code>.</p>
+</li>
+<li>
+<p><code>total_snapshots</code>: The total amount of snapshots you wish to take before exiting.</p>
+</li>
+<li>
+<p><code>ib_devices</code>: A space-separated string of mlx5 device names you wish to monitor.</p>
+</li>
+<li>
+<p><code>device_port</code>: The port ID on each device you wish to monitor. Only 1 port is supported for monitoring currently. Default is <code>1</code> for the first port.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">./ibmon.sh /tmp/ccarlson/ $(date +%s) 1 5 "mlx5_0 mlx5_1 mlx5_2 mlx5_3 mlx5_4" 1
+Port LID for mlx5_0, port 1: 152
+Port LID for mlx5_1, port 1: 147
+Port LID for mlx5_2, port 1: 154
+Port LID for mlx5_3, port 1: 0
+Port LID for mlx5_4, port 1: 155</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Resulting output files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># tree /tmp/ccarlson/
+/tmp/ccarlson/
+├── o186i221_1694189342.ibmon.pid
+├── o186i221_mlx5_0_152_1694189342.csv
+├── o186i221_mlx5_1_147_1694189342.csv
+├── o186i221_mlx5_2_154_1694189342.csv
+├── o186i221_mlx5_3_0_1694189342.csv
+└── o186i221_mlx5_4_155_1694189342.csv
+
+0 directories, 6 files</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then you can use <code>aggregate.py</code> to aggregate the CSV results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3 aggregate.py /tmp/ccarlson 1694189342</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This outputs <code>/tmp/ccarlson/o186i221_1694189342_aggregate.csv</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can process/graph this file however you like (Microsoft Excel, Matplotlib, etc). Personally, I like to use a Jupyter Notebook to plot these results.
+You can see an example here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/inf0rmatiker/cluster-benchmarks/blob/master/infiniband.ipynb">InfiniBand Monitor Results</a></p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/infiniband/ibmon_results.png" alt="ibmon results">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenFabrics Workshop - Sandia National Labs Presentation <em>Host Based InfiniBand Network Fabric Monitoring</em></p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/nXaYUGAM1zs?si=lxp0yCQMNp36IDdW?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.osti.gov/servlets/purl/1456369">Host Based InfiniBand Network Fabric Monitoring, PDF Slides</a></p>
+</li>
+<li>
+<p><a href="https://hmdsa.github.io/hmdsa/pages/tools/ldms">LDMS - Lightweight Distributed Metric Service</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

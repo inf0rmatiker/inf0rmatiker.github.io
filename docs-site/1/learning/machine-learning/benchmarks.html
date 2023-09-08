@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Kubernetes API Resources :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/k8s-api-resources.html">
+    <title>Machine Learning Benchmarks :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/machine-learning/benchmarks.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -72,16 +72,16 @@
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="crds.html">CRDs</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="k8s-api-resources.html">Kubernetes Resources</a>
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-install.html">Kubernetes Install</a>
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kubectl.html">kubectl</a>
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
   </li>
 </ul>
   </li>
@@ -215,14 +215,14 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Machine Learning</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+    <a class="nav-link" href="machine-learning.html">Machine Learning</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+    <a class="nav-link" href="determinedai.html">Determined AI</a>
   </li>
 </ul>
   </li>
@@ -281,8 +281,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Kubernetes</li>
-    <li><a href="k8s-api-resources.html">Kubernetes Resources</a></li>
+    <li>Machine Learning</li>
+    <li><a href="benchmarks.html">Benchmarks</a></li>
   </ul>
 </nav>
 </div>
@@ -291,172 +291,72 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Kubernetes API Resources</h1>
-<div id="preamble">
-<div class="sectionbody">
-<div class="paragraph">
-<p>This page contains commonly used Kubernetes resource definitions, templates, examples, and links to original API documentation.</p>
-</div>
-</div>
-</div>
+<h1 class="page">Machine Learning Benchmarks</h1>
 <div class="sect1">
-<h2 id="_pod"><a class="anchor" href="#_pod"></a>Pod</h2>
+<h2 id="_mlperf"><a class="anchor" href="#_mlperf"></a>MLPerf</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/pods/">Kubernetes Pod Documentation</a></p>
+<p><a href="https://github.com/mlcommons/training/blob/master/object_detection/README.md">RESNET-50 Object Detection Instructions</a>
+<a href="https://github.com/mlcommons/training_results_v3.0/tree/main/NVIDIA/benchmarks/resnet/implementations/mxnet">Nvidia RESNET Instructions</a></p>
 </div>
 <div class="paragraph">
-<p>Example Pod</p>
+<p>The binding configuration needs to be correct.</p>
+</div>
+<div class="paragraph">
+<p>The idea is to minimize latency going from CPU to GPU. Typically you have NUMA domains, you specify the closest NUMA domain for each CPU.
+In our system you only have half the PCI lanes, so you have to make a mapping based on cores.</p>
+</div>
+<div class="paragraph">
+<p>See the current mapping using the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Pod
-metadata:
-  name: rocky-admin-pod
-spec:
-  containers:
-    - name: rocky-admin-container
-      image: rockylinux:9.1.20221221
-      ports:
-        - containerPort: 80
-      imagePullPolicy: Always
-      command:
-        - "sleep"
-        - "86400"</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">nvidia-smi topo -m</code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_job"><a class="anchor" href="#_job"></a>Job</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">Kubernetes Job Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_cronjob"><a class="anchor" href="#_cronjob"></a>CronJob</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/">Kubernetes CronJob Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_deployment"><a class="anchor" href="#_deployment"></a>Deployment</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Kubernetes Deployment Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_replicaset"><a class="anchor" href="#_replicaset"></a>ReplicaSet</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/">Kubernetes ReplicaSet Documenetation</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_statefulset"><a class="anchor" href="#_statefulset"></a>StatefulSet</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">Kubernetes StatefulSet Documentation</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_daemonset"><a class="anchor" href="#_daemonset"></a>DaemonSet</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/">Kubernetes DaemonSet Documentation</a></p>
 </div>
 <div class="paragraph">
-<p>Example DaemonSet</p>
+<p>Example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  name: validation-svc-workers
-spec:
-  selector:
-    matchLabels:
-      name: validation-svc-worker
-  template:
-    metadata:
-      labels:
-        name: validation-svc-worker
-    spec:
-      nodeSelector:
-        validationSvcWorker: "true"
-      containers:
-        - name: validation-svc-worker
-          image: sustain/validation-service:latest
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 50058
-          # Right now the easiest way to do this without creating a cluster service is just to set the master_uri to the
-          # validation-svc-master pod's cluster IP.
-          command: [ "python3", "-m", "overlay", "--worker", "--master_uri=&lt;validation-svc-master-ip&gt;:&lt;master_port&gt;", "--port=50058" ]
-          env:
-            - name: NODE_HOSTNAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName  # tell the pod about the host it's on, so it can talk to the local mongod
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: POD_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.podIP</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/ccarlson/experiments# nvidia-smi topo -m
+	GPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	GPU7	NIC0	NIC1	NIC2	NIC3	NIC4	CPU Affinity	NUMA Affinity
+GPU0	 X 	PXB	SYS	SYS	SYS	SYS	SYS	SYS	PXB	SYS	SYS	SYS	SYS	48-63	3
+GPU1	PXB	 X 	SYS	SYS	SYS	SYS	SYS	SYS	PXB	SYS	SYS	SYS	SYS	48-63	3
+GPU2	SYS	SYS	 X 	PXB	SYS	SYS	SYS	SYS	SYS	PXB	SYS	SYS	SYS	16-31	1
+GPU3	SYS	SYS	PXB	 X 	SYS	SYS	SYS	SYS	SYS	PXB	SYS	SYS	SYS	16-31	1
+GPU4	SYS	SYS	SYS	SYS	 X 	PXB	SYS	SYS	SYS	SYS	PXB	SYS	SYS	112-127	7
+GPU5	SYS	SYS	SYS	SYS	PXB	 X 	SYS	SYS	SYS	SYS	PXB	SYS	SYS	112-127	7
+GPU6	SYS	SYS	SYS	SYS	SYS	SYS	 X 	PXB	SYS	SYS	SYS	SYS	PXB	80-95	5
+GPU7	SYS	SYS	SYS	SYS	SYS	SYS	PXB	 X 	SYS	SYS	SYS	SYS	PXB	80-95	5
+NIC0	PXB	PXB	SYS	SYS	SYS	SYS	SYS	SYS	 X 	SYS	SYS	SYS	SYS
+NIC1	SYS	SYS	PXB	PXB	SYS	SYS	SYS	SYS	SYS	 X 	SYS	SYS	SYS
+NIC2	SYS	SYS	SYS	SYS	PXB	PXB	SYS	SYS	SYS	SYS	 X 	SYS	SYS
+NIC3	SYS	SYS	SYS	SYS	SYS	SYS	SYS	SYS	SYS	SYS	SYS	 X 	SYS
+NIC4	SYS	SYS	SYS	SYS	SYS	SYS	PXB	PXB	SYS	SYS	SYS	SYS	 X
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1
+  NIC2: mlx5_2
+  NIC3: mlx5_3
+  NIC4: mlx5_4</code></pre>
 </div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_services"><a class="anchor" href="#_services"></a>Services</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://kubernetes.io/docs/concepts/services-networking/">Kubernetes Networking Documentation</a></p>
-</li>
-<li>
-<p><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes Service Documentation</a></p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_nodeport_service"><a class="anchor" href="#_nodeport_service"></a>NodePort Service</h3>
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport">Kubernetes NodePort Service Documentation</a></p>
-</div>
-<div class="paragraph">
-<p>Example NodePort Service</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">apiVersion: v1
-kind: Service
-metadata:
-  name: validation-service
-spec:
-  type: NodePort
-  selector:
-    name: validation-svc-master
-  ports:
-    - name: master-port
-      port: 50059
-      nodePort: 30036
-      protocol: http</code></pre>
-</div>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">BUILDDOCKER_BUILDKIT=1 docker build</code></pre>
 </div>
 </div>
 </div>

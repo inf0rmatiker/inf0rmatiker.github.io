@@ -408,6 +408,11 @@ image::docs-site:learning:infiniband/ibmon_results.png[ibmon results]
 
 == References
 
+* https://enterprise-support.nvidia.com/s/article/understanding-mlx5-linux-counters-and-status-parameters[Nvidia - Understanding mlx5 Linux Counters]
+* https://github.com/infiniband-radar[GitHub - InfiniBand Radar]
+** https://github.com/infiniband-radar/infiniband-radar-daemon[infiniband-radar-daemon]
+** https://github.com/infiniband-radar/infiniband-radar-web[infiniband-radar-web]
+
 OpenFabrics Workshop - Sandia National Labs Presentation _Host Based InfiniBand Network Fabric Monitoring_
 
 video::nXaYUGAM1zs?si=lxp0yCQMNp36IDdW[youtube,width=960,height=440]

@@ -328,10 +328,7 @@
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h3>
-<div class="paragraph">
-<p>This installation guide is for a RHEL-based system, commands might be slightly different for Ubuntu.</p>
-</div>
+<h3 id="_ior_installation"><a class="anchor" href="#_ior_installation"></a>IOR Installation</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -340,20 +337,23 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>Install the dependencies:</p>
+<p>Stop your firewall, this can prevent openmpi communication:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y wget tar git openmpi openmpi-devel automake kernel-devel gcc</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl stop firewalld
+setenforce 0</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Put <code>openmpi</code> on your <code>PATH</code> variable:</p>
+<p>Install openmpi for your distribution:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export PATH=$PATH:/usr/lib64/openmpi/bin/</code></pre>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.open-mpi.org/en/v5.0.x/installing-open-mpi/quickstart.html">Installing OpenMPI Quickstart</a></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Clone the <code>ior</code> repo:</p>
@@ -365,31 +365,13 @@ cd ior/</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Load the <code>openmpi</code> module:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">module load mpi/openmpi-x86_64</code></pre>
-</div>
-</div>
-<div class="paragraph">
 <p>Next, bootstrap, configure and make the IOR software:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./bootstrap
 ./configure
-make clean &amp;&amp; make
-make install</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Stop the firewall daemon and turn off SELinux:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">systemctl stop firewalld
-setenforce 0</code></pre>
+make</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -457,12 +439,13 @@ to execute by just changing some variables:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
 
-IOR_BIN="$HOME/ior/src/ior"
+IOR_BIN="/home/ccarlson/ior/src/ior"
 MACHINE_FILE="machinefile.txt"
-TOTAL_SLOTS=128
-BLOCKSIZE_PER_TASK="32g"
+TOTAL_HOSTS=$(cat $MACHINE_FILE | wc -l)
+TOTAL_SLOTS=$(( $TOTAL_HOSTS * 128 ))
+BLOCKSIZE_PER_TASK="16g"
 TRANSFER_SIZES="64m"
-TEST_DIRECTORY="/lus/aiholus1/flash/ccarlson"
+TEST_DIRECTORY="/mnt/cstor1/ccarlson"
 TEST_FILE="testfile"
 
 set -ex
@@ -470,7 +453,7 @@ set -ex
 # Sequential Write
 function seq_write {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -k -o $TEST_DIRECTORY/$TEST_FILE \
     &gt; seq_write_$TRANSFER_SIZE.out
 }
@@ -478,7 +461,7 @@ function seq_write {
 # Random Write
 function rand_write {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
     &gt; rand_write_$TRANSFER_SIZE.out
 }
@@ -486,7 +469,7 @@ function rand_write {
 # Sequential Read
 function seq_read {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE \
     &gt; seq_read_$TRANSFER_SIZE.out
 }
@@ -494,7 +477,7 @@ function seq_read {
 # Random Read
 function rand_read {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -z -k -o $TEST_DIRECTORY/$TEST_FILE \
     &gt; rand_read_$TRANSFER_SIZE.out
 }

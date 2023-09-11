@@ -22,25 +22,21 @@ Documentation:
 * https://wiki.lustre.org/IOR#Download_and_Compile_IOR[Download and Compile IOR]
 * https://ior.readthedocs.io/en/latest/userDoc/options.html[IOR Command Options]
 
-=== Installation
-
-This installation guide is for a RHEL-based system, commands might be slightly different for Ubuntu.
+=== IOR Installation
 
 * https://ior.readthedocs.io/en/latest/userDoc/install.html[`ior` Installation Documentation]
 
-Install the dependencies:
+Stop your firewall, this can prevent openmpi communication:
 
 [,bash]
 ----
-dnf install -y wget tar git openmpi openmpi-devel automake kernel-devel gcc
+systemctl stop firewalld
+setenforce 0
 ----
 
-Put `openmpi` on your `PATH` variable:
+Install openmpi for your distribution:
 
-[,bash]
-----
-export PATH=$PATH:/usr/lib64/openmpi/bin/
-----
+* https://docs.open-mpi.org/en/v5.0.x/installing-open-mpi/quickstart.html[Installing OpenMPI Quickstart]
 
 Clone the `ior` repo:
 
@@ -50,29 +46,13 @@ git clone https://github.com/hpc/ior
 cd ior/
 ----
 
-Load the `openmpi` module:
-
-[,bash]
-----
-module load mpi/openmpi-x86_64
-----
-
 Next, bootstrap, configure and make the IOR software:
 
 [,bash]
 ----
 ./bootstrap
 ./configure
-make clean && make
-make install
-----
-
-Stop the firewall daemon and turn off SELinux:
-
-[,bash]
-----
-systemctl stop firewalld
-setenforce 0
+make
 ----
 
 Add the built `ior` binary to your `PATH` variable:
@@ -120,12 +100,13 @@ to execute by just changing some variables:
 ----
 #!/bin/bash
 
-IOR_BIN="$HOME/ior/src/ior"
+IOR_BIN="/home/ccarlson/ior/src/ior"
 MACHINE_FILE="machinefile.txt"
-TOTAL_SLOTS=128
-BLOCKSIZE_PER_TASK="32g"
+TOTAL_HOSTS=$(cat $MACHINE_FILE | wc -l)
+TOTAL_SLOTS=$(( $TOTAL_HOSTS * 128 ))
+BLOCKSIZE_PER_TASK="16g"
 TRANSFER_SIZES="64m"
-TEST_DIRECTORY="/lus/aiholus1/flash/ccarlson"
+TEST_DIRECTORY="/mnt/cstor1/ccarlson"
 TEST_FILE="testfile"
 
 set -ex
@@ -133,7 +114,7 @@ set -ex
 # Sequential Write
 function seq_write {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -k -o $TEST_DIRECTORY/$TEST_FILE \
     > seq_write_$TRANSFER_SIZE.out
 }
@@ -141,7 +122,7 @@ function seq_write {
 # Random Write
 function rand_write {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
     > rand_write_$TRANSFER_SIZE.out
 }
@@ -149,7 +130,7 @@ function rand_write {
 # Sequential Read
 function seq_read {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE \
     > seq_read_$TRANSFER_SIZE.out
 }
@@ -157,7 +138,7 @@ function seq_read {
 # Random Read
 function rand_read {
   TRANSFER_SIZE=$1
-  mpirun --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -z -k -o $TEST_DIRECTORY/$TEST_FILE \
     > rand_read_$TRANSFER_SIZE.out
 }

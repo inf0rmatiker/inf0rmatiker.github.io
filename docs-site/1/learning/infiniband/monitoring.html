@@ -738,7 +738,7 @@ cd omniscient/monitoring/ibmon/</code></pre>
 <p><code>total_snapshots</code>: The total amount of snapshots you wish to take before exiting.</p>
 </li>
 <li>
-<p><code>ib_devices</code>: A space-separated string of mlx5 device names you wish to monitor.</p>
+<p><code>ib_devices</code>: A comma-separated string of mlx5 device names you wish to monitor.</p>
 </li>
 <li>
 <p><code>device_port</code>: The port ID on each device you wish to monitor. Only 1 port is supported for monitoring currently. Default is <code>1</code> for the first port.</p>
@@ -750,11 +750,10 @@ cd omniscient/monitoring/ibmon/</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">./ibmon.sh /tmp/ccarlson/ $(date +%s) 1 5 "mlx5_0 mlx5_1 mlx5_2 mlx5_3 mlx5_4" 1
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># ./ibmon.sh /tmp/omniscient/ root-20230911-200447 1 5 "mlx5_0,mlx5_1,mlx5_2,mlx5_4" 1
 Port LID for mlx5_0, port 1: 152
 Port LID for mlx5_1, port 1: 147
 Port LID for mlx5_2, port 1: 154
-Port LID for mlx5_3, port 1: 0
 Port LID for mlx5_4, port 1: 155</code></pre>
 </div>
 </div>
@@ -763,16 +762,15 @@ Port LID for mlx5_4, port 1: 155</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># tree /tmp/ccarlson/
-/tmp/ccarlson/
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># tree /tmp/omniscient/
+/tmp/omniscient/
 ├── o186i221_1694189342.ibmon.pid
-├── o186i221_mlx5_0_152_1694189342.csv
-├── o186i221_mlx5_1_147_1694189342.csv
-├── o186i221_mlx5_2_154_1694189342.csv
-├── o186i221_mlx5_3_0_1694189342.csv
-└── o186i221_mlx5_4_155_1694189342.csv
+├── o186i221_mlx5_0_152_root-20230911-200447.ibmon.csv
+├── o186i221_mlx5_1_147_root-20230911-200447.ibmon.csv
+├── o186i221_mlx5_2_154_root-20230911-200447.ibmon.csv
+└── o186i221_mlx5_4_155_root-20230911-200447.ibmon.csv
 
-0 directories, 6 files</code></pre>
+0 directories, 5 files</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -780,11 +778,21 @@ Port LID for mlx5_4, port 1: 155</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3 aggregate.py /tmp/ccarlson 1694189342</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3 aggregate.py example/ root-20230911-200447</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This outputs <code>/tmp/ccarlson/o186i221_1694189342_aggregate.csv</code>.</p>
+<p>This outputs two files:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>example/o186i221_root-20230911-200447_host_aggregate.ibmon.csv</code> : This is a file that&#8217;s aggregated all the device captures to a single file for a given host.</p>
+</li>
+<li>
+<p><code>example/root-20230911-200447_total_aggregate.ibmon.csv</code> : This is a file that&#8217;s aggregated all the host (and underlying device) captures to a single file for a given monitor, which may span multiple nodes in the cluster.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>You can process/graph this file however you like (Microsoft Excel, Matplotlib, etc). Personally, I like to use a Jupyter Notebook to plot these results.
@@ -800,6 +808,36 @@ You can see an example here:</p>
 <div class="imageblock">
 <div class="content">
 <img src="../_images/infiniband/ibmon_results.png" alt="ibmon results">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_omniscient"><a class="anchor" href="#_omniscient"></a>Omniscient</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>ibmon.sh</code> sits in the omniscient repo, which is a set of utility scripts and a CLI for monitoring a cluster in a distributed fashion.</p>
+</div>
+<div class="paragraph">
+<p>This is easier than using the individual <code>ibmon.sh</code> and <code>aggregate.py</code> scripts directly; everything is handled for you by your <code>omni</code> configuration settings.
+View the Omniscient documentation below for how to use this tool.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/inf0rmatiker/omniscient">omniscient</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_ior_benchmarks_with_system_monitoring"><a class="anchor" href="#_ior_benchmarks_with_system_monitoring"></a>IOR Benchmarks with System Monitoring</h3>
+<div class="paragraph">
+<p>This video provides an overview for capturing InfiniBand metrics with <code>omni</code> while an experiment is ongoing:</p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/FM7a9HuOl-k?si=1hpPs0SM7Ds2uQM-?rel=0" frameborder="0" allowfullscreen></iframe>
 </div>
 </div>
 </div>

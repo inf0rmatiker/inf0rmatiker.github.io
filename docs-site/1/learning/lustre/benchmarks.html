@@ -328,7 +328,7 @@
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_ior_installation"><a class="anchor" href="#_ior_installation"></a>IOR Installation</h3>
+<h3 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -439,31 +439,31 @@ to execute by just changing some variables:</p>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
 
+set -ex
+
 IOR_BIN="/home/ccarlson/ior/src/ior"
 MACHINE_FILE="machinefile.txt"
 TOTAL_HOSTS=$(cat $MACHINE_FILE | wc -l)
-TOTAL_SLOTS=$(( $TOTAL_HOSTS * 128 ))
+TOTAL_SLOTS=$(( $TOTAL_HOSTS * 64 ))
 BLOCKSIZE_PER_TASK="16g"
-TRANSFER_SIZES="64m"
+TRANSFER_SIZES="128k 1m 16m 64m"
 TEST_DIRECTORY="/mnt/cstor1/ccarlson"
 TEST_FILE="testfile"
-
-set -ex
 
 # Sequential Write
 function seq_write {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
-    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -k -o $TEST_DIRECTORY/$TEST_FILE \
-    &gt; seq_write_$TRANSFER_SIZE.out
+    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -k -o $TEST_DIRECTORY/$TEST_FILE \
+    -O summaryFile=$OUT_DIR/seq_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Random Write
 function rand_write {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
-    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    &gt; rand_write_$TRANSFER_SIZE.out
+    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
+    -O summaryFile=$OUT_DIR/rand_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Sequential Read
@@ -471,7 +471,7 @@ function seq_read {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE \
-    &gt; seq_read_$TRANSFER_SIZE.out
+    -O summaryFile=$OUT_DIR/seq_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Random Read
@@ -479,8 +479,13 @@ function rand_read {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    &gt; rand_read_$TRANSFER_SIZE.out
+    -O summaryFile=$OUT_DIR/rand_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
+
+[ $# -ne 1 ] &amp;&amp; echo -e "Usage:\n\tbenchmark.sh &lt;output_directory&gt;\n" &amp;&amp; exit 1
+
+OUT_DIR=$1
+mkdir -p $OUT_DIR
 
 for TRANSFER_SIZE in $TRANSFER_SIZES; do
   echo -e "\nRunning benchmark with transfer size $TRANSFER_SIZE\n"
@@ -489,6 +494,244 @@ for TRANSFER_SIZE in $TRANSFER_SIZES; do
   rand_write $TRANSFER_SIZE
   rand_read $TRANSFER_SIZE
 done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_command_line_options"><a class="anchor" href="#_command_line_options"></a>Command-line Options</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://ior.readthedocs.io/en/latest/userDoc/options.html">IOR Command Options</a></p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-a S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">api - API for I/O [POSIX|MPIIO|HDF5|HDFS|S3|S3_EMC|NCMPI|RADOS]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-A N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refNum - user reference number to include in long summary</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-b N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">blockSize - contiguous bytes to write per task (e.g.: 8, 4k, 2m, 1g)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-c</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">collective - collective I/O</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-C</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reorderTasksConstant - changes task ordering to n+1 ordering for readback</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-d N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">interTestDelay - delay between reps in seconds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-D N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deadlineForStonewalling - seconds before stopping write or read phase</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-e</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fsync - perform fsync upon POSIX write close</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useExistingTestFile - do not remove test file before write access</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-f S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scriptFile - test script name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-F</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">filePerProc - file-per-process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-g</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">intraTestBarriers - use barriers between open, write/read, and close</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-G N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setTimeStampSignature - set value for time stamp signature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-h</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">showHelp - displays options and help</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-H</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">showHints - show hints</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-i N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">repetitions - number of repetitions of test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-I</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">individualDataSets - datasets not shared by all procs [not working]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-j N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">outlierThreshold - warn on outlier N seconds from mean</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-J N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setAlignment - HDF5 alignment in bytes (e.g.: 8, 4k, 2m, 1g)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-k</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keepFile - don&#8217;t remove the test file(s) on program exit</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-K</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keepFileWithError - keep error-filled file(s) after data-checking</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-l</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">data packet type- type of packet that will be created [offset|incompressible|timestamp|o|i|t]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-m</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">multiFile - use number of reps (-i) for multiple file count</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-M N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memoryPerNode - hog memory on the node (e.g.: 2g, 75%)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-n</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">noFill - no fill in HDF5 file creation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-N N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">numTasks - number of tasks that should participate in the test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-o S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">testFile - full name for test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-O S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">string of IOR directives (e.g. -O checkRead=1,GPUid=2)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-p</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">preallocate - preallocate file size</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-P</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useSharedFilePointer - use shared file pointer [not working]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-q</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">quitOnError - during file error-checking, abort on error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-Q N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">taskPerNodeOffset for read tests use with -C &amp; -Z options (-C constant N, -Z at least N) [!HDF5]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-r</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">readFile - read existing file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-R</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkRead - check read after read</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-s N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">segmentCount - number of segments</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useStridedDatatype - put strided access into datatype [not working]</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-t N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">transferSize - size of transfer in bytes (e.g.: 8, 4k, 2m, 1g)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-T N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maxTimeDuration - max time in minutes to run tests</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-u</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uniqueDir - use unique directory name for each file-per-process</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-U S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hintsFileName - full name for hints file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-v</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">verbose - output information (repeating flag increases level)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-V</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">useFileView - use MPI_File_set_view</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-w</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">writeFile - write file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-W</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">checkWrite - check read after write</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">singleXferAttempt - do not retry transfer if incomplete</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-X N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reorderTasksRandomSeed - random seed for -Z option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-Y</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fsyncPerWrite - perform fsync after each POSIX write</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-z</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">randomOffset - access is to random, not sequential, offsets within a file</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-Z</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">reorderTasksRandom - changes task ordering to random ordering for readback</p></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>S</strong> is a string, <strong>N</strong> is an integer number.</p>
+</li>
+<li>
+<p>For transfer and block sizes, the case-insensitive <strong>K</strong>, <strong>M</strong>, and <strong>G</strong> suffices are recognized. I.e., <code>4k</code> or <code>4K`</code> is accepted as 4096.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_overview_of_ior_benchmarks_with_system_monitoring"><a class="anchor" href="#_overview_of_ior_benchmarks_with_system_monitoring"></a>Overview of IOR Benchmarks with System Monitoring</h3>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/FM7a9HuOl-k?si=1hpPs0SM7Ds2uQM-?rel=0" frameborder="0" allowfullscreen></iframe>
 </div>
 </div>
 </div>

@@ -157,6 +157,23 @@ for TRANSFER_SIZE in $TRANSFER_SIZES; do
 done
 ----
 
+=== Usage Example
+
+The following example uses `mpirun` to execute a single instance (`-np 1`) of `ior` on the machine provided in `machinefile.txt`, mapped by slots available on that machine.
+IOR is doing a sequential write (`-w`) benchmark, using file-per-process (`-F`), bypasses the hosts buffer with ODIRECT=1 flag (`--posix.odirect=1`), reordering tasks (`-C`),
+with a transfer size of 128 KiB at a time (`-t 128k`), and a total block size of 16 GiB (`-b 16g`) per process. It does an fsync after the write operation is closed (`-e`), and keeps the files it wrote (`-k`). The output files go to `/mnt/cstor1/ccarlson/testfile.XXXX` where `XXXX` is the process ID. Finally, the benchmark summary is output to the file
+`single_node/slots_1/seq_write_128k.csv` in the CSV format.
+
+[,bash]
+----
+mpirun --allow-run-as-root --machinefile machinefile.txt -np 1 --map-by slot \
+  /home/ccarlson/ior/src/ior -v \
+    -F --posix.odirect -C -t 128k -b 16g -e -w -k \
+    -o /mnt/cstor1/ccarlson/testfile \
+    -O summaryFile=single_node/slots_1/seq_write_128k.csv \
+    -O summaryFormat=CSV
+----
+
 === Command-line Options
 
 * https://ior.readthedocs.io/en/latest/userDoc/options.html[IOR Command Options]

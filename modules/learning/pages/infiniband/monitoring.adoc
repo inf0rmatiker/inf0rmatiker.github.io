@@ -359,18 +359,17 @@ ibmon.sh <output_dir> <monitor_id> <snapshot_seconds> <total_snapshots> <ib_devi
 * `monitor_id`: The unique ID of the monitor session. This could be either a number, date string, or UUID -- really whatever you want.
 * `snapshot_seconds`: The interval between snapshots in seconds. Default is usually `1`.
 * `total_snapshots`: The total amount of snapshots you wish to take before exiting.
-* `ib_devices`: A space-separated string of mlx5 device names you wish to monitor.
+* `ib_devices`: A comma-separated string of mlx5 device names you wish to monitor.
 * `device_port`: The port ID on each device you wish to monitor. Only 1 port is supported for monitoring currently. Default is `1` for the first port.
 
 Example:
 
 [,console]
 ----
-./ibmon.sh /tmp/ccarlson/ $(date +%s) 1 5 "mlx5_0 mlx5_1 mlx5_2 mlx5_3 mlx5_4" 1
+# ./ibmon.sh /tmp/omniscient/ root-20230911-200447 1 5 "mlx5_0,mlx5_1,mlx5_2,mlx5_4" 1
 Port LID for mlx5_0, port 1: 152
 Port LID for mlx5_1, port 1: 147
 Port LID for mlx5_2, port 1: 154
-Port LID for mlx5_3, port 1: 0
 Port LID for mlx5_4, port 1: 155
 ----
 
@@ -378,26 +377,28 @@ Resulting output files:
 
 [,console]
 ----
-# tree /tmp/ccarlson/
-/tmp/ccarlson/
+# tree /tmp/omniscient/
+/tmp/omniscient/
 ├── o186i221_1694189342.ibmon.pid
-├── o186i221_mlx5_0_152_1694189342.csv
-├── o186i221_mlx5_1_147_1694189342.csv
-├── o186i221_mlx5_2_154_1694189342.csv
-├── o186i221_mlx5_3_0_1694189342.csv
-└── o186i221_mlx5_4_155_1694189342.csv
+├── o186i221_mlx5_0_152_root-20230911-200447.ibmon.csv
+├── o186i221_mlx5_1_147_root-20230911-200447.ibmon.csv
+├── o186i221_mlx5_2_154_root-20230911-200447.ibmon.csv
+└── o186i221_mlx5_4_155_root-20230911-200447.ibmon.csv
 
-0 directories, 6 files
+0 directories, 5 files
 ----
 
 Then you can use `aggregate.py` to aggregate the CSV results:
 
 [,bash]
 ----
-python3 aggregate.py /tmp/ccarlson 1694189342
+python3 aggregate.py example/ root-20230911-200447
 ----
 
-This outputs `/tmp/ccarlson/o186i221_1694189342_aggregate.csv`.
+This outputs two files:
+
+- `example/o186i221_root-20230911-200447_host_aggregate.ibmon.csv` : This is a file that's aggregated all the device captures to a single file for a given host.
+- `example/root-20230911-200447_total_aggregate.ibmon.csv` : This is a file that's aggregated all the host (and underlying device) captures to a single file for a given monitor, which may span multiple nodes in the cluster.
 
 You can process/graph this file however you like (Microsoft Excel, Matplotlib, etc). Personally, I like to use a Jupyter Notebook to plot these results.
 You can see an example here:
@@ -405,6 +406,21 @@ You can see an example here:
 * https://github.com/inf0rmatiker/cluster-benchmarks/blob/master/infiniband.ipynb[InfiniBand Monitor Results]
 
 image::docs-site:learning:infiniband/ibmon_results.png[ibmon results]
+
+== Omniscient
+
+`ibmon.sh` sits in the omniscient repo, which is a set of utility scripts and a CLI for monitoring a cluster in a distributed fashion.
+
+This is easier than using the individual `ibmon.sh` and `aggregate.py` scripts directly; everything is handled for you by your `omni` configuration settings.
+View the Omniscient documentation below for how to use this tool.
+
+- https://github.com/inf0rmatiker/omniscient[omniscient]
+
+=== IOR Benchmarks with System Monitoring
+
+This video provides an overview for capturing InfiniBand metrics with `omni` while an experiment is ongoing:
+
+video::FM7a9HuOl-k?si=1hpPs0SM7Ds2uQM-[youtube,width=960,height=440]
 
 == References
 

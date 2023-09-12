@@ -22,7 +22,7 @@ Documentation:
 * https://wiki.lustre.org/IOR#Download_and_Compile_IOR[Download and Compile IOR]
 * https://ior.readthedocs.io/en/latest/userDoc/options.html[IOR Command Options]
 
-=== IOR Installation
+=== Installation
 
 * https://ior.readthedocs.io/en/latest/userDoc/install.html[`ior` Installation Documentation]
 
@@ -100,31 +100,31 @@ to execute by just changing some variables:
 ----
 #!/bin/bash
 
+set -ex
+
 IOR_BIN="/home/ccarlson/ior/src/ior"
 MACHINE_FILE="machinefile.txt"
 TOTAL_HOSTS=$(cat $MACHINE_FILE | wc -l)
-TOTAL_SLOTS=$(( $TOTAL_HOSTS * 128 ))
+TOTAL_SLOTS=$(( $TOTAL_HOSTS * 64 ))
 BLOCKSIZE_PER_TASK="16g"
-TRANSFER_SIZES="64m"
+TRANSFER_SIZES="128k 1m 16m 64m"
 TEST_DIRECTORY="/mnt/cstor1/ccarlson"
 TEST_FILE="testfile"
-
-set -ex
 
 # Sequential Write
 function seq_write {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
-    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -k -o $TEST_DIRECTORY/$TEST_FILE \
-    > seq_write_$TRANSFER_SIZE.out
+    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -k -o $TEST_DIRECTORY/$TEST_FILE \
+    -O summaryFile=$OUT_DIR/seq_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Random Write
 function rand_write {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
-    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    > rand_write_$TRANSFER_SIZE.out
+    $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
+    -O summaryFile=$OUT_DIR/rand_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Sequential Read
@@ -132,7 +132,7 @@ function seq_read {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE \
-    > seq_read_$TRANSFER_SIZE.out
+    -O summaryFile=$OUT_DIR/seq_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
 
 # Random Read
@@ -140,8 +140,13 @@ function rand_read {
   TRANSFER_SIZE=$1
   mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    > rand_read_$TRANSFER_SIZE.out
+    -O summaryFile=$OUT_DIR/rand_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
 }
+
+[ $# -ne 1 ] && echo -e "Usage:\n\tbenchmark.sh <output_directory>\n" && exit 1
+
+OUT_DIR=$1
+mkdir -p $OUT_DIR
 
 for TRANSFER_SIZE in $TRANSFER_SIZES; do
   echo -e "\nRunning benchmark with transfer size $TRANSFER_SIZE\n"
@@ -151,3 +156,166 @@ for TRANSFER_SIZE in $TRANSFER_SIZES; do
   rand_read $TRANSFER_SIZE
 done
 ----
+
+=== Command-line Options
+
+* https://ior.readthedocs.io/en/latest/userDoc/options.html[IOR Command Options]
+
+[cols="1,4"]
+|===
+| Option | Description
+
+|-a S
+|api - API for I/O [POSIX\|MPIIO\|HDF5\|HDFS\|S3\|S3_EMC\|NCMPI\|RADOS]
+
+|-A N
+|refNum - user reference number to include in long summary
+
+|-b N
+|blockSize - contiguous bytes to write per task (e.g.: 8, 4k, 2m, 1g)
+
+|-c
+|collective - collective I/O
+
+|-C
+|reorderTasksConstant - changes task ordering to n+1 ordering for readback
+
+|-d N
+|interTestDelay - delay between reps in seconds
+
+|-D N
+|deadlineForStonewalling - seconds before stopping write or read phase
+
+|-e
+|fsync - perform fsync upon POSIX write close
+
+|-E
+|useExistingTestFile - do not remove test file before write access
+
+|-f S
+|scriptFile - test script name
+
+|-F
+|filePerProc - file-per-process
+
+|-g
+|intraTestBarriers - use barriers between open, write/read, and close
+
+|-G N
+|setTimeStampSignature - set value for time stamp signature
+
+|-h
+|showHelp - displays options and help
+
+|-H
+|showHints - show hints
+
+|-i N
+|repetitions - number of repetitions of test
+
+|-I
+|individualDataSets - datasets not shared by all procs [not working]
+
+|-j N
+|outlierThreshold - warn on outlier N seconds from mean
+	
+|-J N
+|setAlignment - HDF5 alignment in bytes (e.g.: 8, 4k, 2m, 1g)
+
+|-k
+|keepFile - don't remove the test file(s) on program exit
+	
+|-K
+|keepFileWithError - keep error-filled file(s) after data-checking
+	
+|-l
+|data packet type- type of packet that will be created [offset\|incompressible\|timestamp\|o\|i\|t]
+	
+|-m
+|multiFile - use number of reps (-i) for multiple file count
+
+|-M N
+|memoryPerNode - hog memory on the node (e.g.: 2g, 75%)
+
+|-n
+|noFill - no fill in HDF5 file creation
+
+|-N N
+|numTasks - number of tasks that should participate in the test
+
+|-o S
+|testFile - full name for test
+
+|-O S
+|string of IOR directives (e.g. -O checkRead=1,GPUid=2)
+
+|-p
+|preallocate - preallocate file size
+
+|-P
+|useSharedFilePointer - use shared file pointer [not working]
+
+|-q
+|quitOnError - during file error-checking, abort on error
+
+|-Q N
+|taskPerNodeOffset for read tests use with -C & -Z options (-C constant N, -Z at least N) [!HDF5]
+
+|-r
+|readFile - read existing file
+
+|-R
+|checkRead - check read after read
+
+|-s N
+|segmentCount - number of segments
+
+|-S
+|useStridedDatatype - put strided access into datatype [not working]
+
+|-t N
+|transferSize - size of transfer in bytes (e.g.: 8, 4k, 2m, 1g)
+
+|-T N
+|maxTimeDuration - max time in minutes to run tests
+
+|-u
+|uniqueDir - use unique directory name for each file-per-process
+
+|-U S
+|hintsFileName - full name for hints file
+
+|-v
+|verbose - output information (repeating flag increases level)
+
+|-V
+|useFileView - use MPI_File_set_view
+
+|-w
+|writeFile - write file
+
+|-W
+|checkWrite - check read after write
+
+|-x
+|singleXferAttempt - do not retry transfer if incomplete
+
+|-X N
+|reorderTasksRandomSeed - random seed for -Z option
+
+|-Y
+|fsyncPerWrite - perform fsync after each POSIX write
+
+|-z	
+|randomOffset - access is to random, not sequential, offsets within a file
+
+|-Z
+|reorderTasksRandom - changes task ordering to random ordering for readback
+|===
+
+* *S* is a string, *N* is an integer number.
+* For transfer and block sizes, the case-insensitive *K*, *M*, and *G* suffices are recognized. I.e., `4k` or `4K`` is accepted as 4096.
+
+=== Overview of IOR Benchmarks with System Monitoring
+
+video::FM7a9HuOl-k?si=1hpPs0SM7Ds2uQM-[youtube,width=960,height=440]

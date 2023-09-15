@@ -139,7 +139,7 @@ mkdir -p /mnt/lustre
 mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre
 ----
 
-== Validating Lustre Client
+== Lustre Client Usage
 
 Show Lustre mounts on the system:
 
@@ -204,6 +204,33 @@ testfs-OST0000_UUID  14645113856  5222995968  9422115840  36% /lus[OST:0]
 testfs-OST0001_UUID  14645118976   111712256 14533404672   1% /lus[OST:1]
 
 filesystem_summary:  29290232832  5334708224 23955520512  19% /lus
+----
+
+`lctl pool_list <filesystem>`: Show pools for a Lustre filesystem.
+
+[,console]
+----
+root@o186i221:~/ccarlson/experiments# lctl pool_list cstor1
+Pools from cstor1:
+cstor1.disk
+cstor1.flash
+----
+
+`lfs setstripe -c <count> -p <pool> <directory>`: Create a directory and set it to only be on a Lustre pool.
+
+[,bash]
+----
+mkdir /mnt/cstor1/ccarlson/flash
+lfs setstripe -c 1 -p cstor1.flash /mnt/cstor1/ccarlson/flash
+----
+
+`lfs getstripe <directory>`: Show the striping of a file or directory on the Lustre filesystem.
+
+[,console]
+----
+root@o186i221:~/ccarlson/experiments# lfs getstripe /mnt/cstor1/ccarlson/flash
+/mnt/cstor1/ccarlson/flash
+stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash
 ----
 
 === Client Connectivity

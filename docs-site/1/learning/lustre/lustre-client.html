@@ -473,7 +473,7 @@ mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_validating_lustre_client"><a class="anchor" href="#_validating_lustre_client"></a>Validating Lustre Client</h2>
+<h2 id="_lustre_client_usage"><a class="anchor" href="#_lustre_client_usage"></a>Lustre Client Usage</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Show Lustre mounts on the system:</p>
@@ -552,6 +552,36 @@ testfs-OST0000_UUID  14645113856  5222995968  9422115840  36% /lus[OST:0]
 testfs-OST0001_UUID  14645118976   111712256 14533404672   1% /lus[OST:1]
 
 filesystem_summary:  29290232832  5334708224 23955520512  19% /lus</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>lctl pool_list &lt;filesystem&gt;</code>: Show pools for a Lustre filesystem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/ccarlson/experiments# lctl pool_list cstor1
+Pools from cstor1:
+cstor1.disk
+cstor1.flash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>lfs setstripe -c &lt;count&gt; -p &lt;pool&gt; &lt;directory&gt;</code>: Create a directory and set it to only be on a Lustre pool.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir /mnt/cstor1/ccarlson/flash
+lfs setstripe -c 1 -p cstor1.flash /mnt/cstor1/ccarlson/flash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>lfs getstripe &lt;directory&gt;</code>: Show the striping of a file or directory on the Lustre filesystem.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/ccarlson/experiments# lfs getstripe /mnt/cstor1/ccarlson/flash
+/mnt/cstor1/ccarlson/flash
+stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash</code></pre>
 </div>
 </div>
 <div class="sect2">

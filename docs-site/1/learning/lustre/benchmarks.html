@@ -741,7 +741,7 @@ with a transfer size of 128 KiB at a time (<code>-t 128k</code>), and a total bl
 <p><strong>S</strong> is a string, <strong>N</strong> is an integer number.</p>
 </li>
 <li>
-<p>For transfer and block sizes, the case-insensitive <strong>K</strong>, <strong>M</strong>, and <strong>G</strong> suffices are recognized. I.e., <code>4k</code> or <code>4K`</code> is accepted as 4096.</p>
+<p>For transfer and block sizes, the case-insensitive <strong>K</strong>, <strong>M</strong>, and <strong>G</strong> suffices are recognized. I.e., <code>4k</code> or <code>4K</code> is accepted as 4096.</p>
 </li>
 </ul>
 </div>
@@ -752,6 +752,129 @@ with a transfer size of 128 KiB at a time (<code>-t 128k</code>), and a total bl
 <div class="content">
 <iframe width="960" height="440" src="https://www.youtube.com/embed/FM7a9HuOl-k?si=1hpPs0SM7Ds2uQM-?rel=0" frameborder="0" allowfullscreen></iframe>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_study_grenoble_system_benchmark_results"><a class="anchor" href="#_case_study_grenoble_system_benchmark_results"></a>Case Study: Grenoble System Benchmark Results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here we show a demo of the benchmark results captured using the aforementioned tools on the flash pool of a single ClusterStor E1000.</p>
+</div>
+<div class="sect2">
+<h3 id="_single_node_performance"><a class="anchor" href="#_single_node_performance"></a>Single-node Performance</h3>
+<div class="paragraph">
+<p>MPI parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Number of processes: 1, 16, 32, 64, 128</p>
+</li>
+<li>
+<p>Nodes: 1</p>
+</li>
+<li>
+<p>Map-by: slots on node (node capable of 128 slots)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>IOR write parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>File-per-process (<code>-F</code>)</p>
+</li>
+<li>
+<p>POSIX write directives: O_DIRECT (<code>--posix.odirect</code>)</p>
+</li>
+<li>
+<p>Transfer sizes: 128k, 1m, 16m, 64m (<code>-t N</code>)</p>
+</li>
+<li>
+<p>Blocksize per task: 16g (<code>-b N</code>)</p>
+</li>
+<li>
+<p>Invoke fsync on POSIX write close (<code>-e</code>)</p>
+</li>
+<li>
+<p>Keep written files for reading later (<code>-k</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally, the <code>-z</code> flag was used for the random writes test to write to random offsets.</p>
+</div>
+<div class="paragraph">
+<p>IOR read parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>File-per-process (<code>-F</code>)</p>
+</li>
+<li>
+<p>Transfer sizes: 128k, 1m, 16m, 64m (<code>-t N</code>)</p>
+</li>
+<li>
+<p>Shift reads to what our node <em>didn&#8217;t</em> write, if we have neighboring nodes (<code>-C</code>)</p>
+</li>
+<li>
+<p>Blocksize per task: 16g (<code>-b N</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Additionally, the <code>-z</code> flag was used for the random reads test to read from random offsets.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_single_node_plotted_results"><a class="anchor" href="#_single_node_plotted_results"></a>Single-node Plotted Results</h3>
+<div class="paragraph">
+<p>Visualizing these results with <code>matplotlib</code> shows us some critical information:</p>
+</div>
+<div class="paragraph">
+<p><strong>Figure 1: Single-node write throughput</strong>: <em>Write performance varies by concurrent thread count, categorized by transfer size.</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/lustre/grenoble_ior_write_perf.png" alt="Grenoble Write Performance">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Figure 2: Single-node write IOPS</strong>: <em>Write performance varies by concurrent thread count, categorized by transfer size.</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/lustre/grenoble_ior_write_iops.png" alt="Grenoble Write IOPS">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Figure 3: Single-node read throughput</strong>: <em>Read performance varies by concurrent thread count, categorized by transfer size.</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/lustre/grenoble_ior_read_perf.png" alt="Grenoble Read Performance">
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Figure 4: Single-node read IOPS</strong>: <em>Read performance varies by concurrent thread count, categorized by transfer size.</em></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/lustre/grenoble_ior_read_iops.png" alt="Grenoble Read IOPS">
+</div>
+</div>
+<div class="paragraph">
+<p>From the figures above, we can see that transfer size is inversely correlated with IOPS; the bigger your transfers are, the fewer you can do per second.
+Lustre has higher throughput with larger transfer sizes, meaning higher throughput means lower IOPS. We can also see the effects of having tuned the system
+for large I/O transfer sizes, in our case, 64 MiB transfer sizes. Trying to use smaller 128 KiB transfer sizes with a system tuned this way simply does not perform
+well when it comes to write throughput. Another curious discovery is that 1 MiB transfer sizes actually beat 128 KiB transfer sizes in terms of IOPS; a theory here is that
+Lustre queues up several 128 KiB transactions before sending, whereas 1 MiB transactions are sent immediately. Again, this is a tuning option that can be configured differently
+based on the user&#8217;s needs.</p>
 </div>
 </div>
 </div>

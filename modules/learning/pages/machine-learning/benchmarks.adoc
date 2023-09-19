@@ -1,11 +1,11 @@
 = Machine Learning Benchmarks
 
-== MLPerf
+:toc: auto
+:showtitle:
 
-https://github.com/mlcommons/training/blob/master/object_detection/README.md[RESNET-50 Object Detection Instructions]
-https://github.com/mlcommons/training_results_v3.0/tree/main/NVIDIA/benchmarks/resnet/implementations/mxnet[Nvidia RESNET Instructions]
+== System Tuning
 
-The binding configuration needs to be correct.
+The binding configuration for the GPUs needs to be correct.
 
 The idea is to minimize latency going from CPU to GPU. Typically you have NUMA domains, you specify the closest NUMA domain for each CPU. 
 In our system you only have half the PCI lanes, so you have to make a mapping based on cores.
@@ -56,7 +56,159 @@ NIC Legend:
   NIC4: mlx5_4
 ----
 
+In order to prioritize CUDA devices when building with Docker, set the `BUILDDOCKER_BUILDKIT` environment variable.
+
 [,console]
 ----
 BUILDDOCKER_BUILDKIT=1 docker build 
 ----
+
+== MLPerf
+
+* https://www.nvidia.com/en-us/data-center/resources/mlperf-benchmarks/[Nvidia - MLPerf]
+* https://mlcommons.org/en/[MLCommons]
+
+> MLPerf™ benchmarks - developed by MLCommons, a consortium of AI leaders from academia, research labs, and industry - are designed to provide unbiased evaluations of training and inference performance for hardware, software, and services. They're all conducted under prescribed conditions. To stay on the cutting edge of industry trends, MLPerf continues to evolve, holding new tests at regular intervals and adding new workloads that represent the state of the art in AI.
+
+=== MLPerf Training
+
+MLPerf Training presents three unique benchmarking challenges missing from other domains. Optimizations that improve training throughput can
+increase time to solution, training is randomly determined and time to solution exhibits high variance,
+and software and hardware are diverse enough to present difficulties for fairer benchmarking with the same binary, code, and even hyperparameters.
+MLPerf Training tests eight different workloads across various use cases like computer vision, large language models, and recommenders.
+
+While the repository, https://github.com/mlcommons/training[mlcommons/training], is intended to serve as valid starting points for benchmark implementations,
+it is not meant to be used for real performance measurements of software frameworks and hardware.
+The following steps would need to be executed in order to run a benchmark.
+Speeds may vary based on the reference hardware being used.
+
+1. Clone the repo https://github.com/mlcommons/training[mlcommons/training] to the host machine.
+2. Run the `install_cuda_docker.sh` script on the host machine. This will ensure that CUDA and Docker is installed. The script would also take care of setting up the correct docker dependencies.
+3. While being on the host machine and outside of docker, run `./download_dataset.sh` for the dataset being used for the benchmark. The script should be run within the directory of the benchmark.
+4. Once the download completes, it can be verified by running `./verify_dataset.sh` in the same manner.
+5. Build and run the docker image. Each benchmark has a command to do that.
+6. Once the target quality is reached, the benchmark will stop to produce timing results.
+
+=== MLPerf Storage
+
+https://github.com/mlcommons/storage/blob/main/README.md[MLCommons - Storage]
+
+MLPerf Storage is a benchmark suite to characterize the performance of storage systems that support machine learning workloads.
+
+* https://github.com/mlcommons/storage/blob/main/README.md#overview[Overview]
+* https://github.com/mlcommons/storage/blob/main/README.md#installation[Installation]
+* https://github.com/mlcommons/storage/blob/main/README.md#configuration[Configuration]
+* https://github.com/mlcommons/storage/blob/main/README.md#workloads[Workloads]
+** https://github.com/mlcommons/storage/blob/main/README.md#u-net3d[U-Net3D]
+** https://github.com/mlcommons/storage/blob/main/README.md#bert[BERT]
+* https://github.com/mlcommons/storage/blob/main/README.md#parameters[Parameters]
+** https://github.com/mlcommons/storage/blob/main/README.md#closed[CLOSED]
+** https://github.com/mlcommons/storage/blob/main/README.md#open[OPEN]
+
+The MLPerf Storage Benchmark Suite is an AI/ML benchmarking suite that measures performance of storage for ML workloads.
+The benchmark helps bridge the gap between the utilization between storage and compute resources to make sure that they are both used efficiently for ML workloads.
+
+It measures the sustained performance of a storage system for MLPerf Training and HPC workloads on both PyTorch and Tensorflow without requiring the use of expensive accelerators. Additionally, the `dlio_benchmark` code is used to emulate I/O patterns for deep learning workloads.
+
+==== Accelerator Utilization
+
+The Accelerator Utilization (AU) is the benchmark output metric samples per second for each workload.
+In order the calculate the AU, the total compute time and the total benchmark running time is needed.
+The total compute time is calculated by:
+
+----
+total_compute_time = (records/file * total_files)/simulated_accelerators/batch_size * sleep_time
+----
+
+The formula below calculates the AU:
+
+----
+AU (percentage) = (total_compute_time/total_benchmark_running_time) * 100 
+----
+
+==== MLPerf Storage Installation
+
+First, the `mpich` for MPI package is needed. This can be done by:
+
+[,bash]
+----
+sudo apt-get install mpich
+----
+
+Next, clone the https://github.com/mlcommons/storage[MLCommons Storage] repo.
+
+[,bash]
+----
+git clone https://github.com/mlcommons/storage.git
+----
+
+The `requirements.txt` for `dlio_benchmark` would need to be installed. Before that, a Python virtual environment needs to be set up:
+
+[,bash]
+----
+python3 -m venv ~/myvenv
+source ~/myvenv/bin/activate
+----
+
+The `requirements.txt` would then be installed afterwards.
+
+[,bash]
+----
+pip install -r dlio_benchmark/requirements.txt
+----
+
+To launch the `dlio_benchmark`, execute the `benchmark.sh` script:
+
+[,bash]
+----
+./benchmark.sh -h
+----
+
+=== RESNET-50
+
+* https://github.com/mlcommons/training/blob/master/object_detection/README.md[RESNET-50 Object Detection Instructions]
+* https://github.com/mlcommons/training_results_v3.0/tree/main/NVIDIA/benchmarks/resnet/implementations/mxnet[Nvidia RESNET Instructions]
+
+The RESNET-50 neural network is a well-known image classification network that can be used with the `ImageNet` dataset. It computationally intensive and good indication of driving meaningful storage I/O. In order to keep up the training benchmark and the overall run average time, the storage system has to keep up with the read bandwidth demands of a complete training job. The training benchmark are measured at `Epoch 0`, which is the most I/O-intensive portion of the MLPerf benchmark run. On that note, the RESNET-50 test would verify if the storage system is not a bottleneck for the workload and will provide the same images/second for `Epoch 0`.
+
+==== RESNET-50 Installation
+
+In order to run the MLPerf RESNET-50 test, https://github.com/mlcommons/ck/tree/master/cm/cmind[Collective Mind automation language] (CM) (also known as ML Commons CM language)  would need to be installed. It is part of the MLCommons Collective Knowledge (CK) project, and is powered by Python, JSON, YAML, and a unified CLI. More detailed information on CM  can be found here: https://github.com/mlcommons/ck/tree/master/cm#readme[Collective Minds]. The following installation steps assume the host machine will be running on RedHat Enterprise Linux. Furthermore, `python 3+`, `pip`, `git` , and `wget`  would need to be installed beforehand.
+
+The following will install CM:
+
+[,bash]
+----
+sudo dnf update
+sudo dnf install python3 python-pip git wget curl
+python3 -m pip install --user cmind
+----
+
+Once CM is installed, the next step would be to install MLCommons CK repository with automation workflows for MLPerf:
+
+[,bash]
+----
+cm pull repo mlcommons@ck
+----
+
+This command will pre-process the dataset for a given backend. The `loadgen` would be built, and it will run the inference for all scenarios and modes.
+A submission folder would be created with the test results.
+
+[,bash]
+----
+cmr "run mlperf inference generate-run-cmds _submission" \
+    --quiet --submitter="MLCommons" --hw_name=default --model=resnet50 --implementation=reference \
+    --backend=onnxruntime --device=cpu --scenario=Offline --adr.compiler.tags=gcc  --target_qps=1 \
+    --category=edge --division=open
+----
+
+The `target_qps` value would need to be updated according to the system performance for a valid submission.
+The following values should be as is,
+
+* Use `--device=cuda` to run the inference on Nvidia GPU
+* Use `--division=closed` to run all scenarios for the closed division (compliance tests are skipped for `_find-performance` mode)
+* Use `--category=datacenter` to run datacenter scenarios
+* Use `--backend=tf` or `--backend=tvm-onnx` to use `tensorflow` and `tvm-onnx` backends, respectively
+
+
+NOTE: Credit goes to https://www.linkedin.com/in/sakib-samar-23a79612a[Sakib Samar] for a large portion of these notes.

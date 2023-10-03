@@ -444,42 +444,58 @@ set -ex
 IOR_BIN="/home/ccarlson/ior/src/ior"
 MACHINE_FILE="machinefile.txt"
 TOTAL_HOSTS=$(cat $MACHINE_FILE | wc -l)
-TOTAL_SLOTS=$(( $TOTAL_HOSTS * 64 ))
+THREADS_PER_NODE=(1 8 16 32 64 128)
 BLOCKSIZE_PER_TASK="16g"
-TRANSFER_SIZES="128k 1m 16m 64m"
-TEST_DIRECTORY="/mnt/cstor1/ccarlson"
+TRANSFER_SIZES=("128k" "1m" "16m" "64m")
+TEST_DIRECTORY="/mnt/cstor1/ccarlson/flash"
 TEST_FILE="testfile"
 
 # Sequential Write
 function seq_write {
   TRANSFER_SIZE=$1
-  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  THREADS=$2
+  OUT_FILE="$OUT_DIR/seq_write_${TRANSFER_SIZE}_${THREADS}.csv"
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE --mca btl_tcp_if_include eth0 -np $(( THREADS * TOTAL_HOSTS )) --map-by "node" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -k -o $TEST_DIRECTORY/$TEST_FILE \
-    -O summaryFile=$OUT_DIR/seq_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
+    -O summaryFile=$OUT_FILE -O summaryFormat=CSV
+  RESULTS=$(tail -1 $OUT_FILE)
+  echo -e "seq_write,$THREADS,$TRANSFER_SIZE,$RESULTS" &gt;&gt; $OUT_DIR/results.csv
 }
 
 # Random Write
 function rand_write {
   TRANSFER_SIZE=$1
-  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  THREADS=$2
+  OUT_FILE="$OUT_DIR/rand_write_${TRANSFER_SIZE}_${THREADS}.csv"
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE --mca btl_tcp_if_include eth0 -np $(( THREADS * TOTAL_HOSTS )) --map-by "node" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -e -w -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    -O summaryFile=$OUT_DIR/rand_write_$TRANSFER_SIZE.csv -O summaryFormat=CSV
+    -O summaryFile=$OUT_FILE -O summaryFormat=CSV
+  RESULTS=$(tail -1 $OUT_FILE)
+  echo -e "rand_write,$THREADS,$TRANSFER_SIZE,$RESULTS" &gt;&gt; $OUT_DIR/results.csv
 }
 
 # Sequential Read
 function seq_read {
   TRANSFER_SIZE=$1
-  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  THREADS=$2
+  OUT_FILE="$OUT_DIR/seq_read_${TRANSFER_SIZE}_${THREADS}.csv"
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE --mca btl_tcp_if_include eth0 -np $(( THREADS * TOTAL_HOSTS )) --map-by "node" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -k -o $TEST_DIRECTORY/$TEST_FILE \
-    -O summaryFile=$OUT_DIR/seq_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
+    -O summaryFile=$OUT_FILE -O summaryFormat=CSV
+  RESULTS=$(tail -1 $OUT_FILE)
+  echo -e "seq_read,$THREADS,$TRANSFER_SIZE,$RESULTS" &gt;&gt; $OUT_DIR/results.csv
 }
 
 # Random Read
 function rand_read {
   TRANSFER_SIZE=$1
-  mpirun --allow-run-as-root --machinefile $MACHINE_FILE -np $TOTAL_SLOTS --map-by "slot" \
+  THREADS=$2
+  OUT_FILE="$OUT_DIR/rand_read_${TRANSFER_SIZE}_${THREADS}.csv"
+  mpirun --allow-run-as-root --machinefile $MACHINE_FILE --mca btl_tcp_if_include eth0 -np $(( THREADS * TOTAL_HOSTS )) --map-by "node" \
     $IOR_BIN -v -F --posix.odirect -C -t $TRANSFER_SIZE -b $BLOCKSIZE_PER_TASK -r -z -k -o $TEST_DIRECTORY/$TEST_FILE \
-    -O summaryFile=$OUT_DIR/rand_read_$TRANSFER_SIZE.csv -O summaryFormat=CSV
+    -O summaryFile=$OUT_FILE -O summaryFormat=CSV
+  RESULTS=$(tail -1 $OUT_FILE)
+  echo -e "rand_read,$THREADS,$TRANSFER_SIZE,$RESULTS" &gt;&gt; $OUT_DIR/results.csv
 }
 
 [ $# -ne 1 ] &amp;&amp; echo -e "Usage:\n\tbenchmark.sh &lt;output_directory&gt;\n" &amp;&amp; exit 1
@@ -487,13 +503,42 @@ function rand_read {
 OUT_DIR=$1
 mkdir -p $OUT_DIR
 
-for TRANSFER_SIZE in $TRANSFER_SIZES; do
-  echo -e "\nRunning benchmark with transfer size $TRANSFER_SIZE\n"
-  seq_write $TRANSFER_SIZE
-  seq_read $TRANSFER_SIZE
-  rand_write $TRANSFER_SIZE
-  rand_read $TRANSFER_SIZE
+echo -e "access_type,threads,transfer_size,access,bw(MiB/s),IOPS,Latency,block(KiB),xfer(KiB),open(s),wr/rd(s),close(s),total(s),numTasks,iter" \
+  &gt; $OUT_DIR/results.csv
+
+for THREADS in ${THREADS_PER_NODE[@]}; do
+  for TRANSFER_SIZE in ${TRANSFER_SIZES[@]}; do
+    echo -e "\nRunning benchmark with transfer size of $TRANSFER_SIZE, and $THREADS threads\n"
+    seq_write $TRANSFER_SIZE $THREADS
+    seq_read $TRANSFER_SIZE $THREADS
+    rand_write $TRANSFER_SIZE $THREADS
+    rand_read $TRANSFER_SIZE $THREADS
+  done
 done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can use this by just running <code>./benchmark.sh &lt;output_directory&gt;</code>, i.e:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./benchmark.sh /home/ccarlson/multi_node</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will collect all your aggregated CSV results into a single <code>results.csv</code> file, a snippet of which looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-csv hljs" data-lang="csv">access_type,threads,transfer_size,access,bw(MiB/s),IOPS,Latency,block(KiB),xfer(KiB),open(s),wr/rd(s),close(s),total(s),numTasks,iter
+seq_write,32,16m,write,27135.9688,1696.0195,0.0363,16777216.0000,16384.0000,0.0086,38.6411,24.2267,38.6416,64,0
+seq_read,32,16m,read,28805.2367,1800.3649,0.0355,16777216.0000,16384.0000,0.0016,36.4015,24.7580,36.4023,64,0
+rand_write,32,16m,write,37879.2400,2367.4950,0.0257,16777216.0000,16384.0000,0.0114,27.6816,2.0832,27.6821,64,0
+rand_read,32,16m,read,39275.2087,2454.7904,0.0257,16777216.0000,16384.0000,0.0017,26.6972,3.4322,26.6982,64,0
+seq_write,32,64m,write,41838.6043,653.7421,0.0746,16777216.0000,65536.0000,0.0090,25.0619,6.8782,25.0624,64,0
+seq_read,32,64m,read,43203.6925,675.0791,0.0912,16777216.0000,65536.0000,0.0015,24.2697,7.1871,24.2705,64,0
+rand_write,32,64m,write,40580.2781,634.0792,0.0908,16777216.0000,65536.0000,0.1828,25.8390,8.8996,25.8395,64,0
+rand_read,32,64m,read,43326.2159,676.9922,0.0713,16777216.0000,65536.0000,0.0024,24.2012,7.6495,24.2019,64,0</code></pre>
 </div>
 </div>
 </div>

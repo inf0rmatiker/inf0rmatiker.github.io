@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Linux Package Management :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/package-management.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="networking/ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../index.html">Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../index.html">Documentation</a></li>
+    <li><a href="package-management.html">Linux Package Management</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Linux Package Management</h1>
+<div class="sect1">
+<h2 id="_opensuse_zypper"><a class="anchor" href="#_opensuse_zypper"></a>OpenSUSE Zypper</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_usage"><a class="anchor" href="#_usage"></a>Usage</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Usage:
+
+    zypper [--GLOBAL-OPTIONS] &lt;COMMAND&gt; [--COMMAND-OPTIONS] [ARGUMENTS]
+    zypper &lt;SUBCOMMAND&gt; [--COMMAND-OPTIONS] [ARGUMENTS]
+
+Global Options:
+
+    --help, -h              Help.
+    --version, -V           Output the version number.
+    --promptids             Output a list of zypper's user prompts.
+    --config, -c &lt;FILE&gt;     Use specified config file instead of the default.
+    --userdata &lt;STRING&gt;     User defined transaction id used in history and plugins.
+    --quiet, -q             Suppress normal output, print only error messages.
+    --verbose, -v           Increase verbosity.
+    --color
+    --no-color              Whether to use colors in output if tty supports it.
+    --no-abbrev, -A         Do not abbreviate text in tables. Default: false
+    --table-style, -s &lt;INTEGER&gt;
+                            Table style (0-11).
+    --non-interactive, -n   Do not ask anything, use default answers automatically. Default: false
+    --non-interactive-include-reboot-patches
+                            Do not treat patches as interactive, which have the rebootSuggested-flag
+                            set. Default: false
+    --xmlout, -x            Switch to XML output.
+    --ignore-unknown, -i    Ignore unknown packages. Default: false
+    --terse, -t             Terse output for machine consumption. Implies --no-abbrev and
+                            --no-color.
+
+
+    --reposd-dir, -D &lt;DIR&gt;  Use alternative repository definition file directory.
+    --cache-dir, -C &lt;DIR&gt;   Use alternative directory for all caches.
+    --raw-cache-dir &lt;DIR&gt;   Use alternative raw meta-data cache directory.
+    --solv-cache-dir &lt;DIR&gt;  Use alternative solv file cache directory.
+    --pkg-cache-dir &lt;DIR&gt;   Use alternative package cache directory.
+
+  Repository Options
+
+    --no-gpg-checks         Ignore GPG check failures and continue. Default: false
+    --gpg-auto-import-keys  Automatically trust and import new repository signing keys.
+    --plus-repo, -p &lt;URI&gt;   Use an additional repository.
+    --plus-content &lt;TAG&gt;    Additionally use disabled repositories providing a specific keyword. Try
+                            '--plus-content debug' to enable repos indicating to provide debug
+                            packages.
+    --disable-repositories  Do not read meta-data from repositories.
+    --no-refresh            Do not refresh the repositories.
+    --no-cd                 Ignore CD/DVD repositories.
+    --no-remote             Ignore remote repositories.
+    --releasever            Set the value of $releasever in all .repo files (default: distribution
+                            version)
+
+  Target Options
+
+    --root, -R &lt;DIR&gt;        Operate on a different root directory.
+    --installroot &lt;DIR&gt;     Operate on a different root directory, but share repositories with the
+                            host.
+    --disable-system-resolvables
+                            Do not read installed packages.
+
+Commands:
+
+      help, ?               Print zypper help
+      shell, sh             Accept multiple commands at once.
+
+  Repository Management:
+
+      repos, lr             List all defined repositories.
+      addrepo, ar           Add a new repository.
+      removerepo, rr        Remove specified repository.
+      renamerepo, nr        Rename specified repository.
+      modifyrepo, mr        Modify specified repository.
+      refresh, ref          Refresh all repositories.
+      clean, cc             Clean local caches.
+
+  Service Management:
+
+      services, ls          List all defined services.
+      addservice, as        Add a new service.
+      modifyservice, ms     Modify specified service.
+      removeservice, rs     Remove specified service.
+      refresh-services, refs
+                            Refresh all services.
+
+  Software Management:
+
+      install, in           Install packages.
+      remove, rm            Remove packages.
+      verify, ve            Verify integrity of package dependencies.
+      source-install, si    Install source packages and their build dependencies.
+      install-new-recommends, inr
+                            Install newly added packages recommended by installed packages.
+
+  Update Management:
+
+      update, up            Update installed packages with newer versions.
+      list-updates, lu      List available updates.
+      patch                 Install needed patches.
+      list-patches, lp      List available patches.
+      dist-upgrade, dup     Perform a distribution upgrade.
+      patch-check, pchk     Check for patches.
+
+  Querying:
+
+      search, se            Search for packages matching a pattern.
+      info, if              Show full information for specified packages.
+      patch-info            Show full information for specified patches.
+      pattern-info          Show full information for specified patterns.
+      product-info          Show full information for specified products.
+      patches, pch          List all available patches.
+      packages, pa          List all available packages.
+      patterns, pt          List all available patterns.
+      products, pd          List all available products.
+      what-provides, wp     List packages providing specified capability.
+
+  Package Locks:
+
+      addlock, al           Add a package lock.
+      removelock, rl        Remove a package lock.
+      locks, ll             List current package locks.
+      cleanlocks, cl        Remove useless locks.
+
+  Locale Management:
+
+      locales, lloc         List requested locales (languages codes).
+      addlocale, aloc       Add locale(s) to requested locales.
+      removelocale, rloc    Remove locale(s) from requested locales.
+
+  Other Commands:
+
+      versioncmp, vcmp      Compare two version strings.
+      targetos, tos         Print the target operating system ID string.
+      licenses              Print report about licenses and EULAs of installed packages.
+      download              Download rpms specified on the commandline to a local directory.
+      source-download       Download source rpms for all installed packages to a local directory.
+      needs-rebooting       Check if the reboot-needed flag was set.
+      ps                    List running processes which might still use files and libraries deleted
+                            by recent upgrades.
+      purge-kernels         Remove old kernels.
+
+  Subcommands:
+
+      subcommand            Lists available subcommands.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_list_repos"><a class="anchor" href="#_list_repos"></a>List Repos</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper repos
+zypper lr</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper repos
+Repository priorities are without effect. All enabled repositories share the same priority.
+
+# | Alias                               | Name                                                                                        | Enabled | GPG Check | Refresh
+--+-------------------------------------+---------------------------------------------------------------------------------------------+---------+-----------+--------
+1 | opensuse-leap-15.5-base             | opensuse-leap-15.5-base                                                                     | Yes     | (r ) Yes  | No
+2 | opensuse-leap-15.5-update-backports | opensuse-leap-15.5-update-backports                                                         | Yes     | (r ) Yes  | No
+3 | opensuse-leap-15.5-update-oss       | opensuse-leap-15.5-update-oss                                                               | Yes     | (r ) Yes  | No
+4 | opensuse-leap-15.5-update-sle       | opensuse-leap-15.5-update-sle                                                               | Yes     | (r ) Yes  | No
+5 | repo-backports-debug-update         | Update repository with updates for openSUSE Leap debuginfo packages from openSUSE Backports | No      | ----      | ----
+6 | repo-backports-update               | Update repository of openSUSE Backports                                                     | Yes     | ( p) Yes  | Yes
+7 | repo-sle-debug-update               | Update repository with debuginfo for updates from SUSE Linux Enterprise 15                  | No      | ----      | ----
+8 | repo-sle-update                     | Update repository with updates from SUSE Linux Enterprise 15                                | Yes     | ( p) Yes  | Yes</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_list_only_active_repos"><a class="anchor" href="#_list_only_active_repos"></a>List Only Active Repos</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper repos --show-enabled-only
+zypper lr -E</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper repos --show-enabled-only
+Repository priorities are without effect. All enabled repositories share the same priority.
+
+# | Alias                               | Name                                                         | Enabled | GPG Check | Refresh
+--+-------------------------------------+--------------------------------------------------------------+---------+-----------+--------
+1 | opensuse-leap-15.5-base             | opensuse-leap-15.5-base                                      | Yes     | (r ) Yes  | No
+2 | opensuse-leap-15.5-update-backports | opensuse-leap-15.5-update-backports                          | Yes     | (r ) Yes  | No
+3 | opensuse-leap-15.5-update-oss       | opensuse-leap-15.5-update-oss                                | Yes     | (r ) Yes  | No
+4 | opensuse-leap-15.5-update-sle       | opensuse-leap-15.5-update-sle                                | Yes     | (r ) Yes  | No
+6 | repo-backports-update               | Update repository of openSUSE Backports                      | Yes     | ( p) Yes  | Yes
+8 | repo-sle-update                     | Update repository with updates from SUSE Linux Enterprise 15 | Yes     | ( p) Yes  | Yes</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_disable_repo"><a class="anchor" href="#_disable_repo"></a>Disable Repo</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper modifyrepo --disable
+zypper mr -d</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper mr -d opensuse-leap-15.5-update-backports
+Repository 'opensuse-leap-15.5-update-backports' has been successfully disabled.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enable_repo"><a class="anchor" href="#_enable_repo"></a>Enable Repo</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper modifyrepo --enable
+zypper mr -e</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper mr -e opensuse-leap-15.5-update-backports
+Repository 'opensuse-leap-15.5-update-backports' has been successfully enabled.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_disable_gpg_check_for_repo"><a class="anchor" href="#_disable_gpg_check_for_repo"></a>Disable GPG Check for Repo</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper modifyrepo --no-gpgcheck
+zypper mr -G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper mr -G opensuse-leap-15.5-base
+GPG check has been disabled for repository 'opensuse-leap-15.5-base'.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enable_gpg_check_for_repo"><a class="anchor" href="#_enable_gpg_check_for_repo"></a>Enable GPG Check for Repo</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper modifyrepo --gpgcheck
+zypper mr -g</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper mr -g opensuse-leap-15.5-base
+GPG check has been enabled for repository 'opensuse-leap-15.5-base'.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../_/js/site.js" data-ui-root-path="../../../../_"></script>
+<script async src="../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

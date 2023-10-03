@@ -116,12 +116,14 @@ The Accelerator Utilization (AU) is the benchmark output metric samples per seco
 In order the calculate the AU, the total compute time and the total benchmark running time is needed.
 The total compute time is calculated by:
 
+[,console]
 ----
 total_compute_time = (records/file * total_files)/simulated_accelerators/batch_size * sleep_time
 ----
 
 The formula below calculates the AU:
 
+[,console]
 ----
 AU (percentage) = (total_compute_time/total_benchmark_running_time) * 100 
 ----

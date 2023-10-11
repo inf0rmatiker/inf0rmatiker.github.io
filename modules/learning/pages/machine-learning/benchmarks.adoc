@@ -215,7 +215,7 @@ The following values should be as is,
 
 NOTE: Credit goes to https://www.linkedin.com/in/sakib-samar-23a79612a[Sakib Samar] for a large portion of these notes.
 
-=== NCCL Tests
+== NCCL Tests
 
 These tests check both the performance and the correctness of https://github.com/nvidia/nccl[NCCL] operations (inter-GPU communication).
 
@@ -224,7 +224,7 @@ GitHub repositories with documentation:
 * https://github.com/NVIDIA/nccl-tests/tree/master[NCCL Tests]
 * https://github.com/nvidia/nccl[NCCL]
 
-==== Installation
+=== Installation
 
 First, you need `nccl` installed on the nodes you want to include in the benchmark.
 
@@ -285,7 +285,7 @@ all_gather_perf  alltoall_perf   gather_perf     reduce_perf          scatter_pe
 all_reduce_perf  broadcast_perf  hypercube_perf  reduce_scatter_perf  sendrecv_perf  verifiable
 ----
 
-==== Usage
+=== Usage
 
 https://github.com/NVIDIA/nccl-tests/tree/master#arguments[NCCL Tests Arguments]
 
@@ -379,4 +379,6 @@ Example output for multiple nodes:
 # Avg bus bandwidth    : 61.4514
 #
 ----
+
+=== GPU Direct Storage (GDS)
 

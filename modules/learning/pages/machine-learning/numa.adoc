@@ -1,0 +1,8 @@
+= Understanding NUMA Domains and Configuration
+
+_NUMA_: Non-Uniform Memory Access
+
+"The time required for accessing memory will not be uniform".
+
+Helpful video: https://www.youtube.com/watch?v=gCOEunP5kjs&ab_channel=JargonsSimplified
+

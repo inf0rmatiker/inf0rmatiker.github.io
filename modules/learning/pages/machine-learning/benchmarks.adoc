@@ -219,10 +219,10 @@ NOTE: Credit goes to https://www.linkedin.com/in/sakib-samar-23a79612a[Sakib Sam
 
 These tests check both the performance and the correctness of https://github.com/nvidia/nccl[NCCL] operations (inter-GPU communication).
 
-GitHub repositories:
+GitHub repositories with documentation:
 
-* https://github.com/NVIDIA/nccl-tests/tree/master[nccl-tests]
-* https://github.com/nvidia/nccl[nccl]
+* https://github.com/NVIDIA/nccl-tests/tree/master[NCCL Tests]
+* https://github.com/nvidia/nccl[NCCL]
 
 ==== Installation
 

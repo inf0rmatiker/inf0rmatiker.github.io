@@ -621,6 +621,208 @@ Credit goes to <a href="https://www.linkedin.com/in/sakib-samar-23a79612a">Sakib
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_nccl_tests"><a class="anchor" href="#_nccl_tests"></a>NCCL Tests</h3>
+<div class="paragraph">
+<p>These tests check both the performance and the correctness of <a href="https://github.com/nvidia/nccl">NCCL</a> operations (inter-GPU communication).</p>
+</div>
+<div class="paragraph">
+<p>GitHub repositories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/NVIDIA/nccl-tests/tree/master">nccl-tests</a></p>
+</li>
+<li>
+<p><a href="https://github.com/nvidia/nccl">nccl</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h4>
+<div class="paragraph">
+<p>First, you need <code>nccl</code> installed on the nodes you want to include in the benchmark.</p>
+</div>
+<div class="paragraph">
+<p>Go ahead and clone the <code>nccl</code> repo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/NVIDIA/nccl.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Change directory into the <code>nccl</code> repo and build it against your system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd nccl
+make -j src.build</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, install it (here we&#8217;re using Ubuntu 22.04):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Install tools to create debian packages
+sudo apt install build-essential devscripts debhelper fakeroot
+# Build NCCL deb package
+make pkg.debian.build
+ls build/pkg/deb/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Your <code>.deb</code> packaages should now be in <code>build/pkg/deb</code>. You can install them using</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apt install /root/ccarlson/nccl/build/pkg/deb/libnccl-dev_2.18.5-1+cuda12.2_amd64.deb /root/ccarlson/nccl/build/pkg/deb/libnccl2_2.18.5-1+cuda12.2_amd64.deb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, clone your <code>nccl-tests</code> repo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git clone https://github.com/NVIDIA/nccl-tests.git</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, change directory into it and <code>make</code> it against the installation of MPI you have on the system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cd nccl-tests
+make MPI=1 MPI_HOME=/usr/mpi/gcc/openmpi-4.1.5rc2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now have <code>nccl-tests</code> binaries available under <code>build/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/ccarlson/nccl-tests# ls build/
+all_gather_perf  alltoall_perf   gather_perf     reduce_perf          scatter_perf   timer.o
+all_reduce_perf  broadcast_perf  hypercube_perf  reduce_scatter_perf  sendrecv_perf  verifiable</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_usage"><a class="anchor" href="#_usage"></a>Usage</h4>
+<div class="paragraph">
+<p><a href="https://github.com/NVIDIA/nccl-tests/tree/master#arguments">NCCL Tests Arguments</a></p>
+</div>
+<div class="paragraph">
+<p><code>all_reduce_perf</code> options:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">USAGE: all_reduce_perf
+	[-t,--nthreads &lt;num threads&gt;]
+	[-g,--ngpus &lt;gpus per thread&gt;]
+	[-b,--minbytes &lt;min size in bytes&gt;]
+	[-e,--maxbytes &lt;max size in bytes&gt;]
+	[-i,--stepbytes &lt;increment size&gt;]
+	[-f,--stepfactor &lt;increment factor&gt;]
+	[-n,--iters &lt;iteration count&gt;]
+	[-m,--agg_iters &lt;aggregated iteration count&gt;]
+	[-w,--warmup_iters &lt;warmup iteration count&gt;]
+	[-p,--parallel_init &lt;0/1&gt;]
+	[-c,--check &lt;check iteration count&gt;]
+	[-o,--op &lt;sum/prod/min/max/avg/mulsum/all&gt;]
+	[-d,--datatype &lt;nccltype/all&gt;]
+	[-r,--root &lt;root&gt;]
+	[-z,--blocking &lt;0/1&gt;]
+	[-y,--stream_null &lt;0/1&gt;]
+	[-T,--timeout &lt;time in seconds&gt;]
+	[-G,--cudagraph &lt;num graph launches&gt;]
+	[-C,--report_cputime &lt;0/1&gt;]
+	[-a,--average &lt;0/1/2/3&gt; report average iteration time &lt;0=RANK0/1=AVG/2=MIN/3=MAX&gt;]
+	[-h,--help]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the NCCL tests on a single node is pretty straightforward:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/root/ccarlson/nccl-tests/build/all_reduce_perf --ngpus 8 --minbytes=128M --maxbytes=1024M --stepfactor=2 --nthreads=1 --iters=1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running across multiple nodes should be done with MPI (<code>mpirun</code>)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mpirun --allow-run-as-root -np 2 --mca btl_tcp_if_include eth0 --machinefile machinefile.txt --map-by "node" /root/ccarlson/nccl-tests/build/all_reduce_perf --ngpus 8 --minbytes=128M --maxbytes=1024M --stepfactor=2 --nthreads=1 --iters=1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>My <code>machinefile</code> for two nodes looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">o186i221 slots=64
+o186i222 slots=64</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This launches two tasks via MPI (<code>-np 2</code>), one per node, each of which runs the <code>all_reduce_perf</code> binary with the specified options.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+We have to include the <code>eth0</code> interface for MPI to communicate over, otherwise it&#8217;ll try to send TCP over the IB devices which won&#8217;t work.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Example output for multiple nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">/build/all_reduce_perf --ngpus 8 --minbytes=128M --maxbytes=1024M --stepfactor=2 --nthreads=1 --iters=1
+# nThread 1 nGpus 8 minBytes 134217728 maxBytes 1073741824 step: 2(factor) warmup iters: 5 iters: 1 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 256912 on   o186i221 device  0 [0x07] NVIDIA A100-SXM4-80GB
+#  Rank  1 Group  0 Pid 256912 on   o186i221 device  1 [0x0b] NVIDIA A100-SXM4-80GB
+#  Rank  2 Group  0 Pid 256912 on   o186i221 device  2 [0x48] NVIDIA A100-SXM4-80GB
+#  Rank  3 Group  0 Pid 256912 on   o186i221 device  3 [0x4c] NVIDIA A100-SXM4-80GB
+#  Rank  4 Group  0 Pid 256912 on   o186i221 device  4 [0x88] NVIDIA A100-SXM4-80GB
+#  Rank  5 Group  0 Pid 256912 on   o186i221 device  5 [0x8b] NVIDIA A100-SXM4-80GB
+#  Rank  6 Group  0 Pid 256912 on   o186i221 device  6 [0xc8] NVIDIA A100-SXM4-80GB
+#  Rank  7 Group  0 Pid 256912 on   o186i221 device  7 [0xcb] NVIDIA A100-SXM4-80GB
+#  Rank  8 Group  0 Pid 540236 on   o186i222 device  0 [0x07] NVIDIA A100-SXM4-80GB
+#  Rank  9 Group  0 Pid 540236 on   o186i222 device  1 [0x0b] NVIDIA A100-SXM4-80GB
+#  Rank 10 Group  0 Pid 540236 on   o186i222 device  2 [0x48] NVIDIA A100-SXM4-80GB
+#  Rank 11 Group  0 Pid 540236 on   o186i222 device  3 [0x4c] NVIDIA A100-SXM4-80GB
+#  Rank 12 Group  0 Pid 540236 on   o186i222 device  4 [0x88] NVIDIA A100-SXM4-80GB
+#  Rank 13 Group  0 Pid 540236 on   o186i222 device  5 [0x8b] NVIDIA A100-SXM4-80GB
+#  Rank 14 Group  0 Pid 540236 on   o186i222 device  6 [0xc8] NVIDIA A100-SXM4-80GB
+#  Rank 15 Group  0 Pid 540236 on   o186i222 device  7 [0xcb] NVIDIA A100-SXM4-80GB
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)
+   134217728      33554432     float     sum      -1   5619.6   23.88   44.78      0   5662.5   23.70   44.44      0
+   268435456      67108864     float     sum      -1    10796   24.86   46.62      0    10836   24.77   46.45      0
+   536870912     134217728     float     sum      -1    14128   38.00   71.25      0    13863   38.73   72.61      0
+  1073741824     268435456     float     sum      -1    24419   43.97   82.45      0    24255   44.27   83.00      0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 61.4514
+#</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </article>

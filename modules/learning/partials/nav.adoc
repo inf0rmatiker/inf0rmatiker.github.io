@@ -22,6 +22,7 @@
 ** xref:docs-site:learning:linux/user-management.adoc[User Management]
 ** Networking
 *** xref:docs-site:learning:linux/networking/linux-networking.adoc[Linux]
+*** xref:docs-site:learning:linux/networking/mpi.adoc[MPI]
 *** xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]
 *** xref:docs-site:learning:linux/networking/ssh.adoc[SSH]
 ** Storage
@@ -47,8 +48,9 @@
 
 * Machine Learning
 ** xref:docs-site:learning:machine-learning/benchmarks.adoc[Benchmarks]
-** xref:docs-site:learning:machine-learning/machine-learning.adoc[Machine Learning]
 ** xref:docs-site:learning:machine-learning/determinedai.adoc[Determined AI]
+** xref:docs-site:learning:machine-learning/nvidia.adoc[Nvidia]
+** xref:docs-site:learning:machine-learning/numa.adoc[NUMA]
 
 * REST APIs
 ** xref:docs-site:learning:rest-apis/api-security.adoc[Secure Development]
@@ -56,3 +58,6 @@
 * InfiniBand
 ** xref:docs-site:learning:infiniband/infiniband.adoc[InfiniBand]
 ** xref:docs-site:learning:infiniband/monitoring.adoc[Fabric Monitoring]
+
+* Languages
+** xref:docs-site:learning:languages/languages.adoc[Languages]

@@ -7,11 +7,27 @@
 
 https://fio.readthedocs.io/en/latest/fio_doc.html[FIO Documentation]
 
-Usage:
+=== Examples
+
+Small sequential writes:
 
 [,console]
 ----
-fio --name benchmark1 --directory=/lus/aiholus1/disk/ccarlson/ --group_reporting --rw=read --size=16g --iodepth=128 --blocksize=1024k --direct=1 --numjobs=128 --ioengine=libaio | tee results_max2.out
+fio --numjobs=64 --name=seq_write_$(hostname) --iodepth=16 --size=16g --blocksize=128k --direct=1 --ioengine=libaio --rw=write --directory=/mnt/cstor1/ccarlson/flash --group_reporting --output-format=json --output=seq_write_small.json
+----
+
+Large sequential writes:
+
+[,console]
+----
+fio --numjobs=64 --name=seq_write_$(hostname) --iodepth=2 --size=16g --blocksize=16m --direct=1 --ioengine=libaio --rw=write --directory=/mnt/cstor1/ccarlson/flash --group_reporting --output-format=json --output=seq_write_large.json
+----
+
+Large sequential reads:
+
+[,console]
+----
+fio --numjobs=64 --name=seq_read_$(hostname) --size=16g --blocksize=64m --ioengine=libaio --rw=read --directory=/mnt/cstor1/ccarlson/flash --group_reporting --output-format=json --output=seq_read_large.json
 ----
 
 == IOR
@@ -439,3 +455,225 @@ for large I/O transfer sizes, in our case, 64 MiB transfer sizes. Trying to use 
 well when it comes to write throughput. Another curious discovery is that 1 MiB transfer sizes actually beat 128 KiB transfer sizes in terms of IOPS; a theory here is that
 Lustre queues up several 128 KiB transactions before sending, whereas 1 MiB transactions are sent immediately. Again, this is a tuning option that can be configured differently
 based on the user's needs.
+
+== MDTest
+
+* https://wiki.lustre.org/MDTest[Lustre Wiki: MDTest]
+* https://www.glennklockwood.com/benchmarks/mdtest.html[Glenn Lockwood: Getting Started with MDTest]
+
+=== MDTest Installation
+
+Make sure MPI is installed on your nodes:
+
+[,bash]
+----
+apt install openmpi-common=4.1.2-2ubuntu1 openmpi-bin=4.1.2-2ubuntu1 mpich=4.0-3 mpi-default-dev=1.14 libopenmpi3=4.1.2-2ubuntu1 libopenmpi-dev=4.1.2-2ubuntu1 libmpich12=4.0-3 libmpich-dev=4.0-3 libcaf-openmpi-3=2.9.2-3
+----
+
+Then, clone the `ior` repo and `make` it to generate the `mdtest` binary
+
+[,bash]
+----
+git clone https://github.com/hpc/ior.git && cd ior && ./bootstrap && ./configure && make && make install
+----
+
+=== MDTest Synopsis
+
+[,console]
+----
+Synopsis mdtest
+
+Flags
+  -C                            only create files/dirs
+  -T                            only stat files/dirs
+  -E                            only read files/dir
+  -r                            only remove files or directories left behind by previous runs
+  -D                            perform test on directories only (no files)
+  -F                            perform test on files only (no directories)
+  -k                            use mknod to create file
+  -L                            files only at leaf level of tree
+  -P                            print rate AND time
+  --print-all-procs             all processes print an excerpt of their results
+  -R                            random access to files (only for stat)
+  -S                            shared file access (file only, no directories)
+  -c                            collective creates: task 0 does all creates
+  -t                            time unique working directory overhead
+  -u                            unique working directory for each task
+  -v                            verbosity (each instance of option increments by one)
+  -X, --verify-read             Verify the data read
+  --verify-write                Verify the data after a write by reading it back immediately
+  -y                            sync file after writing
+  -Y                            call the sync command after each phase (included in the timing; note it causes all IO to be flushed from your node)
+  -Z                            print time instead of rate
+  --warningAsErrors             Any warning should lead to an error.
+  --showRankStatistics          Include statistics per rank
+
+Optional arguments
+  -a=STRING                     API for I/O [POSIX|DUMMY]
+  -b=1                          branching factor of hierarchical directory structure
+  -d=./out                      directory or multiple directories where the test will run [dir|dir1@dir2@dir3...]
+  -B=0                          no barriers between phases
+  -e=0                          bytes to read from each file
+  -f=1                          first number of tasks on which the test will run
+  -G=-1                         Offset for the data in the read/write buffer, if not set, a random value is used
+  -i=1                          number of iterations the test will run
+  -I=0                          number of items per directory in tree
+  -l=0                          last number of tasks on which the test will run
+  -n=0                          every process will creat/stat/read/remove # directories and files
+  -N=0                          stride # between tasks for file/dir operation (local=0; set to 1 to avoid client cache)
+  -p=0                          pre-iteration delay (in seconds)
+  --random-seed=0               random seed for -R
+  -s=1                          stride between the number of tasks for each test
+  -V=0                          verbosity value
+  -w=0                          bytes to write to each file after it is created
+  -W=0                          number in seconds; stonewall timer, write as many seconds and ensure all processes did the same number of operations (currently only stops during create phase and files)
+  -x=STRING                     StoneWallingStatusFile; contains the number of iterations of the creation phase, can be used to split phases across runs
+  -z=0                          depth of hierarchical directory structure
+  --dataPacketType=t            type of packet that will be created [offset|incompressible|timestamp|random|o|i|t|r]
+  --run-cmd-before-phase=STRING call this external command before each phase (excluded from the timing)
+  --run-cmd-after-phase=STRING  call this external command after each phase (included in the timing)
+  --saveRankPerformanceDetails=STRINGSave the individual rank information into this CSV file.
+
+
+Module POSIX
+
+Flags
+  --posix.odirect               Direct I/O Mode
+  --posix.rangelocks            Use range locks (read locks for read ops)
+
+
+Module DUMMY
+
+Flags
+  --dummy.delay-only-rank0      Delay only Rank0
+
+Optional arguments
+  --dummy.delay-create=0        Delay per create in usec
+  --dummy.delay-close=0         Delay per close in usec
+  --dummy.delay-sync=0          Delay for sync in usec
+  --dummy.delay-xfer=0          Delay per xfer in usec
+
+
+Module MPIIO
+
+Flags
+  --mpiio.showHints             Show MPI hints
+  --mpiio.preallocate           Preallocate file size
+  --mpiio.useStridedDatatype    put strided access into datatype
+  --mpiio.useFileView           Use MPI_File_set_view
+
+Optional arguments
+  --mpiio.hintsFileName=STRING  Full name for hints file
+
+
+Module MMAP
+
+Flags
+  --mmap.madv_dont_need         Use advise don't need
+  --mmap.madv_pattern           Use advise to indicate the pattern random/sequential
+----
+
+=== MDTest Usage
+
+Create a `machinefile.txt` for the nodes you want to use in the test:
+[,console]
+----
+o186i221 slots=128
+----
+
+Here's the template of the script I'm using to run the benchmarks:
+
+[,bash]
+----
+set -ex
+
+MDTEST_BIN=mdtest
+TEST_DIRECTORY="/mnt/cstor1/ccarlson/flash"
+
+mpirun --allow-run-as-root --machinefile machinefile.txt --mca btl_tcp_if_include eth0 -np 256 --map-by "node" $MDTEST_BIN -n 1024 -i 8 -u -d $TEST_DIRECTORY
+----
+
+Single-node results:
+
+[,console]
+----
+SUMMARY rate (in ops/sec): (of 1 iterations)
+   Operation                     Max            Min           Mean        Std Dev
+   ---------                     ---            ---           ----        -------
+   Directory creation          45516.799      45516.799      45516.799          0.000
+   Directory stat              91325.356      91325.356      91325.356          0.000
+   Directory rename            19092.439      19092.439      19092.439          0.000
+   Directory removal           46454.459      46454.459      46454.459          0.000
+   File creation               27546.829      27546.829      27546.829          0.000
+   File stat                  100070.848     100070.848     100070.848          0.000
+   File read                   31330.659      31330.659      31330.659          0.000
+   File removal                47469.422      47469.422      47469.422          0.000
+   Tree creation                 160.929        160.929        160.929          0.000
+   Tree removal                  114.180        114.180        114.180          0.000
+----
+
+Adding a node to the `machinefile.txt`:
+
+[,console]
+----
+o186i221 slots=128
+o186i222 slots=128
+----
+
+And running `mdtest` with `-np 64` across two nodes:
+
+[,console]
+----
+SUMMARY rate (in ops/sec): (of 1 iterations)
+   Operation                     Max            Min           Mean        Std Dev
+   ---------                     ---            ---           ----        -------
+   Directory creation          78491.020      78491.020      78491.020          0.000
+   Directory stat             171977.979     171977.979     171977.979          0.000
+   Directory rename            18771.272      18771.272      18771.272          0.000
+   Directory removal           74219.955      74219.955      74219.955          0.000
+   File creation               47604.781      47604.781      47604.781          0.000
+   File stat                  203713.008     203713.008     203713.008          0.000
+   File read                   57480.862      57480.862      57480.862          0.000
+   File removal                90014.367      90014.367      90014.367          0.000
+   Tree creation                 126.758        126.758        126.758          0.000
+   Tree removal                   77.215         77.215         77.215          0.000
+----
+
+For `mdtest` with `-np 96` across three nodes:
+
+[,console]
+----
+SUMMARY rate (in ops/sec): (of 1 iterations)
+   Operation                     Max            Min           Mean        Std Dev
+   ---------                     ---            ---           ----        -------
+   Directory creation          97702.454      97702.454      97702.454          0.000
+   Directory stat             207674.088     207674.088     207674.088          0.000
+   Directory rename            18211.999      18211.999      18211.999          0.000
+   Directory removal           81427.460      81427.460      81427.460          0.000
+   File creation               66567.553      66567.553      66567.553          0.000
+   File stat                  230463.001     230463.001     230463.001          0.000
+   File read                   69500.465      69500.465      69500.465          0.000
+   File removal               110073.006     110073.006     110073.006          0.000
+   Tree creation                 127.715        127.715        127.715          0.000
+   Tree removal                   59.439         59.439         59.439          0.000
+----
+
+
+And lastly, `mdtest` with `-np 128` across four nodes:
+
+[,console]
+----
+SUMMARY rate (in ops/sec): (of 8 iterations)
+   Operation                     Max            Min           Mean        Std Dev
+   ---------                     ---            ---           ----        -------
+   Directory creation          84251.208      62647.619      78386.218       6880.651
+   Directory stat             361536.604     332163.887     352341.756      10178.275
+   Directory rename            18698.508      17422.244      18151.485        452.181
+   Directory removal          105595.415      88066.194      98551.598       7980.985
+   File creation               70881.893      57927.137      63400.068       4959.008
+   File stat                  454551.577     436691.911     445087.492       5121.937
+   File read                   82874.429      77116.916      80370.560       2020.437
+   File removal               129379.591     106346.752     118982.552      10990.342
+   Tree creation                  83.131         55.279         78.752          9.537
+   Tree removal                   43.141         40.316         41.821          0.997
+----

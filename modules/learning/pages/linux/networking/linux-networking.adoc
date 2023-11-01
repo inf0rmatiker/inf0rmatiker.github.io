@@ -4,12 +4,13 @@
 
 * `ip`
 * `ifcfg`
+* `nmcli`
 
 == Interfaces
 
 === List Ethernet Interfaces on Host
 
-Example:
+You can use `lspci` to list PCI-based Ethernet devices on a system.
 
 [,console]
 ----
@@ -25,6 +26,8 @@ c6:00.3 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (
 https://tldp.org/HOWTO/Linux+IPv6-HOWTO/ch05s02.html[Reference]
 
 Two methods can be used to bring interfaces up or down.
+
+NOTE: This does not persist across boots. Once you reboot the node, the link will return to its default state.
 
 Using `ip`
 
@@ -87,3 +90,10 @@ Disable SELinux
 ----
 setenforce 0
 ----
+
+== RHEL NetworkManager
+
+The newer style of managing Linux networking, particularly in Rocky Linux 9.X going forward. The older `ifconfig` network scripts are no longer being used.
+
+* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/getting_started_with_networkmanager[RHEL: Getting Started with NetworkManager]
+

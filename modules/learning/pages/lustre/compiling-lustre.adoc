@@ -1,4 +1,4 @@
-= Compiling Lustre
+= Compiling Lustre Client
 
 :toc: auto
 :showtitle:
@@ -9,20 +9,23 @@ Some references for compiling lustre:
 * https://wiki.lustre.org/Compiling_Lustre[Compiling Lustre Documentation]
 * https://wiki.whamcloud.com/pages/viewpage.action?pageId=258179277[Walk-through: Build Lustre MASTER on RHEL/Rocky linux 8.7 from Git]
 * https://wiki.whamcloud.com/display/PUB/Rebuilding+the+Lustre-client+rpms+for+a+new+kernel[Rebuilding the Lustre Client RPMs for a New Kernel]
+* https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(All_other_Builds)[Compiling Lustre Client (non-DKMS)]
+* https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(DKMS_Packages_only)[Compiling Lustre Client (DKMS)]
 
-== Compiling on Rocky 8.6 Host
+== Compiling in Container
+
+The processes for compiling the client directly on the host where it will be used is easier than compiling it in a container to be used for a targeted environment.
+Thus, I've separated out the two following sections:
+
+* <<on_host>>
+* <<in_container>>
+
+== Compiling on Host [[on_host]]
+
+=== Using Rocky 8.6 Host
 
 Here we'll be using Rocky Linux 8.6 Minimal as our base installation medium, and will be compiling on the baremetal host OS.
 This will effectively allow us to compile Lustre for the OS/kernel installed.
-
-=== Client
-
-Here we'll explore how to compile the Lustre client.
-
-Reference documentation:
-
-* https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(All_other_Builds)[Compiling Lustre Client (non-DKMS)]
-* https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(DKMS_Packages_only)[Compiling Lustre Client (DKMS)]
 
 ==== Prerequisites and Dependencies
 
@@ -404,104 +407,7 @@ Once it finishes, you should end up with all the RPMs and sources dumped into th
 /root/lustre-release/lustre-iokit-2.15.56_124_g3ebc8e0-1.el8.x86_64.rpm
 ----
 
-== Compiling within a Rocky 8.6 Docker Container
-
-Create the following `Dockerfile`:
-
-[,dockerfile]
-----
-FROM rockylinux:8.6 AS rocky86
-
-# Switch out default 8.8 repos for archived 8.6 repos
-RUN rm -f /etc/yum.repos.d/*.repo
-COPY config/Rocky-86-Development.repo /etc/yum.repos.d/Rocky-86-Development.repo
-
-# Set up HPE proxy for DNF
-COPY config/dnf.conf /etc/dnf/dnf.conf
-
-# Install plugins-core so we can use things like dnf config-manager
-RUN dnf install -y dnf-plugins-core
-
-# Install Extra Packages for Enterprise Linux
-RUN dnf install -y epel-release
-
-# Pull in kernel-headers and kernel-devel packages as dependencies
-RUN dnf groupinstall -y "Development Tools"
-
-# Install dependencies needed to build Lustre client
-RUN dnf install -y     \
-    audit-libs-devel   \
-    bc                 \
-    binutils-devel     \
-    git                \
-    json-c-devel       \
-    kernel-abi-stablelists \
-    kernel-devel       \
-    kernel-debug-devel \
-    kernel-rpm-macros  \
-    libaio-devel       \
-    libattr-devel      \
-    libblkid-devel     \
-    libmount           \
-    libmount-devel     \
-    libnl3-devel       \
-    libselinux-devel   \
-    libssh-devel       \
-    libtirpc-devel     \
-    libuuid-devel      \
-    libyaml            \
-    libyaml-devel      \
-    llvm-toolset       \
-    pciutils-devel     \
-    ncurses-devel      \
-    openssl-devel      \
-    perl               \
-    perl-devel         \
-    python39           \
-    python3-devel      \
-    python3-docutils   \
-    redhat-lsb         \
-    texinfo            \
-    texinfo-tex
-
-# Update dnf
-RUN dnf update -y
-
-# Disable original default repos, enable new ones
-RUN dnf config-manager --disable appstream baseos extras
-RUN dnf config-manager --enable appstream86 baseos86 extras86 devel86 powertools86
-
-# Install Mellanox OFED
-COPY config/Mellanox_OFED.repo /etc/yum.repos.d/
-RUN dnf install -y mlnx-ofed-all
-
-WORKDIR /work
-
-# Clone lustre-release repo
-RUN https_proxy=http://proxy.houston.hpecorp.net:8080 git clone https://review.whamcloud.com/fs/lustre-release
-RUN cd lustre-release && sh autogen.sh && ./configure \
-    --disable-server \
-    --enable-client \
-    --with-linux=/usr/src/kernels/4.18.0-372.32.1.el8_6.x86_64 \
-    --with-o2ib=/usr/src/ofa_kernel/default
-RUN cd lustre-release && make rpms
-
-ENTRYPOINT ["/bin/bash"]
-----
-
-Build it with:
-
-[,bash]
-----
-docker build -t rocky .
-----
-
-Run the built image, and verify the RPMs are built in the workspace:
-
-[,bash]
-----
-docker run -it --name=rocky rocky
-----
+== Compiling in Container [[in_container]]
 
 == Compiling within an OpenSUSE 15.5 Docker Container
 
@@ -539,4 +445,69 @@ RUN zypper install -y libyaml-devel libmount-devel
     
 
 ENTRYPOINT ["/usr/bin/bash"]
+----
+
+== On-Host Builds
+
+
+=== Building for Ubuntu
+
+Here we're building for Ubuntu 22.04.
+
+Install the build dependencies:
+
+[,bash]
+----
+#!/bin/bash
+
+set -ex
+
+# Install dependencies
+apt-get install -y \
+	module-assistant \
+	libreadline-dev \
+	debhelper \
+	dpatch \
+	automake \
+	pkg-config \
+	libtool \
+	libyaml-dev \
+	libnl-genl-3-dev \
+	libselinux-dev \
+	libsnmp-dev \
+	mpi-default-dev \
+	bzip2 \
+	quilt \
+	linux-headers-$(uname -r) \
+	rsync \
+	libssl-dev \
+	libpython3-dev \
+	swig
+
+LUSTRE_DIR=/root/ccarlson/lustre-release
+
+# e.g: generic
+KERNEL_FLAVOR=$(uname -r | tr '-' '\n' | tail -1)
+
+# e.g: 5.15.0-83
+KERNEL_VERSION=$(uname -r | sed -e "s:-${KERNEL_FLAVOR}$::g")
+
+# e.g: /usr/src/linux-headers-5.15.0-83
+LINUX_KERNEL_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION})
+
+# e.g: /usr/src/linux-headers-5.15.0-83-generic/
+LINUX_OBJ_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION}-${KERNEL_FLAVOR})
+
+# e.g: /usr/src/ofa_kernel/default
+# MOFED_SRC_DIR="/usr/src/mlnx-ofed-kernel-23.07"
+MOFED_SRC_DIR="/usr/src/ofa_kernel/default"
+
+# Configure build options then build debian packages
+cd $LUSTRE_DIR && sh autogen.sh && ./configure \
+	--disable-server \
+	--enable-client \
+	--with-linux=${LINUX_KERNEL_DIR} \
+	--with-linux-obj=${LINUX_OBJ_DIR} \
+	--with-o2ib=${MOFED_SRC_DIR} \
+	&& make debs
 ----

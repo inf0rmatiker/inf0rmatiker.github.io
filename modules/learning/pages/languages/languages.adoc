@@ -1,0 +1,7 @@
+= Languages
+
+Module landing page for learning different programming languages.
+
+See specific language submodules for more details:
+
+* xref:docs-site:learning:languages/cpp/cpp.adoc[C++]

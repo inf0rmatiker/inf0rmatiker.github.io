@@ -1,0 +1,45 @@
+= Nvidia
+
+:toc: auto
+
+== Nvidia / CUDA Installation with GDS
+
+For Ubuntu 22.04:
+
+[,bash]
+----
+#!/bin/bash
+
+apt-get install \
+	cuda-drivers-535="535.104.05-1" \
+	cuda-drivers-fabricmanager-535="535.104.05-1" \
+	cuda-drivers-fabricmanager="535.104.05-1" \
+	libnvidia-cfg1-535="535.104.05-0ubuntu1" \
+	libnvidia-common-535="535.104.05-0ubuntu1" \
+	libnvidia-compute-535="535.104.05-0ubuntu1" \
+	libnvidia-container-tools="1.14.1-1" \
+	libnvidia-container1="1.14.1-1" \
+	libnvidia-decode-535="535.104.05-0ubuntu1" \
+	libnvidia-encode-535="535.104.05-0ubuntu1" \
+	libnvidia-extra-535="535.104.05-0ubuntu1" \
+	libnvidia-fbc1-535="535.104.05-0ubuntu1" \
+	libnvidia-gl-535="535.104.05-0ubuntu1" \
+	nvidia-compute-utils-535="535.104.05-0ubuntu1" \
+	nvidia-container-toolkit-base="1.14.1-1" \
+	nvidia-container-toolkit="1.14.1-1" \
+	nvidia-dkms-535="535.104.05-0ubuntu1" \
+	nvidia-docker2="2.13.0-1" \
+	nvidia-driver-535="535.104.05-0ubuntu1" \
+	nvidia-fabricmanager-535="535.104.05-1" \
+	nvidia-fs-dkms="2.17.5-1" \
+	nvidia-fs="2.17.5-1" \
+	nvidia-gds-12-2="12.2.2-1" \
+	nvidia-gds="12.2.2-1" \
+	nvidia-kernel-common-535="535.104.05-0ubuntu1" \
+	nvidia-kernel-source-535="535.104.05-0ubuntu1" \
+	nvidia-modprobe="535.104.05-0ubuntu1" \
+	nvidia-prime="0.8.17.1" \
+	nvidia-settings="535.104.05-0ubuntu1" \
+	nvidia-utils-535="535.104.05-0ubuntu1" \
+	xserver-xorg-video-nvidia-535="535.104.05-0ubuntu1"
+----

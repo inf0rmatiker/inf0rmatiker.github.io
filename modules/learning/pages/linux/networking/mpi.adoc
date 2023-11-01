@@ -1,0 +1,279 @@
+= Message Passing Interface (MPI)
+
+:toc: auto
+:showtitle:
+
+Reference links:
+
+* https://www.open-mpi.org/[OpenMPI]
+* https://www.mpi-forum.org/docs/[MPI Documents]
+
+== Introduction to MPI
+
+The Message Passing Interface (MPI) is a standard for message passing computation, allowing you to distribute computing by communicating between CPUs.
+It is high bandwidth, and low latency.
+
+What is OpenMPI?
+
+video::D0-xSWBGNAw?si=ICi3-nekq50XzwSm[youtube,width=960,height=440]
+
+MPI Basics Video
+
+video::c0C9mQaxsD4?si=OErei3cJMatJBGjh[youtube,width=960,height=440]
+
+MPI Implementations:
+
+* https://www.mpich.org/[MPICH]
+** Open-source (Git)
+** 'CH' from _Chameleon_ portability system
+** MPICH1 (1992), MPICH2 (2001), and MPICH3 (2012)
+* https://www.open-mpi.org/[OpenMPI]
+** Open-source (Git)
+
+== Basic Concepts
+
+In this context we have individual processes on different CPUs that need to communicate with each other.
+
+=== Communication Domain
+
+The communication patterns are abstracted out into a `communicator`. This type is defined as `MPI_Comm`, and the default communicator type is `MPI_COMM_WORLD`.
+Most functions and types are prefixed with `MPI_`.
+
+=== MPI Functions
+
+[,c]
+----
+/* Set up */
+int MPI_Init(int *argc, char ***argv);
+
+/* Tear down */
+int MPI_Finalize();
+
+/* Total processes */
+int MPI_Comm_size(MPI_Comm comm, int *size);
+
+/* Local process index */
+int MPI_Comm_rank(MPI_Comm comm, int *rank);
+----
+
+For the purposes of keeping things simple we're going to be using the global MPI communicator, `MPI_COMM_WORLD` that all the processes in the multicomputer should be a part of.
+
+* `MPI_Init`: runs MPI to configure our program, initialize all the data structures, etc. Processes some command-line arguments. You must call this _before_ you call any other MPI functions in our program.
+** Arguments similar to those of a `main(int argc, char **argv)` function in C.
+*** `argc` being the number of command-line arguments
+*** `argv` being an array of character pointers (strings)
+** In this case, we want to pass the _address of_ `argc` and the _address of_ `argv` to our `MPI_Init` function. This allows it to make changes to our original idea of the command-line arguments to the program. MPI will actually process the list of command-line args, looking for MPI-specific arguments to configure itself, and will actually remove those from the list of command-line arguments to the program. This way, by the time we get around to processing our own arguments, those MPI-specific arguments have already been processed and removed and we don't have to deal with them.
+* `MPI_Finalize`: Call this at the very _end_ of our program before we exit. Allows MPI to turn off any open communication channels and free memory.
+* `MPI_Comm_size`: Allows us to get the number of processes that are communicating inside our communicator.
+** Takes as an argument a pointer to an integer. We need to define an integer beforehand that will store the size of the multicomputer/number of participating processes, then pass in an address of that variable to the function. The function will then fill in this value at that address.
+* `MPI_Comm_rank`: Tells us who we are in the communicator.
+** Takes as an argument a pointer to an integer. We need to define an integer beforehand that will store the index of the of participating processes _that we are_, then pass in an address of that variable to the function. The function will then fill in this value at that address.
+
+=== Basic MPI Program
+
+Here's the basic skeleton of an MPI program. This covers the initialization and finalization of the MPI program.
+
+[,c]
+----
+int main(int argc, char **argv) {
+
+    /* Set up int variables for MPI functions */
+    int num_procs;
+    int rank;
+
+    /* Note how we're sending the addresses of argc and argv */
+    MPI_Init(&argc, &argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    printf("%d: hello (p=%d)\n", rank, num_procs);
+
+    /* Do many things, all at once */
+
+    MPI_Finalize();
+}
+----
+
+=== Primitive Communication
+
+There's two central functions that allow us to communicate back and forth between the processes running in this distributed environment.
+
+[,c]
+----
+/* Send */
+int MPI_Send(
+    void *buf,
+    int count,
+    MPI_Datatype datatype,
+    int dest,
+    int tag,
+    MPI_Comm comm
+);
+
+/* Receive */
+int MPI_Recv(
+    void *buf,
+    int count,
+    MPI_Datatype datatype,
+    int source,
+    int tag,
+    MPI_Comm comm,
+    MPI_Status status
+);
+----
+
+* `MPI_Send`: Transmit something from our process to another process.
+** When sending information, we need to know _the location_ of that information, and _the size_ of that information.
+** `void *buf` is the generic pointer, can be a pointer to anything we want. This tells it where to go get stuff out of our memory.
+** `int count` NOT a byte-count, but rather a sum number of primitive elements in this buffer we're sending.
+** `MPI_Datatype datatype` determines the specifics of the primitive we're sending (i.e byte size, etc). See below for datatypes.
+** `int dest` the rank of the process to which we want to send this data.
+** `int tag` a hint we can send along to specify different types of information we're sending.
+** `MPI_Comm comm` the communicator we're using. In our case, again, it will be `MPI_COMM_WORLD`.
+* `MPI_Recv`: Receive something from another process in the distributed environment.
+** Pulls data into the destination process.
+** `void *buf` the buffer where we want to _store_ the data received.
+** `int count` how many primitive items of type `MPI_Datatype datatype` we want to receive.
+** `MPI_Datatype datatype` the type of data we're receiving.
+** `int source` the rank of the process we're wanting to receive from.
+** `int tag` select which kind of message to receive at that time.
+** `MPI_Comm comm` MPI communicator we're using. In our case, again, it will be `MPI_COMM_WORLD`.
+** `MPI_Status *status` a pointer to a status structure. Gives us information about the success or failure of this communication from the other process.
+We'll have to predefine this structure to have MPI fill it out.
+
+`MPI_Datatype` types, see https://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node44.htm[MPI Datatype document]. These are constants that get brought in
+in a header file when we compile our code.
+
+Examples:
+
+----
+MPI_SHORT                       char (treated as printable character)
+MPI_INT	                        signed int
+MPI_LONG	                    signed long int
+MPI_LONG_LONG_INT	            signed long long int
+MPI_LONG_LONG (as a synonym)	signed long long int
+MPI_SIGNED_CHAR	                signed char (treated as integral value)
+MPI_UNSIGNED_CHAR	            unsigned char (treated as integral value)
+MPI_UNSIGNED_SHORT	            unsigned short int
+MPI_UNSIGNED	                unsigned int
+MPI_UNSIGNED_LONG	            unsigned long int
+MPI_UNSIGNED_LONG_LONG	        unsigned long long int
+MPI_FLOAT	                    float
+MPI_DOUBLE	                    double
+MPI_LONG_DOUBLE	                long double
+MPI_WCHAR                       wchar_t (defined in <stddef.h>) (treated as printable character)
+----
+
+`MPI_Status` structure:
+
+[,c]
+----
+typedef struct MPI_Status {
+    int MPI_SOURCE;
+    int MPI_TAG;
+    int MPI_ERROR;
+};
+----
+
+=== MPI Exercise 1
+
+Generate four processes in a ring-like structure. Each process will generate a random number value, and will communicate it to the next process in the ring. Each process will also receive the random value generated from the process previous in the ring. In `round_robin()`, we need to organize the send and receive calls so that when one process A is sending to some process B, process B is listening (receiving) from process A.
+
+Here we divide the processes into two groups (based on modulo 2):
+
+* Ones that will send first, then receive
+* Ones that will receive first, then send
+
+Solution:
+
+[,c]
+----
+
+void round_robin(int rank, int procs) {
+    
+    /* Declare placeholders for my random number, 
+    and the previous process' random number */
+    long int rand_mine, rand_prev;
+
+    /* Determine the next rank and the previous rank */
+    int rank_next = (rank + 1) % procs;
+    int rank_prev = rank == 0 ? procs - 1 : rank - 1;
+
+    /* Allocate space for a status object */
+    MPI_Status status;
+
+    /* Seed a random number, then generate and print it */
+    srandom(time(NULL) + rank);
+    rand_mine = random() / (RAND_MAX / 100);
+    printf("%d: random is %ld\n", rank, rand_mine);
+
+    /* Organize send/receive call orders based on process rank */
+    if (rank % 2 == 0) {
+
+        printf("%d: sending %ld to %d\n", rank, rand_mine, rank_next);
+        MPI_Send(
+            (void *) &rand_mine, // cast address of our random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_next, // dest
+            1, // tag
+            MPI_COMM_WORLD // communicator
+        );
+
+        printf("%d: receiving from %d\n", rank, rank_prev);
+        MPI_Recv(
+            (void *) &rand_prev, // cast address of previous proc's random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_prev, // source
+            1, // tag
+            MPI_COMM_WORLD, // communicator
+            &status // where to store status
+        );
+
+    } else {
+
+        printf("%d: receiving from %d\n", rank, rank_prev);
+        MPI_Recv(
+            (void *) &rand_prev, // cast address of previous proc's random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_prev, // source
+            1, // tag
+            MPI_COMM_WORLD, // communicator
+            &status // where to store status
+        );
+
+        printf("%d: sending %ld to %d\n", rank, rand_mine, rank_next);
+        MPI_Send(
+            (void *) &rand_mine, // cast address of our random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_next, // dest
+            1, // tag
+            MPI_COMM_WORLD // communicator
+        );
+    }
+
+    /* Print answer for each process */
+    printf("%d: I had %ld, %d had %ld\n", rank, rand_mine, rank_prev, rand_prev);
+}
+
+int main(int argc, char **argv) {
+
+    /* Set up int variables for MPI functions */
+    int num_procs;
+    int rank;
+
+    /* Initialize MPI */
+    MPI_Init(&argc, &argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    printf("%d: hello (p=%d)\n", rank, num_procs);
+
+    round_robin(rank, num_procs);
+
+    /* Tear down MPI */
+    printf("%d: goodbye\n", rank);
+    MPI_Finalize();
+}
+----

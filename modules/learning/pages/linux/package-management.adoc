@@ -266,3 +266,56 @@ Example:
 2cd8f8f76da4:/ # zypper mr -g opensuse-leap-15.5-base
 GPG check has been enabled for repository 'opensuse-leap-15.5-base'.
 ----
+
+== DNF
+
+Dandified Yum (DNF), or `dnf`, is used to manage packages on RHEL-based systems like CentOS, Rocky, and Alma Linux.
+
+=== Install Local RPMs
+
+[,bash]
+----
+dnf install <path_to_rpms>/*.rpm
+----
+
+=== Disable Default Repos
+
+[,bash]
+----
+dnf config-manager --disable appstream baseos extras
+----
+
+=== Enable Repos
+
+[,bash]
+----
+dnf config-manager --enable appstream86 baseos86 extras86
+----
+
+=== Update DNF
+
+[,bash]
+----
+dnf update -y
+----
+
+== DPKG
+
+Debian Package Manager, used by Ubuntu Linux.
+
+=== Replace an Existing Package Installation
+
+[,bash]
+----
+dpkg -i -B <local_package>.deb
+----
+
+From `man dpkg`:
+
+----
+-B, --auto-deconfigure
+          When  a  package is removed, there is a possibility that another
+          installed package depended on the  removed  package.  Specifying
+          this  option will cause automatic deconfiguration of the package
+          which depended on the removed package.
+----

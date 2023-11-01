@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>C++ :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../linux/rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../linux/tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../linux/user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/networking/linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/networking/proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/networking/ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../linux/storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/numa.html">NUMA</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages.html">Languages</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Documentation</a></li>
+    <li><a href="cpp.html">C++</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">C++</h1>
+<div class="sect1">
+<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_program"><a class="anchor" href="#_basic_program"></a>Basic Program</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  std::cout &lt;&lt; "Hello World!\n";
+  return 0;
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compile_and_execute"><a class="anchor" href="#_compile_and_execute"></a>Compile and Execute</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To compile a simple <code>.cpp</code> file alone to <code>a.out</code>, you can run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">g++ hello.cpp
+./a.out</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  simple1 g++ hello.cpp
+➜  simple1 ls
+a.out  hello.cpp
+➜  simple1 ./a.out
+Hello World</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To compile our <code>.cpp</code> file to binary and give it a name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">g++ hello.cpp -o hello</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A compiler translates the C++ program into machine language code which it stores on the disk as a file with the extension <code>.o</code> (e.g. <code>hello.o</code>). A linker then links the object code with standard library routines that the program may use and creates an executable image which is also saved on disk, usually as a file with the file name without any extension (e.g. <code>hello</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_c_data_types"><a class="anchor" href="#_c_data_types"></a>C++ Data Types</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.codecademy.com/resources/docs/cpp/data-types?page_ref=catalog">Types Catalog</a></p>
+</div>
+<div class="sect2">
+<h3 id="_datatype_modifiers"><a class="anchor" href="#_datatype_modifiers"></a>Datatype Modifiers</h3>
+<div class="paragraph">
+<p>As the name implies, datatype modifiers are used with built-in data types to modify the length of data that a particular data type can hold. Data type modifiers in C++ are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>signed</code></p>
+</li>
+<li>
+<p><code>unsigned</code></p>
+</li>
+<li>
+<p><code>short</code></p>
+</li>
+<li>
+<p><code>long</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_const"><a class="anchor" href="#_const"></a>Const</h3>
+<div class="paragraph">
+<p><code>const</code> (constant) variables cannot be changed by your program during execution.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">const double quarter = 0.25;
+// and now variable quarter can only be 0.25</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Simply add the keyword <code>const</code> before the data type during declaration to make the variable not modifiable.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_type_conversion"><a class="anchor" href="#_type_conversion"></a>Type Conversion</h3>
+<div class="paragraph">
+<p>A type cast is basically a conversion from one type to another.</p>
+</div>
+<div class="paragraph">
+<p>The notation <code>(type) value</code> means "convert value to type". So for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">double weight1;
+int weight2;
+
+weight1 = 154.49;
+weight2 = (int) weight1;
+
+// weight2 is now 154</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Going from a <code>double</code> to an <code>int</code> simply removes the decimal. There&#8217;s no rounding involved.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reading_user_input"><a class="anchor" href="#_reading_user_input"></a>Reading User Input</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int tip = 0;
+  std::cout &lt;&lt; "Enter tip amount: ";
+  std::cin &gt;&gt; tip;
+
+  std::cout &lt;&lt; "You paid " &lt;&lt; tip &lt;&lt; " dollars.\n";
+
+  return 0;
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conditionals"><a class="anchor" href="#_conditionals"></a>Conditionals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Example random number generator program with <code>if</code>/<code>else</code> blocks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;ctime&gt;
+
+int main() {
+
+  // Create a number that's 0 or 1
+
+  srand (time(NULL));
+  int coin = rand() % 2;
+
+  // If number is 0: Heads
+  // If it is not 0: Tails
+  if (coin == 0) {
+    std::cout &lt;&lt; "Heads\n";
+  }
+  else {
+    std::cout &lt;&lt; "Tails\n";
+  }
+
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switch_statements"><a class="anchor" href="#_switch_statements"></a>Switch Statements</h3>
+<div class="paragraph">
+<p>Example program with switch statements. If you don&#8217;t include the <code>break</code> for a condition, it will execute that block and "fall through" to the next one.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int number = 9;
+
+  switch(number) {
+
+    case 1 :
+      std::cout &lt;&lt; "Bulbusaur\n";
+      break;
+    case 2 :
+      std::cout &lt;&lt; "Ivysaur\n";
+      break;
+    case 3 :
+      std::cout &lt;&lt; "Venusaur\n";
+      break;
+    case 4 :
+      std::cout &lt;&lt; "Charmander\n";
+      break;
+    case 5 :
+      std::cout &lt;&lt; "Charmeleon\n";
+      break;
+    case 6 :
+      std::cout &lt;&lt; "Charizard\n";
+      break;
+    default :
+      std::cout &lt;&lt; "Unknown\n";
+      break;
+
+  }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loops"><a class="anchor" href="#_loops"></a>Loops</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Repeat instructions while some condition is met.</p>
+</div>
+<div class="sect2">
+<h3 id="_while_loops"><a class="anchor" href="#_while_loops"></a>While Loops</h3>
+<div class="paragraph">
+<p>Example <code>enter_pin.cpp</code> program using a <code>while</code> loop:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int pin = 0;
+  int tries = 0;
+
+  std::cout &lt;&lt; "BANK OF CODECADEMY\n";
+
+  std::cout &lt;&lt; "Enter your PIN: ";
+  std::cin &gt;&gt; pin;
+
+  tries++;
+
+  while (pin != 1234 &amp;&amp; tries &lt; 3) {
+
+    std::cout &lt;&lt; "Enter your PIN: ";
+    std::cin &gt;&gt; pin;
+    tries++;
+
+  }
+
+  if (pin == 1234) {
+
+    std::cout &lt;&lt; "PIN accepted!\n";
+    std::cout &lt;&lt; "You now have access.\n";
+
+  }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_for_loops"><a class="anchor" href="#_for_loops"></a>For Loops</h3>
+<div class="paragraph">
+<p>Structure: <code>for (int i = 0; i &lt; 20; i++)</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>3 parts: <code>( &lt;initialization&gt; ; &lt;condition&gt; ; &lt;action&gt; )</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">for (int i = 99; i &gt;= 0; i--) {
+    std::cout &lt;&lt; i &lt;&lt; " bottles of beer on the wall...\n";
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_errors"><a class="anchor" href="#_errors"></a>Errors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In C++, there are many different ways of classifying errors, but they can be boiled down to four categories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Compile-time errors</strong>: Errors found by the compiler.</p>
+</li>
+<li>
+<p><strong>Link-time errors</strong>: Errors found by the linker when it is trying to combine object files into an executable program.</p>
+</li>
+<li>
+<p><strong>Run-time errors</strong>: Errors found by checks in a running program.</p>
+</li>
+<li>
+<p><strong>Logic errors</strong>: Errors found by the programmer looking for the causes of erroneous results.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_compile_time_errors"><a class="anchor" href="#_compile_time_errors"></a>Compile-time Errors</h3>
+<div class="paragraph">
+<p>There are two types of compile-time errors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Syntax errors</strong>: Errors that occur when we violate the rules of C++ syntax.</p>
+</li>
+<li>
+<p><strong>Type errors</strong>: Errors that occur when there are mismatch between the types we declared.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_link_time_errors"><a class="anchor" href="#_link_time_errors"></a>Link-time Errors</h3>
+<div class="paragraph">
+<p>Sometimes the code compiles fine, but there is still a message because the program needs some function or library that it can&#8217;t find. This is known as a link-time error.</p>
+</div>
+<div class="paragraph">
+<p>As our program gets bigger, it is good practice to divide the program into separate files. After compiling them, the linker takes those separate object files and combines them into a single executable file. Link-time errors are found by the linker when it is trying to combine object files into an executable file.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_time_errors"><a class="anchor" href="#_run_time_errors"></a>Run-time Errors</h3>
+<div class="paragraph">
+<p>If our program has no compile-time errors and no link-time errors, it&#8217;ll run. This is where the fun really starts.</p>
+</div>
+<div class="paragraph">
+<p>Errors which happen during program execution (run-time) after successful compilation are called run-time errors. Run-time errors occur when a program with no compile-time errors and link-time errors asks the computer to do something that the computer is unable to reliably do.</p>
+</div>
+<div class="paragraph">
+<p>Some common run-time errors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Division by zero also known as division error. These types of error are hard to find as the compiler doesn&#8217;t point to the line at which the error occurs.</p>
+</li>
+<li>
+<p>Trying to open a file that doesn&#8217;t exist</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logic_errors"><a class="anchor" href="#_logic_errors"></a>Logic Errors</h3>
+<div class="paragraph">
+<p>Once we have removed the compile-time errors, link-time errors, and run-time errors, the program runs successfully. But sometimes, the program doesn&#8217;t do what we want it to do or no output is produced. Hmmm…</p>
+</div>
+<div class="paragraph">
+<p>These types of errors which provide incorrect output, but appears to be error-free, are called logical errors. These are one of the most common errors that happen to beginners and also usually the most difficult to find and eliminate.</p>
+</div>
+<div class="paragraph">
+<p>Logical errors solely depend on the logical thinking of the programmer. Your job now is to figure out why the program didn&#8217;t do what you wanted it to do.</p>
+</div>
+<div class="paragraph">
+<p>Some common logic errors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Program logic is flawed</p>
+</li>
+<li>
+<p>Some “silly” mistake in an if statement or a for/while loop</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_data_structures"><a class="anchor" href="#_data_structures"></a>Data Structures</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_arrays"><a class="anchor" href="#_arrays"></a>Arrays</h3>
+<div class="paragraph">
+<p>Reference: <a href="https://cplusplus.com/doc/tutorial/arrays/">arrays</a></p>
+</div>
+<div class="paragraph">
+<p>Fixed-size sequential data structure; lower-level than vectors.</p>
+</div>
+<div class="sect3">
+<h4 id="_initialization"><a class="anchor" href="#_initialization"></a>Initialization</h4>
+<div class="paragraph">
+<p>Allocate an empty array of type <code>int</code>, and size 4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int nums[4];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Initializing with values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Equivalent statements
+int nums[] = {1, 2, 3, 4};
+int nums[] {1, 2, 3, 4};
+
+// Create array of size 7, assign the first 4
+// values, then the rest leave as default values
+int nums[7] = {1, 2, 3, 4};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_accessing_array_elements"><a class="anchor" href="#_accessing_array_elements"></a>Accessing Array Elements</h4>
+<div class="paragraph">
+<p>Use square brackets and an index to access values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">nums[0] = 53;
+std::cout &lt;&lt; nums[0] &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_multi_dimensional_arrays"><a class="anchor" href="#_multi_dimensional_arrays"></a>Multi-dimensional Arrays</h4>
+<div class="paragraph">
+<p>You can create arrays of arrays, i.e. matrices:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Create an array of 3 rows, 5 columns
+int nums[3][5];
+
+// Set the second row, third column to 7
+nums[1][2] = 7;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vectors"><a class="anchor" href="#_vectors"></a>Vectors</h3>
+<div class="paragraph">
+<p>Essentially resizable arrays with built-in functions for manipulation, metadata, and safety checking.</p>
+</div>
+<div class="paragraph">
+<p>Reference: <a href="https://cplusplus.com/reference/vector/vector/">vector</a></p>
+</div>
+<div class="sect3">
+<h4 id="_initialization_2"><a class="anchor" href="#_initialization_2"></a>Initialization</h4>
+<div class="paragraph">
+<p>A <code>vector</code> is a sequence of elements that you can access by index.</p>
+</div>
+<div class="paragraph">
+<p>Include <code>&lt;vector&gt;</code> then declare it like: <code>std::vector&lt;type&gt; name;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+
+  # Declare vector of doubles
+  std::vector&lt;double&gt; subway_adult;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can initialize a <code>vector</code> by assigning values at the same time as declaration, like you would with an array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location = {42.651443, -73.749302};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location(2);
+location[0] = 42.651443;
+location[1] = -73.749302;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s many ways to initialize a C++ <code>vector</code>. Check out this article to see more ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.geeksforgeeks.org/initialize-a-vector-in-cpp-different-ways/#">Different ways to initialize a CPP vector</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_accessing_vector_elements"><a class="anchor" href="#_accessing_vector_elements"></a>Accessing Vector Elements</h4>
+<div class="paragraph">
+<p>Using square brackets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};
+std::cout &lt;&lt; location[1] &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This doesn&#8217;t prevent you from accessing elements outside the indices range of the vector. For example, one could use <code>location[5]</code>, which would take the beginning
+of <code>location</code>, add 5 <code>double</code>-sized spaces, then use whatever is there in memory.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>.at()</code> function for safety/bounds checking:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};
+std::cout &lt;&lt; location.at(1) &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This makes sure that the index you passed in is within the bounds of the size of the vector. This is an example of an error thrown when going out of bounds.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 4) &gt;= this-&gt;size() (which is 3)
+[1]    17482 abort (core dumped)  ./a.out</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_adding_and_removing_elements"><a class="anchor" href="#_adding_and_removing_elements"></a>Adding and Removing Elements</h4>
+<div class="paragraph">
+<p><code>.push_back()</code> adds a new element to the end of the array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;std::string&gt; last_jedi;
+last_jedi.push_back("kylo");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>.pop_back()</code> removes an element from the end of the array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;std::string&gt; last_jedi{"kylo", "rey"};
+last_jedi.pop_back();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>.pop_back()</code> has no return value.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_viewing_size"><a class="anchor" href="#_viewing_size"></a>Viewing Size</h4>
+<div class="paragraph">
+<p>The <code>.size()</code> function returns the number of elements in the vector.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

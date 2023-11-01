@@ -139,6 +139,9 @@
     <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -219,10 +222,13 @@
     <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+    <a class="nav-link" href="../machine-learning/nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -244,6 +250,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -836,8 +851,10 @@ peer:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_lustre_client_builds_location"><a class="anchor" href="#_lustre_client_builds_location"></a>Lustre Client Builds location</h2>
+<h2 id="_building_the_lustre_client"><a class="anchor" href="#_building_the_lustre_client"></a>Building the Lustre Client</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_lustre_client_builds_location"><a class="anchor" href="#_lustre_client_builds_location"></a>Lustre Client Builds location</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -855,9 +872,83 @@ peer:
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_building_for_rhel"><a class="anchor" href="#_building_for_rhel"></a>Building for RHEL</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_building_for_opensuse_leap"><a class="anchor" href="#_building_for_opensuse_leap"></a>Building for OpenSUSE Leap</h3>
+
+</div>
+<div class="sect2">
+<h3 id="_building_for_ubuntu"><a class="anchor" href="#_building_for_ubuntu"></a>Building for Ubuntu</h3>
+<div class="paragraph">
+<p>Here we&#8217;re building for Ubuntu 22.04.</p>
+</div>
+<div class="paragraph">
+<p>Install the build dependencies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+set -ex
+
+# Install dependencies
+apt-get install -y \
+	module-assistant \
+	libreadline-dev \
+	debhelper \
+	dpatch \
+	automake \
+	pkg-config \
+	libtool \
+	libyaml-dev \
+	libnl-genl-3-dev \
+	libselinux-dev \
+	libsnmp-dev \
+	mpi-default-dev \
+	bzip2 \
+	quilt \
+	linux-headers-$(uname -r) \
+	rsync \
+	libssl-dev \
+	libpython3-dev \
+	swig
+
+LUSTRE_DIR=/root/ccarlson/lustre-release
+
+# e.g: generic
+KERNEL_FLAVOR=$(uname -r | tr '-' '\n' | tail -1)
+
+# e.g: 5.15.0-83
+KERNEL_VERSION=$(uname -r | sed -e "s:-${KERNEL_FLAVOR}$::g")
+
+# e.g: /usr/src/linux-headers-5.15.0-83
+LINUX_KERNEL_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION})
+
+# e.g: /usr/src/linux-headers-5.15.0-83-generic/
+LINUX_OBJ_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION}-${KERNEL_FLAVOR})
+
+# e.g: /usr/src/ofa_kernel/default
+# MOFED_SRC_DIR="/usr/src/mlnx-ofed-kernel-23.07"
+MOFED_SRC_DIR="/usr/src/ofa_kernel/default"
+
+# Configure build options then build debian packages
+cd $LUSTRE_DIR &amp;&amp; sh autogen.sh &amp;&amp; ./configure \
+	--disable-server \
+	--enable-client \
+	--with-linux=${LINUX_KERNEL_DIR} \
+	--with-linux-obj=${LINUX_OBJ_DIR} \
+	--with-o2ib=${MOFED_SRC_DIR} \
+	&amp;&amp; make debs</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div class="sect1">
-<h2 id="_persistent_client_cache"><a class="anchor" href="#_persistent_client_cache"></a>Persistent Client Cache</h2>
+<h2 id="_persistent_client_cache_pcc"><a class="anchor" href="#_persistent_client_cache_pcc"></a>Persistent Client Cache (PCC)</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1150,36 +1241,69 @@ done</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_benchmarks"><a class="anchor" href="#_benchmarks"></a>Benchmarks</h2>
+<h2 id="_lustre_client_tunings"><a class="anchor" href="#_lustre_client_tunings"></a>Lustre Client Tunings</h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Watch IB interfaces for network load</p>
-</li>
-<li>
-<p>I/O patterns from a Lustre client perspective</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>lctl</code> RPC stats/information dig out of <code>lctl</code> in debug mode</p>
-</li>
-<li>
-<p>Lustre&#8217;s sweetspot is large streaming I/O, not great for small files</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Here&#8217;s a script to tune a Lustre client for an E1000 filesystem.</p>
 </div>
-</li>
-<li>
-<p>View how PCC affects this stuff; looking at local devices</p>
-</li>
-<li>
-<p>Get Fragalla engaged on MLDS platform</p>
-</li>
-<li>
-<p>Get lnet config updated for max interfaces</p>
-</li>
-</ul>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+# mdc: metadata client
+# osc: object storage client
+
+# Disable checksums on mdc and osc
+lctl set_param osc.cstor1*.checksums=0
+lctl set_param mdc.cstor1*.checksums=0
+
+# Increase RPCs in flight limit for mdc and osc
+lctl set_param osc.cstor1*.max_rpcs_in_flight=256
+lctl set_param mdc.cstor1*.max_rpcs_in_flight=256
+
+# Enable 16MB RPCs for osc, and 1MB RPCs for mdc
+lctl set_param osc.cstor1*.max_pages_per_rpc=4096
+lctl set_param mdc.cstor1*.max_pages_per_rpc=256
+
+# Set 2GB limit on max dirty RPCs for osc and mdc
+lctl set_param osc.cstor1*.max_dirty_mb=2000
+lctl set_param mdc.cstor1*.max_dirty_mb=2000
+
+# Set read-ahead tunings
+lctl set_param llite.cstor1*.max_read_ahead_mb=512
+lctl set_param llite.cstor1*.max_read_ahead_per_file_mb=512</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see the current client tunings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+# mdc: metadata client
+# osc: object storage client
+
+# Get checksums on mdc and osc
+lctl get_param osc.cstor1*.checksums
+lctl get_param mdc.cstor1*.checksums
+
+# Get RPCs in flight limit for mdc and osc
+lctl get_param osc.cstor1*.max_rpcs_in_flight
+lctl get_param mdc.cstor1*.max_rpcs_in_flight
+
+# Get RPCs for osc and mdc
+lctl get_param osc.cstor1*.max_pages_per_rpc
+lctl get_param mdc.cstor1*.max_pages_per_rpc
+
+# Get limit on max dirty RPCs for osc and mdc
+lctl get_param osc.cstor1*.max_dirty_mb
+lctl get_param mdc.cstor1*.max_dirty_mb
+
+# Get read-ahead tunings
+lctl get_param llite.cstor1*.max_read_ahead_mb
+lctl get_param llite.cstor1*.max_read_ahead_per_file_mb</code></pre>
+</div>
 </div>
 </div>
 </div>

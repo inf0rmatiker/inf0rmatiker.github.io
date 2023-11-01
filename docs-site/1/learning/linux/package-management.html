@@ -139,6 +139,9 @@
     <a class="nav-link" href="networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -219,10 +222,13 @@
     <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+    <a class="nav-link" href="../machine-learning/nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -244,6 +250,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -566,6 +581,74 @@ zypper mr -g</code></pre>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">2cd8f8f76da4:/ # zypper mr -g opensuse-leap-15.5-base
 GPG check has been enabled for repository 'opensuse-leap-15.5-base'.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dnf"><a class="anchor" href="#_dnf"></a>DNF</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dandified Yum (DNF), or <code>dnf</code>, is used to manage packages on RHEL-based systems like CentOS, Rocky, and Alma Linux.</p>
+</div>
+<div class="sect2">
+<h3 id="_install_local_rpms"><a class="anchor" href="#_install_local_rpms"></a>Install Local RPMs</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install &lt;path_to_rpms&gt;/*.rpm</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_disable_default_repos"><a class="anchor" href="#_disable_default_repos"></a>Disable Default Repos</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf config-manager --disable appstream baseos extras</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enable_repos"><a class="anchor" href="#_enable_repos"></a>Enable Repos</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf config-manager --enable appstream86 baseos86 extras86</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_update_dnf"><a class="anchor" href="#_update_dnf"></a>Update DNF</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf update -y</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dpkg"><a class="anchor" href="#_dpkg"></a>DPKG</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Debian Package Manager, used by Ubuntu Linux.</p>
+</div>
+<div class="sect2">
+<h3 id="_replace_an_existing_package_installation"><a class="anchor" href="#_replace_an_existing_package_installation"></a>Replace an Existing Package Installation</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dpkg -i -B &lt;local_package&gt;.deb</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From <code>man dpkg</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">-B, --auto-deconfigure
+          When  a  package is removed, there is a possibility that another
+          installed package depended on the  removed  package.  Specifying
+          this  option will cause automatic deconfiguration of the package
+          which depended on the removed package.</code></pre>
 </div>
 </div>
 </div>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Machine Learning :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/machine-learning/machine-learning.html">
+    <title>Nvidia :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/machine-learning/nvidia.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -139,6 +139,9 @@
     <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -218,11 +221,14 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="benchmarks.html">Benchmarks</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="machine-learning.html">Machine Learning</a>
-  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="determinedai.html">Determined AI</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -244,6 +250,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -282,7 +297,7 @@
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
     <li>Machine Learning</li>
-    <li><a href="machine-learning.html">Machine Learning</a></li>
+    <li><a href="nvidia.html">Nvidia</a></li>
   </ul>
 </nav>
 </div>
@@ -291,9 +306,52 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Machine Learning</h1>
+<h1 class="page">Nvidia</h1>
+<div class="sect1">
+<h2 id="_nvidia_cuda_installation_with_gds"><a class="anchor" href="#_nvidia_cuda_installation_with_gds"></a>Nvidia / CUDA Installation with GDS</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Default template page for module to be replaced.</p>
+<p>For Ubuntu 22.04:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+apt-get install \
+	cuda-drivers-535="535.104.05-1" \
+	cuda-drivers-fabricmanager-535="535.104.05-1" \
+	cuda-drivers-fabricmanager="535.104.05-1" \
+	libnvidia-cfg1-535="535.104.05-0ubuntu1" \
+	libnvidia-common-535="535.104.05-0ubuntu1" \
+	libnvidia-compute-535="535.104.05-0ubuntu1" \
+	libnvidia-container-tools="1.14.1-1" \
+	libnvidia-container1="1.14.1-1" \
+	libnvidia-decode-535="535.104.05-0ubuntu1" \
+	libnvidia-encode-535="535.104.05-0ubuntu1" \
+	libnvidia-extra-535="535.104.05-0ubuntu1" \
+	libnvidia-fbc1-535="535.104.05-0ubuntu1" \
+	libnvidia-gl-535="535.104.05-0ubuntu1" \
+	nvidia-compute-utils-535="535.104.05-0ubuntu1" \
+	nvidia-container-toolkit-base="1.14.1-1" \
+	nvidia-container-toolkit="1.14.1-1" \
+	nvidia-dkms-535="535.104.05-0ubuntu1" \
+	nvidia-docker2="2.13.0-1" \
+	nvidia-driver-535="535.104.05-0ubuntu1" \
+	nvidia-fabricmanager-535="535.104.05-1" \
+	nvidia-fs-dkms="2.17.5-1" \
+	nvidia-fs="2.17.5-1" \
+	nvidia-gds-12-2="12.2.2-1" \
+	nvidia-gds="12.2.2-1" \
+	nvidia-kernel-common-535="535.104.05-0ubuntu1" \
+	nvidia-kernel-source-535="535.104.05-0ubuntu1" \
+	nvidia-modprobe="535.104.05-0ubuntu1" \
+	nvidia-prime="0.8.17.1" \
+	nvidia-settings="535.104.05-0ubuntu1" \
+	nvidia-utils-535="535.104.05-0ubuntu1" \
+	xserver-xorg-video-nvidia-535="535.104.05-0ubuntu1"</code></pre>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>

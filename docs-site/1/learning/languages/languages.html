@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring a private registry to use a proxy server :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/docker/registry-proxy.html">
+    <title>Languages :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/languages.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -170,8 +170,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Docker</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="registry-proxy.html">Registry Proxy</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
   </li>
 </ul>
   </li>
@@ -257,8 +257,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../languages/languages.html">Languages</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -296,8 +296,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Docker</li>
-    <li><a href="registry-proxy.html">Registry Proxy</a></li>
+    <li>Languages</li>
+    <li><a href="languages.html">Languages</a></li>
   </ul>
 </nav>
 </div>
@@ -306,97 +306,19 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring a private registry to use a proxy server</h1>
-<div id="preamble">
-<div class="sectionbody">
+<h1 class="page">Languages</h1>
 <div class="paragraph">
-<p>Official docs: <a href="https://docs.docker.com/network/proxy/#configure-the-docker-client" class="bare">https://docs.docker.com/network/proxy/#configure-the-docker-client</a></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_configure_the_docker_client"><a class="anchor" href="#_configure_the_docker_client"></a>Configure the Docker client</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>On the Docker client, create or edit the file <code>~/.docker/config</code>.json in the home directory of the user that starts containers. Add JSON similar to the following example. Substitute the type of proxy with <code>httpsProxy</code> or <code>ftpProxy</code> if necessary, and substitute the address and port of the proxy server. You can also configure multiple proxy servers simultaneously.</p>
+<p>Module landing page for learning different programming languages.</p>
 </div>
 <div class="paragraph">
-<p>+
-You can optionally exclude hosts or ranges from going through the proxy server by setting a <code>noProxy</code> key to one or more comma-separated IP addresses or hosts. Using the <code>*</code> character as a wildcard for hosts and using CIDR notation for IP addresses is supported as shown in this example:</p>
+<p>See specific language submodules for more details:</p>
 </div>
-<div class="paragraph">
-<p>+</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json"> {
-     "proxies":
-     {
-         "default":
-         {
-             "httpProxy": "http://192.168.1.12:3128",
-             "httpsProxy": "http://192.168.1.12:3128",
-             "noProxy": "*.test.example.com,.example2.com,127.0.0.0/8"
-         }
-     }
- }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>+
-Save the file.</p>
-</div>
-<div class="paragraph">
-<p>When you create or start new containers, the environment variables are set automatically within the container.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_use_environment_variables"><a class="anchor" href="#_use_environment_variables"></a>Use environment variables</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_set_the_environment_variables_manually"><a class="anchor" href="#_set_the_environment_variables_manually"></a>Set the environment variables manually</h3>
-<div class="paragraph">
-<p>When you build the image, or using the <code>--env</code> flag when you create or run the container, you can set one or more of the following variables to the appropriate value. This method makes the image less portable, so if you have Docker 17.07 or higher, you should configure the Docker client instead.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Dockerfile example</th>
-<th class="tableblock halign-left valign-top"><code>docker run</code> example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTP_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV HTTP_PROXY="http://192.168.1.12:3128"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env HTTP_PROXY="http://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTPS_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV HTTPS_PROXY="https://192.168.1.12:3128</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env HTTPS_PROXY="https://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FTP_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV FTP_PROXY="ftp://192.168.1.12:3128"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env FTP_PROXY="ftp://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NO_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV NO_PROXY="*.test.example.com,.example2.com"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env NO_PROXY="*.test.example.com,.example2.com"</code></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="cpp/cpp.html" class="xref page">C++</a></p>
+</li>
+</ul>
 </div>
 </article>
   </div>

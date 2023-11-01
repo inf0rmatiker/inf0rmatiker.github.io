@@ -139,6 +139,9 @@
     <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -219,10 +222,13 @@
     <a class="nav-link" href="benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="machine-learning.html">Machine Learning</a>
+    <a class="nav-link" href="determinedai.html">Determined AI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="determinedai.html">Determined AI</a>
+    <a class="nav-link" href="nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -244,6 +250,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -825,9 +840,465 @@ We have to include the <code>eth0</code> interface for MPI to communicate over, 
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gpu_direct_storage_gds"><a class="anchor" href="#_gpu_direct_storage_gds"></a>GPU Direct Storage (GDS)</h2>
+<div class="sectionbody">
 <div class="sect2">
-<h3 id="_gpu_direct_storage_gds"><a class="anchor" href="#_gpu_direct_storage_gds"></a>GPU Direct Storage (GDS)</h3>
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>To use NVIDIA CUDA on your system, you will need the following installed:
+CUDA Toolkit (available at <a href="https://developer.nvidia.com/cuda-downloads" class="bare">https://developer.nvidia.com/cuda-downloads</a>)</p>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#install-prereqs">Install Prerequisites</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_installation_2"><a class="anchor" href="#_installation_2"></a>Installation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">CUDA Installation</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#gds-installing">GDS Installation</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#install-gpudirect-storage">GDS Installation via CUDA</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It&#8217;s easiest to just install the CUDA toolkit and drivers, along with <code>nvidia-fs</code> via <code>apt</code> which includes GDS.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
 
+apt-get install \
+	cuda-drivers-535="535.104.05-1" \
+	cuda-drivers-fabricmanager-535="535.104.05-1" \
+	cuda-drivers-fabricmanager="535.104.05-1" \
+        cuda-toolkit-12-2-config-common="12.2.140-1" \
+        cuda-toolkit-12-config-common="12.2.140-1" \
+        cuda-toolkit-config-common="12.2.140-1" \
+	libnvidia-cfg1-535="535.104.05-0ubuntu1" \
+	libnvidia-common-535="535.104.05-0ubuntu1" \
+	libnvidia-compute-535="535.104.05-0ubuntu1" \
+	libnvidia-container-tools="1.14.1-1" \
+	libnvidia-container1="1.14.1-1" \
+	libnvidia-decode-535="535.104.05-0ubuntu1" \
+	libnvidia-encode-535="535.104.05-0ubuntu1" \
+	libnvidia-extra-535="535.104.05-0ubuntu1" \
+	libnvidia-fbc1-535="535.104.05-0ubuntu1" \
+	libnvidia-gl-535="535.104.05-0ubuntu1" \
+	nvidia-compute-utils-535="535.104.05-0ubuntu1" \
+	nvidia-container-toolkit-base="1.14.1-1" \
+	nvidia-container-toolkit="1.14.1-1" \
+	nvidia-dkms-535="535.104.05-0ubuntu1" \
+	nvidia-docker2="2.13.0-1" \
+	nvidia-driver-535="535.104.05-0ubuntu1" \
+	nvidia-fabricmanager-535="535.104.05-1" \
+	nvidia-fs-dkms="2.17.5-1" \
+	nvidia-fs="2.17.5-1" \
+	nvidia-gds-12-2="12.2.2-1" \
+	nvidia-gds="12.2.2-1" \
+	nvidia-kernel-common-535="535.104.05-0ubuntu1" \
+	nvidia-kernel-source-535="535.104.05-0ubuntu1" \
+	nvidia-modprobe="535.104.05-0ubuntu1" \
+	nvidia-prime="0.8.17.1" \
+	nvidia-settings="535.104.05-0ubuntu1" \
+	nvidia-utils-535="535.104.05-0ubuntu1" \
+	xserver-xorg-video-nvidia-535="535.104.05-0ubuntu1"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can verify the installation by running</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/usr/local/cuda-12.2/gds/tools/gdscheck.py -p</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"> ============
+ ENVIRONMENT:
+ ============
+ =====================
+ DRIVER CONFIGURATION:
+ =====================
+ NVMe               : Unsupported
+ NVMeOF             : Unsupported
+ SCSI               : Unsupported
+ ScaleFlux CSD      : Unsupported
+ NVMesh             : Unsupported
+ DDN EXAScaler      : Unsupported
+ IBM Spectrum Scale : Unsupported
+ NFS                : Unsupported
+ BeeGFS             : Unsupported
+ WekaFS             : Unsupported
+ Userspace RDMA     : Unsupported
+ --Mellanox PeerDirect : Enabled
+ --rdma library        : Not Loaded (libcufile_rdma.so)
+ --rdma devices        : Not configured
+ --rdma_device_status  : Up: 0 Down: 0
+ =====================
+ CUFILE CONFIGURATION:
+ =====================
+ properties.use_compat_mode : true
+ properties.force_compat_mode : false
+ properties.gds_rdma_write_support : true
+ properties.use_poll_mode : false
+ properties.poll_mode_max_size_kb : 4
+ properties.max_batch_io_size : 128
+ properties.max_batch_io_timeout_msecs : 5
+ properties.max_direct_io_size_kb : 16384
+ properties.max_device_cache_size_kb : 131072
+ properties.max_device_pinned_mem_size_kb : 33554432
+ properties.posix_pool_slab_size_kb : 4 1024 16384
+ properties.posix_pool_slab_count : 128 64 32
+ properties.rdma_peer_affinity_policy : RoundRobin
+ properties.rdma_dynamic_routing : 0
+ fs.generic.posix_unaligned_writes : false
+ fs.lustre.posix_gds_min_kb: 0
+ fs.beegfs.posix_gds_min_kb: 0
+ fs.weka.rdma_write_support: false
+ fs.gpfs.gds_write_support: false
+ profile.nvtx : false
+ profile.cufile_stats : 0
+ miscellaneous.api_check_aggressive : false
+ execution.max_io_threads : 4
+ execution.max_io_queue_depth : 128
+ execution.parallel_io : true
+ execution.min_io_threshold_size_kb : 8192
+ execution.max_request_parallelism : 4
+ properties.force_odirect_mode : false
+ properties.prefer_iouring : false
+ =========
+ GPU INFO:
+ =========
+ GPU index 0 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 1 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 2 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 3 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 4 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 5 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 6 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ GPU index 7 NVIDIA A100-SXM4-80GB bar:1 bar size (MiB):131072 supports GDS, IOMMU State: Disabled
+ ==============
+ PLATFORM INFO:
+ ==============
+ IOMMU: disabled
+ Platform verification succeeded</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gds_benchmarking"><a class="anchor" href="#_gds_benchmarking"></a>GDS Benchmarking</h3>
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/gpudirect-storage/configuration-guide/index.html#abstract">Benchmarking Guide</a></p>
+</div>
+<div class="paragraph">
+<p>There are various parameters and settings that will factor into delivered performance. In addition to storage/filesystem-specific parameters, there are system settings and GDS-specific parameters defined in <code>/etc/cufile.json</code>. Default configuration file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    // NOTE : Application can override custom configuration via export CUFILE_ENV_PATH_JSON=&lt;filepath&gt;
+    // e.g : export CUFILE_ENV_PATH_JSON="/home/&lt;xxx&gt;/cufile.json"
+
+            "logging": {
+                            // log directory, if not enabled will create log file under current working directory
+                            //"dir": "/home/&lt;xxxx&gt;",
+
+                            // NOTICE|ERROR|WARN|INFO|DEBUG|TRACE (in decreasing order of severity)
+                            "level": "ERROR"
+            },
+
+            "profile": {
+                            // nvtx profiling on/off
+                            "nvtx": false,
+                            // cufile stats level(0-3)
+                            "cufile_stats": 0
+            },
+
+            "execution" : {
+                    // max number of workitems in the queue;
+                    "max_io_queue_depth": 128,
+                    // max number of host threads per gpu to spawn for parallel IO
+                    "max_io_threads" : 4,
+                    // enable support for parallel IO
+                    "parallel_io" : true,
+                    // minimum IO threshold before splitting the IO
+                    "min_io_threshold_size_kb" : 8192,
+		    // maximum parallelism for a single request
+		    "max_request_parallelism" : 4
+            },
+
+            "properties": {
+                            // max IO chunk size (parameter should be multiples of 64K) used by cuFileRead/Write internally per IO request
+                            "max_direct_io_size_kb" : 16384,
+                            // device memory size (parameter should be 4K aligned) for reserving bounce buffers for the entire GPU
+                            "max_device_cache_size_kb" : 131072,
+                            // limit on maximum device memory size (parameter should be 4K aligned) that can be pinned for a given process
+                            "max_device_pinned_mem_size_kb" : 33554432,
+                            // true or false (true will enable asynchronous io submission to nvidia-fs driver)
+                            // Note : currently the overall IO will still be synchronous
+                            "use_poll_mode" : false,
+                            // maximum IO request size (parameter should be 4K aligned) within or equal to which library will use polling for IO completion
+                            "poll_mode_max_size_kb": 4,
+                            // allow compat mode, this will enable use of cuFile posix read/writes
+                            "allow_compat_mode": true,
+                            // enable GDS write support for RDMA based storage
+                            "gds_rdma_write_support": true,
+                            // GDS batch size
+                            "io_batchsize": 128,
+                            // enable io priority w.r.t compute streams
+                            // valid options are "default", "low", "med", "high"
+                            "io_priority": "default",
+                            // client-side rdma addr list for user-space file-systems(e.g ["10.0.1.0", "10.0.2.0"])
+                            "rdma_dev_addr_list": [ ],
+                            // load balancing policy for RDMA memory registration(MR), (RoundRobin, RoundRobinMaxMin)
+                            // In RoundRobin, MRs will be distributed uniformly across NICS closest to a GPU
+                            // In RoundRobinMaxMin, MRs will be distributed across NICS closest to a GPU
+                            // with minimal sharing of NICS acros GPUS
+                            "rdma_load_balancing_policy": "RoundRobin",
+			    //32-bit dc key value in hex
+			    //"rdma_dc_key": "0xffeeddcc",
+			    //To enable/disable different rdma OPs use the below bit map
+			    //Bit 0 - If set enables Local RDMA WRITE
+			    //Bit 1 - If set enables Remote RDMA WRITE
+			    //Bit 2 - If set enables Remote RDMA READ
+			    //Bit 3 - If set enables REMOTE RDMA Atomics
+			    //Bit 4 - If set enables Relaxed ordering.
+			    //"rdma_access_mask": "0x1f",
+
+                            // In platforms where IO transfer to a GPU will cause cross RootPort PCie transfers, enabling this feature
+                            // might help improve overall BW provided there exists a GPU(s) with Root Port common to that of the storage NIC(s).
+                            // If this feature is enabled, please provide the ip addresses used by the mount either in file-system specific
+                            // section for mount_table or in the rdma_dev_addr_list property in properties section
+                            "rdma_dynamic_routing": false,
+                            // The order describes the sequence in which a policy is selected for dynamic routing for cross Root Port transfers
+                            // If the first policy is not applicable, it will fallback to the next and so on.
+                            // policy GPU_MEM_NVLINKS: use GPU memory with NVLink to transfer data between GPUs
+                            // policy GPU_MEM: use GPU memory with PCIe to transfer data between GPUs
+                            // policy SYS_MEM: use system memory with PCIe to transfer data to GPU
+                            // policy P2P: use P2P PCIe to transfer across between NIC and GPU
+                            "rdma_dynamic_routing_order": [ "GPU_MEM_NVLINKS", "GPU_MEM", "SYS_MEM", "P2P" ]
+            },
+
+            "fs": {
+                    "generic": {
+
+                            // for unaligned writes, setting it to true will, cuFileWrite use posix write internally instead of regular GDS write
+                            "posix_unaligned_writes" : false
+                    },
+
+		    "beegfs" : {
+                            // IO threshold for read/write (param should be 4K aligned)) equal to or below which cuFile will use posix read/write
+                            "posix_gds_min_kb" : 0
+
+                            // To restrict the IO to selected IP list, when dynamic routing is enabled
+                            // if using a single BeeGFS mount, provide the ip addresses here
+                            //"rdma_dev_addr_list" : []
+
+                            // if using multiple lustre mounts, provide ip addresses used by respective mount here
+                            //"mount_table" : {
+                            //                    "/beegfs/client1" : {
+                            //                                    "rdma_dev_addr_list" : ["172.172.1.40", "172.172.1.42"]
+                            //                    },
+
+                            //                    "/beegfs/client2" : {
+                            //                                    "rdma_dev_addr_list" : ["172.172.2.40", "172.172.2.42"]
+                            //                    }
+                            //}
+
+		    },
+                    "lustre": {
+
+                            // IO threshold for read/write (param should be 4K aligned)) equal to or below which cuFile will use posix read/write
+                            "posix_gds_min_kb" : 0
+
+                            // To restrict the IO to selected IP list, when dynamic routing is enabled
+                            // if using a single lustre mount, provide the ip addresses here (use : sudo lnetctl net show)
+                            //"rdma_dev_addr_list" : []
+
+                            // if using multiple lustre mounts, provide ip addresses used by respective mount here
+                            //"mount_table" : {
+                            //                    "/lustre/ai200_01/client" : {
+                            //                                    "rdma_dev_addr_list" : ["172.172.1.40", "172.172.1.42"]
+                            //                    },
+
+                            //                    "/lustre/ai200_02/client" : {
+                            //                                    "rdma_dev_addr_list" : ["172.172.2.40", "172.172.2.42"]
+                            //                    }
+                            //}
+                    },
+
+                    "nfs": {
+
+                           // To restrict the IO to selected IP list, when dynamic routing is enabled
+                           //"rdma_dev_addr_list" : []
+
+                           //"mount_table" : {
+                           //                     "/mnt/nfsrdma_01/" : {
+                           //                                     "rdma_dev_addr_list" : []
+                           //                     },
+
+                           //                     "/mnt/nfsrdma_02/" : {
+                           //                                     "rdma_dev_addr_list" : []
+                           //                     }
+                           //}
+                    },
+
+		    "gpfs": {
+                           //allow GDS writes with GPFS
+                           "gds_write_support": false
+
+                           //"rdma_dev_addr_list" : []
+
+                           //"mount_table" : {
+                           //                     "/mnt/gpfs_01" : {
+                           //                                     "rdma_dev_addr_list" : []
+                           //                     },
+
+                           //                     "/mnt/gpfs_02/" : {
+                           //                                     "rdma_dev_addr_list" : []
+                           //                     }
+                           //}
+                    },
+
+                    "weka": {
+
+                            // enable/disable RDMA write
+                            "rdma_write_support" : false
+                    }
+            },
+
+            "denylist": {
+                            // specify list of vendor driver modules to deny for nvidia-fs (e.g. ["nvme" , "nvme_rdma"])
+                            "drivers":  [ ],
+
+                            // specify list of block devices to prevent IO using cuFile (e.g. [ "/dev/nvme0n1" ])
+                            "devices": [ ],
+
+                            // specify list of mount points to prevent IO using cuFile (e.g. ["/mnt/test"])
+                            "mounts": [ ],
+
+                            // specify list of file-systems to prevent IO using cuFile (e.g ["lustre", "wekafs"])
+                            "filesystems": [ ]
+            },
+
+            "miscellaneous": {
+                            // enable only for enforcing strict checks at API level for debugging
+                            "api_check_aggressive": false
+	    }
+}</code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gdsio"><a class="anchor" href="#_gdsio"></a><code>gdsio</code></h4>
+<div class="paragraph">
+<p>Usage help:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">gdsio version :1.11
+Usage [using config file]: gdsio rw-sample.gdsio
+Usage [using cmd line options]:/usr/local/cuda-12.2/gds/tools/gdsio
+         -f &lt;file name&gt;
+         -D &lt;directory name&gt;
+         -d &lt;gpu_index (refer nvidia-smi)&gt;
+         -n &lt;numa node&gt;
+         -m &lt;memory type(0 - (cudaMalloc), 1 - (cuMem), 2 - (cudaMallocHost), 3 - (malloc) 4 - (mmap))&gt;
+         -w &lt;number of threads for a job&gt;
+         -s &lt;file size(K|M|G)&gt;
+         -o &lt;start offset(K|M|G)&gt;
+         -i &lt;io_size(K|M|G)&gt; &lt;min_size:max_size:step_size&gt;
+         -p &lt;enable nvlinks&gt;
+         -b &lt;skip bufregister&gt;
+         -V &lt;verify IO&gt;
+         -x &lt;xfer_type&gt; [0(GPU_DIRECT), 1(CPU_ONLY), 2(CPU_GPU), 3(CPU_ASYNC_GPU), 4(CPU_CACHED_GPU), 5(GPU_DIRECT_ASYNC), 6(GPU_BATCH), 7(GPU_BATCH_STREAM)]
+         -B &lt;batch size&gt;
+         -I &lt;(read) 0|(write)1| (randread) 2| (randwrite) 3&gt;
+         -T &lt;duration in seconds&gt;
+         -k &lt;random_seed&gt; (number e.g. 3456) to be used with random read/write&gt;
+         -U &lt;use unaligned(4K) random offsets&gt;
+         -R &lt;fill io buffer with random data&gt;
+         -F &lt;refill io buffer with random data during each write&gt;
+         -a &lt;alignment size in case of random IO&gt;
+         -P &lt;rdma url&gt;
+         -J &lt;per job statistics&gt;
+
+xfer_type:
+0 - Storage-&gt;GPU (GDS)
+1 - Storage-&gt;CPU
+2 - Storage-&gt;CPU-&gt;GPU
+3 - Storage-&gt;CPU-&gt;GPU_ASYNC
+4 - Storage-&gt;PAGE_CACHE-&gt;CPU-&gt;GPU
+5 - Storage-&gt;GPU_ASYNC
+6 - Storage-&gt;GPU_BATCH
+7 - Storage-&gt;GPU_BATCH_STREAM
+
+Note:
+read test (-I 0) with verify option (-V) should be used with files written (-I 1) with -V option
+read test (-I 2) with verify option (-V) should be used with files written (-I 3) with -V option, using same random seed (-k),
+same number of threads(-w), offset(-o), and data size(-s)
+write test (-I 1/3) with verify option (-V) will perform writes followed by read</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">root@o186i221:~# gdsio -I 1 -i 512K -s 16M -w 128 -d 0 -x 0 -D /mnt/cstor1/ccarlson/flash
+IoType: WRITE XferType: GPUD Threads: 128 DataSetSize: 1630208/2097152(KiB) IOSize: 512(KiB) Throughput: 7.804225 GiB/sec, Avg_Latency: 6595.108546 usecs ops: 3184 total_time 0.199211 secs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a script that helps with the runs, and has comments explaning what each option does.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+set -ex
+POOL_DIR="/mnt/cstor1/ccarlson/flash"
+GDSIO_BIN="/usr/local/cuda-12.2/gds/tools/gdsio"
+
+rm -rf $POOL_DIR/*
+
+# Set up a directory per GPU on the host
+for GPU_INDEX in {0..8}; do
+  mkdir -p $POOL_DIR/$(hostname)/$GPU_INDEX
+done
+
+echo "Created the following directory structure"
+tree $POOL_DIR
+
+# Optionally, mpirun gdsio instances
+#mpirun --machinefile machinefile.txt --allow-run-as-root \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 0 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/0 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 1 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/1 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 2 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/2 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 3 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/3 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 4 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/4 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 5 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/5 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 6 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/6 : \
+#	-np 1 $GDSIO_BIN -I 1 -i 512K -s 128M -p -x 0 -d 7 -w 128 -D /mnt/cstor1/ccarlson/flash/$(hostname)/7 \
+
+# Run gdsio directly
+gdsio -I 1 -i 1024K -s 256M -p -x 0 -d 0 -w 256 -D /mnt/cstor1/ccarlson/flash/$(hostname)/0</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>

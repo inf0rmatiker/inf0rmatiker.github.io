@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Message Passing Interface (MPI) :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/mpi.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/numa.html">NUMA</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../languages/languages.html">Languages</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Documentation</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Networking</li>
+    <li><a href="mpi.html">MPI</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Message Passing Interface (MPI)</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Reference links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.open-mpi.org/">OpenMPI</a></p>
+</li>
+<li>
+<p><a href="https://www.mpi-forum.org/docs/">MPI Documents</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction_to_mpi"><a class="anchor" href="#_introduction_to_mpi"></a>Introduction to MPI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Message Passing Interface (MPI) is a standard for message passing computation, allowing you to distribute computing by communicating between CPUs.
+It is high bandwidth, and low latency.</p>
+</div>
+<div class="paragraph">
+<p>What is OpenMPI?</p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/D0-xSWBGNAw?si=ICi3-nekq50XzwSm?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="paragraph">
+<p>MPI Basics Video</p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/c0C9mQaxsD4?si=OErei3cJMatJBGjh?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="paragraph">
+<p>MPI Implementations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.mpich.org/">MPICH</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Open-source (Git)</p>
+</li>
+<li>
+<p>'CH' from <em>Chameleon</em> portability system</p>
+</li>
+<li>
+<p>MPICH1 (1992), MPICH2 (2001), and MPICH3 (2012)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://www.open-mpi.org/">OpenMPI</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Open-source (Git)</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_concepts"><a class="anchor" href="#_basic_concepts"></a>Basic Concepts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this context we have individual processes on different CPUs that need to communicate with each other.</p>
+</div>
+<div class="sect2">
+<h3 id="_communication_domain"><a class="anchor" href="#_communication_domain"></a>Communication Domain</h3>
+<div class="paragraph">
+<p>The communication patterns are abstracted out into a <code>communicator</code>. This type is defined as <code>MPI_Comm</code>, and the default communicator type is <code>MPI_COMM_WORLD</code>.
+Most functions and types are prefixed with <code>MPI_</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mpi_functions"><a class="anchor" href="#_mpi_functions"></a>MPI Functions</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* Set up */
+int MPI_Init(int *argc, char ***argv);
+
+/* Tear down */
+int MPI_Finalize();
+
+/* Total processes */
+int MPI_Comm_size(MPI_Comm comm, int *size);
+
+/* Local process index */
+int MPI_Comm_rank(MPI_Comm comm, int *rank);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the purposes of keeping things simple we&#8217;re going to be using the global MPI communicator, <code>MPI_COMM_WORLD</code> that all the processes in the multicomputer should be a part of.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>MPI_Init</code>: runs MPI to configure our program, initialize all the data structures, etc. Processes some command-line arguments. You must call this <em>before</em> you call any other MPI functions in our program.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Arguments similar to those of a <code>main(int argc, char **argv)</code> function in C.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>argc</code> being the number of command-line arguments</p>
+</li>
+<li>
+<p><code>argv</code> being an array of character pointers (strings)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In this case, we want to pass the <em>address of</em> <code>argc</code> and the <em>address of</em> <code>argv</code> to our <code>MPI_Init</code> function. This allows it to make changes to our original idea of the command-line arguments to the program. MPI will actually process the list of command-line args, looking for MPI-specific arguments to configure itself, and will actually remove those from the list of command-line arguments to the program. This way, by the time we get around to processing our own arguments, those MPI-specific arguments have already been processed and removed and we don&#8217;t have to deal with them.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>MPI_Finalize</code>: Call this at the very <em>end</em> of our program before we exit. Allows MPI to turn off any open communication channels and free memory.</p>
+</li>
+<li>
+<p><code>MPI_Comm_size</code>: Allows us to get the number of processes that are communicating inside our communicator.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Takes as an argument a pointer to an integer. We need to define an integer beforehand that will store the size of the multicomputer/number of participating processes, then pass in an address of that variable to the function. The function will then fill in this value at that address.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>MPI_Comm_rank</code>: Tells us who we are in the communicator.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Takes as an argument a pointer to an integer. We need to define an integer beforehand that will store the index of the of participating processes <em>that we are</em>, then pass in an address of that variable to the function. The function will then fill in this value at that address.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_basic_mpi_program"><a class="anchor" href="#_basic_mpi_program"></a>Basic MPI Program</h3>
+<div class="paragraph">
+<p>Here&#8217;s the basic skeleton of an MPI program. This covers the initialization and finalization of the MPI program.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int main(int argc, char **argv) {
+
+    /* Set up int variables for MPI functions */
+    int num_procs;
+    int rank;
+
+    /* Note how we're sending the addresses of argc and argv */
+    MPI_Init(&amp;argc, &amp;argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_procs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+    printf("%d: hello (p=%d)\n", rank, num_procs);
+
+    /* Do many things, all at once */
+
+    MPI_Finalize();
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_primitive_communication"><a class="anchor" href="#_primitive_communication"></a>Primitive Communication</h3>
+<div class="paragraph">
+<p>There&#8217;s two central functions that allow us to communicate back and forth between the processes running in this distributed environment.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">/* Send */
+int MPI_Send(
+    void *buf,
+    int count,
+    MPI_Datatype datatype,
+    int dest,
+    int tag,
+    MPI_Comm comm
+);
+
+/* Receive */
+int MPI_Recv(
+    void *buf,
+    int count,
+    MPI_Datatype datatype,
+    int source,
+    int tag,
+    MPI_Comm comm,
+    MPI_Status status
+);</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>MPI_Send</code>: Transmit something from our process to another process.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>When sending information, we need to know <em>the location</em> of that information, and <em>the size</em> of that information.</p>
+</li>
+<li>
+<p><code>void *buf</code> is the generic pointer, can be a pointer to anything we want. This tells it where to go get stuff out of our memory.</p>
+</li>
+<li>
+<p><code>int count</code> NOT a byte-count, but rather a sum number of primitive elements in this buffer we&#8217;re sending.</p>
+</li>
+<li>
+<p><code>MPI_Datatype datatype</code> determines the specifics of the primitive we&#8217;re sending (i.e byte size, etc). See below for datatypes.</p>
+</li>
+<li>
+<p><code>int dest</code> the rank of the process to which we want to send this data.</p>
+</li>
+<li>
+<p><code>int tag</code> a hint we can send along to specify different types of information we&#8217;re sending.</p>
+</li>
+<li>
+<p><code>MPI_Comm comm</code> the communicator we&#8217;re using. In our case, again, it will be <code>MPI_COMM_WORLD</code>.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>MPI_Recv</code>: Receive something from another process in the distributed environment.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Pulls data into the destination process.</p>
+</li>
+<li>
+<p><code>void *buf</code> the buffer where we want to <em>store</em> the data received.</p>
+</li>
+<li>
+<p><code>int count</code> how many primitive items of type <code>MPI_Datatype datatype</code> we want to receive.</p>
+</li>
+<li>
+<p><code>MPI_Datatype datatype</code> the type of data we&#8217;re receiving.</p>
+</li>
+<li>
+<p><code>int source</code> the rank of the process we&#8217;re wanting to receive from.</p>
+</li>
+<li>
+<p><code>int tag</code> select which kind of message to receive at that time.</p>
+</li>
+<li>
+<p><code>MPI_Comm comm</code> MPI communicator we&#8217;re using. In our case, again, it will be <code>MPI_COMM_WORLD</code>.</p>
+</li>
+<li>
+<p><code>MPI_Status *status</code> a pointer to a status structure. Gives us information about the success or failure of this communication from the other process.
+We&#8217;ll have to predefine this structure to have MPI fill it out.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>MPI_Datatype</code> types, see <a href="https://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node44.htm">MPI Datatype document</a>. These are constants that get brought in
+in a header file when we compile our code.</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">MPI_SHORT                       char (treated as printable character)
+MPI_INT	                        signed int
+MPI_LONG	                    signed long int
+MPI_LONG_LONG_INT	            signed long long int
+MPI_LONG_LONG (as a synonym)	signed long long int
+MPI_SIGNED_CHAR	                signed char (treated as integral value)
+MPI_UNSIGNED_CHAR	            unsigned char (treated as integral value)
+MPI_UNSIGNED_SHORT	            unsigned short int
+MPI_UNSIGNED	                unsigned int
+MPI_UNSIGNED_LONG	            unsigned long int
+MPI_UNSIGNED_LONG_LONG	        unsigned long long int
+MPI_FLOAT	                    float
+MPI_DOUBLE	                    double
+MPI_LONG_DOUBLE	                long double
+MPI_WCHAR                       wchar_t (defined in &lt;stddef.h&gt;) (treated as printable character)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MPI_Status</code> structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">typedef struct MPI_Status {
+    int MPI_SOURCE;
+    int MPI_TAG;
+    int MPI_ERROR;
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mpi_exercise_1"><a class="anchor" href="#_mpi_exercise_1"></a>MPI Exercise 1</h3>
+<div class="paragraph">
+<p>Generate four processes in a ring-like structure. Each process will generate a random number value, and will communicate it to the next process in the ring. Each process will also receive the random value generated from the process previous in the ring. In <code>round_robin()</code>, we need to organize the send and receive calls so that when one process A is sending to some process B, process B is listening (receiving) from process A.</p>
+</div>
+<div class="paragraph">
+<p>Here we divide the processes into two groups (based on modulo 2):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ones that will send first, then receive</p>
+</li>
+<li>
+<p>Ones that will receive first, then send</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Solution:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">void round_robin(int rank, int procs) {
+
+    /* Declare placeholders for my random number,
+    and the previous process' random number */
+    long int rand_mine, rand_prev;
+
+    /* Determine the next rank and the previous rank */
+    int rank_next = (rank + 1) % procs;
+    int rank_prev = rank == 0 ? procs - 1 : rank - 1;
+
+    /* Allocate space for a status object */
+    MPI_Status status;
+
+    /* Seed a random number, then generate and print it */
+    srandom(time(NULL) + rank);
+    rand_mine = random() / (RAND_MAX / 100);
+    printf("%d: random is %ld\n", rank, rand_mine);
+
+    /* Organize send/receive call orders based on process rank */
+    if (rank % 2 == 0) {
+
+        printf("%d: sending %ld to %d\n", rank, rand_mine, rank_next);
+        MPI_Send(
+            (void *) &amp;rand_mine, // cast address of our random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_next, // dest
+            1, // tag
+            MPI_COMM_WORLD // communicator
+        );
+
+        printf("%d: receiving from %d\n", rank, rank_prev);
+        MPI_Recv(
+            (void *) &amp;rand_prev, // cast address of previous proc's random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_prev, // source
+            1, // tag
+            MPI_COMM_WORLD, // communicator
+            &amp;status // where to store status
+        );
+
+    } else {
+
+        printf("%d: receiving from %d\n", rank, rank_prev);
+        MPI_Recv(
+            (void *) &amp;rand_prev, // cast address of previous proc's random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_prev, // source
+            1, // tag
+            MPI_COMM_WORLD, // communicator
+            &amp;status // where to store status
+        );
+
+        printf("%d: sending %ld to %d\n", rank, rand_mine, rank_next);
+        MPI_Send(
+            (void *) &amp;rand_mine, // cast address of our random number to void *
+            1, // count
+            MPI_LONG, // type
+            rank_next, // dest
+            1, // tag
+            MPI_COMM_WORLD // communicator
+        );
+    }
+
+    /* Print answer for each process */
+    printf("%d: I had %ld, %d had %ld\n", rank, rand_mine, rank_prev, rand_prev);
+}
+
+int main(int argc, char **argv) {
+
+    /* Set up int variables for MPI functions */
+    int num_procs;
+    int rank;
+
+    /* Initialize MPI */
+    MPI_Init(&amp;argc, &amp;argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;num_procs);
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+    printf("%d: hello (p=%d)\n", rank, num_procs);
+
+    round_robin(rank, num_procs);
+
+    /* Tear down MPI */
+    printf("%d: goodbye\n", rank);
+    MPI_Finalize();
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Compiling Lustre :: Caleb Carlson | Documentation</title>
+    <title>Compiling Lustre Client :: Caleb Carlson | Documentation</title>
     <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/lustre/compiling-lustre.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
@@ -139,6 +139,9 @@
     <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
@@ -219,10 +222,13 @@
     <a class="nav-link" href="../machine-learning/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/machine-learning.html">Machine Learning</a>
+    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../machine-learning/determinedai.html">Determined AI</a>
+    <a class="nav-link" href="../machine-learning/nvidia.html">Nvidia</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../machine-learning/numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -244,6 +250,15 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/languages.html">Languages</a>
   </li>
 </ul>
   </li>
@@ -291,7 +306,7 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Compiling Lustre</h1>
+<h1 class="page">Compiling Lustre Client</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
@@ -308,27 +323,6 @@
 <li>
 <p><a href="https://wiki.whamcloud.com/display/PUB/Rebuilding+the+Lustre-client+rpms+for+a+new+kernel">Rebuilding the Lustre Client RPMs for a New Kernel</a></p>
 </li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_compiling_on_rocky_8_6_host"><a class="anchor" href="#_compiling_on_rocky_8_6_host"></a>Compiling on Rocky 8.6 Host</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Here we&#8217;ll be using Rocky Linux 8.6 Minimal as our base installation medium, and will be compiling on the baremetal host OS.
-This will effectively allow us to compile Lustre for the OS/kernel installed.</p>
-</div>
-<div class="sect2">
-<h3 id="_client"><a class="anchor" href="#_client"></a>Client</h3>
-<div class="paragraph">
-<p>Here we&#8217;ll explore how to compile the Lustre client.</p>
-</div>
-<div class="paragraph">
-<p>Reference documentation:</p>
-</div>
-<div class="ulist">
-<ul>
 <li>
 <p><a href="https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(All_other_Builds)">Compiling Lustre Client (non-DKMS)</a></p>
 </li>
@@ -336,6 +330,36 @@ This will effectively allow us to compile Lustre for the OS/kernel installed.</p
 <p><a href="https://wiki.lustre.org/Compiling_Lustre#Lustre_Client_(DKMS_Packages_only)">Compiling Lustre Client (DKMS)</a></p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compiling_in_container"><a class="anchor" href="#_compiling_in_container"></a>Compiling in Container</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The processes for compiling the client directly on the host where it will be used is easier than compiling it in a container to be used for a targeted environment.
+Thus, I&#8217;ve separated out the two following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#on_host">Compiling on Host</a></p>
+</li>
+<li>
+<p><a href="#in_container">Compiling in Container</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="on_host"><a class="anchor" href="#on_host"></a>Compiling on Host</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_using_rocky_8_6_host"><a class="anchor" href="#_using_rocky_8_6_host"></a>Using Rocky 8.6 Host</h3>
+<div class="paragraph">
+<p>Here we&#8217;ll be using Rocky Linux 8.6 Minimal as our base installation medium, and will be compiling on the baremetal host OS.
+This will effectively allow us to compile Lustre for the OS/kernel installed.</p>
 </div>
 <div class="sect3">
 <h4 id="_prerequisites_and_dependencies"><a class="anchor" href="#_prerequisites_and_dependencies"></a>Prerequisites and Dependencies</h4>
@@ -759,108 +783,9 @@ debug  kernels  mlnx-ofa_kernel-5.4  ofa_kernel  ofa_kernel-5.4</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_compiling_within_a_rocky_8_6_docker_container"><a class="anchor" href="#_compiling_within_a_rocky_8_6_docker_container"></a>Compiling within a Rocky 8.6 Docker Container</h2>
+<h2 id="in_container"><a class="anchor" href="#in_container"></a>Compiling in Container</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Create the following <code>Dockerfile</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-dockerfile hljs" data-lang="dockerfile">FROM rockylinux:8.6 AS rocky86
 
-# Switch out default 8.8 repos for archived 8.6 repos
-RUN rm -f /etc/yum.repos.d/*.repo
-COPY config/Rocky-86-Development.repo /etc/yum.repos.d/Rocky-86-Development.repo
-
-# Set up HPE proxy for DNF
-COPY config/dnf.conf /etc/dnf/dnf.conf
-
-# Install plugins-core so we can use things like dnf config-manager
-RUN dnf install -y dnf-plugins-core
-
-# Install Extra Packages for Enterprise Linux
-RUN dnf install -y epel-release
-
-# Pull in kernel-headers and kernel-devel packages as dependencies
-RUN dnf groupinstall -y "Development Tools"
-
-# Install dependencies needed to build Lustre client
-RUN dnf install -y     \
-    audit-libs-devel   \
-    bc                 \
-    binutils-devel     \
-    git                \
-    json-c-devel       \
-    kernel-abi-stablelists \
-    kernel-devel       \
-    kernel-debug-devel \
-    kernel-rpm-macros  \
-    libaio-devel       \
-    libattr-devel      \
-    libblkid-devel     \
-    libmount           \
-    libmount-devel     \
-    libnl3-devel       \
-    libselinux-devel   \
-    libssh-devel       \
-    libtirpc-devel     \
-    libuuid-devel      \
-    libyaml            \
-    libyaml-devel      \
-    llvm-toolset       \
-    pciutils-devel     \
-    ncurses-devel      \
-    openssl-devel      \
-    perl               \
-    perl-devel         \
-    python39           \
-    python3-devel      \
-    python3-docutils   \
-    redhat-lsb         \
-    texinfo            \
-    texinfo-tex
-
-# Update dnf
-RUN dnf update -y
-
-# Disable original default repos, enable new ones
-RUN dnf config-manager --disable appstream baseos extras
-RUN dnf config-manager --enable appstream86 baseos86 extras86 devel86 powertools86
-
-# Install Mellanox OFED
-COPY config/Mellanox_OFED.repo /etc/yum.repos.d/
-RUN dnf install -y mlnx-ofed-all
-
-WORKDIR /work
-
-# Clone lustre-release repo
-RUN https_proxy=http://proxy.houston.hpecorp.net:8080 git clone https://review.whamcloud.com/fs/lustre-release
-RUN cd lustre-release &amp;&amp; sh autogen.sh &amp;&amp; ./configure \
-    --disable-server \
-    --enable-client \
-    --with-linux=/usr/src/kernels/4.18.0-372.32.1.el8_6.x86_64 \
-    --with-o2ib=/usr/src/ofa_kernel/default
-RUN cd lustre-release &amp;&amp; make rpms
-
-ENTRYPOINT ["/bin/bash"]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Build it with:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker build -t rocky .</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Run the built image, and verify the RPMs are built in the workspace:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker run -it --name=rocky rocky</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -902,6 +827,76 @@ RUN zypper install -y libyaml-devel libmount-devel
 
 
 ENTRYPOINT ["/usr/bin/bash"]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_on_host_builds"><a class="anchor" href="#_on_host_builds"></a>On-Host Builds</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_building_for_ubuntu"><a class="anchor" href="#_building_for_ubuntu"></a>Building for Ubuntu</h3>
+<div class="paragraph">
+<p>Here we&#8217;re building for Ubuntu 22.04.</p>
+</div>
+<div class="paragraph">
+<p>Install the build dependencies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+set -ex
+
+# Install dependencies
+apt-get install -y \
+	module-assistant \
+	libreadline-dev \
+	debhelper \
+	dpatch \
+	automake \
+	pkg-config \
+	libtool \
+	libyaml-dev \
+	libnl-genl-3-dev \
+	libselinux-dev \
+	libsnmp-dev \
+	mpi-default-dev \
+	bzip2 \
+	quilt \
+	linux-headers-$(uname -r) \
+	rsync \
+	libssl-dev \
+	libpython3-dev \
+	swig
+
+LUSTRE_DIR=/root/ccarlson/lustre-release
+
+# e.g: generic
+KERNEL_FLAVOR=$(uname -r | tr '-' '\n' | tail -1)
+
+# e.g: 5.15.0-83
+KERNEL_VERSION=$(uname -r | sed -e "s:-${KERNEL_FLAVOR}$::g")
+
+# e.g: /usr/src/linux-headers-5.15.0-83
+LINUX_KERNEL_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION})
+
+# e.g: /usr/src/linux-headers-5.15.0-83-generic/
+LINUX_OBJ_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION}-${KERNEL_FLAVOR})
+
+# e.g: /usr/src/ofa_kernel/default
+# MOFED_SRC_DIR="/usr/src/mlnx-ofed-kernel-23.07"
+MOFED_SRC_DIR="/usr/src/ofa_kernel/default"
+
+# Configure build options then build debian packages
+cd $LUSTRE_DIR &amp;&amp; sh autogen.sh &amp;&amp; ./configure \
+	--disable-server \
+	--enable-client \
+	--with-linux=${LINUX_KERNEL_DIR} \
+	--with-linux-obj=${LINUX_OBJ_DIR} \
+	--with-o2ib=${MOFED_SRC_DIR} \
+	&amp;&amp; make debs</code></pre>
+</div>
 </div>
 </div>
 </div>

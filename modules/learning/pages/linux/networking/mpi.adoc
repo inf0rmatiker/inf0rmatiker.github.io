@@ -10,8 +10,8 @@ Reference links:
 
 == Introduction to MPI
 
-The Message Passing Interface (MPI) is a standard for message passing computation, allowing you to distribute computing by communicating between CPUs.
-It is high bandwidth, and low latency.
+The Message Passing Interface (MPI) is a "de facto standard" for message passing computation, allowing you to distribute computing by communicating between CPUs.
+It is high bandwidth, and low latency. It sits between the host application and network as a middleware, and simplifies networking to the application.S
 
 What is OpenMPI?
 

@@ -287,6 +287,10 @@ Here we'll be using a Mellanox ConnectX-6 card for this set of examples. Make su
 
 === Enable Card on Boot
 
+==== Rocky Linux 8.6
+
+For Rocky 8.6, we'll be using the network-scripts `ifcfg` configuration file to persist card configuration.
+
 Edit `/etc/sysconfig/network-scripts/ifcfg-ib0`, enabling `ONBOOT` and disabling DHCP as boot protocol
 
 [,bash]
@@ -295,6 +299,14 @@ sed -i -e 's/ONBOOT=no/ONBOOT=yes/g' -e 's/BOOTPROTO=dhcp/BOOTPROTO=none/g' /etc
 ----
 
 Now, `reboot` the node.
+
+==== Rocky Linux 9.1
+
+For Rocky 9.X onwards, everything is done using the newer
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/getting_started_with_networkmanager[NetworkManager]
+system. You can still convert your old `ifcfg` files to the new format, by using `nmcli connection migrate`.
+
+
 
 === Update Firmware
 

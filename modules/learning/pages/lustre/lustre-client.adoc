@@ -492,67 +492,6 @@ peer:
 
 === Building for OpenSUSE Leap
 
-=== Building for Ubuntu
-
-Here we're building for Ubuntu 22.04.
-
-Install the build dependencies:
-
-[,bash]
-----
-#!/bin/bash
-
-set -ex
-
-# Install dependencies
-apt-get install -y \
-	module-assistant \
-	libreadline-dev \
-	debhelper \
-	dpatch \
-	automake \
-	pkg-config \
-	libtool \
-	libyaml-dev \
-	libnl-genl-3-dev \
-	libselinux-dev \
-	libsnmp-dev \
-	mpi-default-dev \
-	bzip2 \
-	quilt \
-	linux-headers-$(uname -r) \
-	rsync \
-	libssl-dev \
-	libpython3-dev \
-	swig
-
-LUSTRE_DIR=/root/ccarlson/lustre-release
-
-# e.g: generic
-KERNEL_FLAVOR=$(uname -r | tr '-' '\n' | tail -1)
-
-# e.g: 5.15.0-83
-KERNEL_VERSION=$(uname -r | sed -e "s:-${KERNEL_FLAVOR}$::g")
-
-# e.g: /usr/src/linux-headers-5.15.0-83
-LINUX_KERNEL_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION})
-
-# e.g: /usr/src/linux-headers-5.15.0-83-generic/
-LINUX_OBJ_DIR=$(ls -d -1 /usr/src/linux-*headers-${KERNEL_VERSION}-${KERNEL_FLAVOR})
-
-# e.g: /usr/src/ofa_kernel/default
-# MOFED_SRC_DIR="/usr/src/mlnx-ofed-kernel-23.07"
-MOFED_SRC_DIR="/usr/src/ofa_kernel/default"
-
-# Configure build options then build debian packages
-cd $LUSTRE_DIR && sh autogen.sh && ./configure \
-	--disable-server \
-	--enable-client \
-	--with-linux=${LINUX_KERNEL_DIR} \
-	--with-linux-obj=${LINUX_OBJ_DIR} \
-	--with-o2ib=${MOFED_SRC_DIR} \
-	&& make debs
-----
 
 == Persistent Client Cache (PCC)
 

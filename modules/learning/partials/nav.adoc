@@ -61,3 +61,4 @@
 
 * Languages
 ** xref:docs-site:learning:languages/languages.adoc[Languages]
+*** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]

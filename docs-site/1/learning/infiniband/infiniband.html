@@ -258,7 +258,13 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages/languages.html">Languages</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../languages/cpp/cpp.html">C++</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -692,6 +698,11 @@ CA: mawenzi-06 HCA-1:
 </div>
 <div class="sect2">
 <h3 id="_enable_card_on_boot"><a class="anchor" href="#_enable_card_on_boot"></a>Enable Card on Boot</h3>
+<div class="sect3">
+<h4 id="_rocky_linux_8_6"><a class="anchor" href="#_rocky_linux_8_6"></a>Rocky Linux 8.6</h4>
+<div class="paragraph">
+<p>For Rocky 8.6, we&#8217;ll be using the network-scripts <code>ifcfg</code> configuration file to persist card configuration.</p>
+</div>
 <div class="paragraph">
 <p>Edit <code>/etc/sysconfig/network-scripts/ifcfg-ib0</code>, enabling <code>ONBOOT</code> and disabling DHCP as boot protocol</p>
 </div>
@@ -702,6 +713,15 @@ CA: mawenzi-06 HCA-1:
 </div>
 <div class="paragraph">
 <p>Now, <code>reboot</code> the node.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rocky_linux_9_1"><a class="anchor" href="#_rocky_linux_9_1"></a>Rocky Linux 9.1</h4>
+<div class="paragraph">
+<p>For Rocky 9.X onwards, everything is done using the newer
+<a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/getting_started_with_networkmanager">NetworkManager</a>
+system. You can still convert your old <code>ifcfg</code> files to the new format, by using <code>nmcli connection migrate</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect2">

@@ -60,5 +60,4 @@
 ** xref:docs-site:learning:infiniband/monitoring.adoc[Fabric Monitoring]
 
 * Languages
-** xref:docs-site:learning:languages/languages.adoc[Languages]
-*** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]
+** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]

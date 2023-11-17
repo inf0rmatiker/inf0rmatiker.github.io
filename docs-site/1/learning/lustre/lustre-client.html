@@ -496,17 +496,23 @@ mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre</code></pre>
 <div class="sect1">
 <h2 id="_lustre_client_usage"><a class="anchor" href="#_lustre_client_usage"></a>Lustre Client Usage</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Show Lustre mounts on the system:</p>
-</div>
+<div class="sect2">
+<h3 id="_show_lustre_mounts_on_the_system"><a class="anchor" href="#_show_lustre_mounts_on_the_system"></a>Show Lustre mounts on the system</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# mount -t lustre
 192.168.0.101@o2ib:/lustre on /mnt/lustre type lustre (rw,seclabel,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt)</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Show Lustre client version:</p>
+</div>
+<div class="sect2">
+<h3 id="_show_lustre_client_version"><a class="anchor" href="#_show_lustre_client_version"></a>Show Lustre client version</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>By looking at <code>/proc/fs/lustre/version</code></p>
+</li>
+</ul>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -514,36 +520,25 @@ mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre</code></pre>
 lustre: 2.15.0.7_rc2_cray_3_g412d1c5</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>By creating a new file in the filesystem, sanity test:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
-<p>Create a directory on the Lustre filesystem: <code>mkdir /lus/ccarlson</code></p>
+<p>By using <code>lctl get_param version</code></p>
 </li>
-<li>
-<p>Create a new file under <code>/lus/ccarlson</code>:</p>
+</ul>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> touch /lus/ccarlson/dummyfile</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# lctl get_param version
+version=2.15.2.2_cray_189_gb367a17
+version=lustre: 2.15.2.2_cray_189_gb367a17</code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>Verify <code>dummyfile</code> exists:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"> k8s-worker1-shira-mercury01:~ # ll /lus/ccarlson/
- total 1
- -rw-r--r-- 1 root root 17 Apr  7 14:29 dummyfile</code></pre>
 </div>
-</div>
-</li>
-</ol>
-</div>
+<div class="sect2">
+<h3 id="_using_lustre_client_to_check_filesystem"><a class="anchor" href="#_using_lustre_client_to_check_filesystem"></a>Using Lustre client to check filesystem</h3>
 <div class="paragraph">
-<p>By using the <code>lfs</code> utility to view information about the filesystem.</p>
+<p>Using <code>lfs</code> utility to view information about the filesystem.</p>
 </div>
 <div class="paragraph">
 <p><code>lfs check</code>: Display the status of MGTs, MDTs or OSTs (as specified in the command)
@@ -603,6 +598,7 @@ lfs setstripe -c 1 -p cstor1.flash /mnt/cstor1/ccarlson/flash</code></pre>
 <pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~/ccarlson/experiments# lfs getstripe /mnt/cstor1/ccarlson/flash
 /mnt/cstor1/ccarlson/flash
 stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -852,6 +848,67 @@ peer:
               ping_count: 0
               next_ping: 0</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_replace_existing_lustre_client_installation"><a class="anchor" href="#_replace_existing_lustre_client_installation"></a>Replace Existing Lustre Client Installation</h3>
+<div class="paragraph">
+<p>On Ubuntu 22.04:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Show Lustre filesystem mounts</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# mount -t lustre
+172.22.184.42@o2ib:172.22.184.43@o2ib:/seagate on /cstor type lustre (rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)
+172.22.187.183@o2ib,172.22.187.184@o2ib:172.22.187.185@o2ib,172.22.187.186@o2ib:/cstor1 on /mnt/cstor1 type lustre (rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Unmount Lustre filesystems</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# umount -t lustre /mnt/cstor1
+umount: /mnt/cstor1: target is busy.</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Looks like something is using the filesystem. Find the PID of the processes using it and kill them:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# lsof /mnt/cstor1
+COMMAND     PID USER   FD   TYPE     DEVICE SIZE/OFF               NODE NAME
+tmux:\x20 46615 root  cwd    DIR 778,293024     4096 144116096797005002 /mnt/cstor1/ssamar/flash/results/resnet50/host4_run1
+bash      46616 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+bash      48218 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+bash      48325 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+root@o186i221:~# kill 46615 46616 48218 48325</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Now, retry the unmount operation and double check no more Lustre-typed filesystems are mounted.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">root@o186i221:~# umount -t lustre /mnt/cstor1
+root@o186i221:~# umount -t lustre /cstor
+root@o186i221:~# mount -t lustre
+root@o186i221:~#</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>3.</p>
 </div>
 </div>
 </div>

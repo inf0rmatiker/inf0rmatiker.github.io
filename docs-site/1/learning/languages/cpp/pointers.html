@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>C++ :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <title>Pointers :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/pointers.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -261,7 +261,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages.html">Languages</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="cpp.html">C++</a>
   </li>
 </ul>
@@ -301,10 +301,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Languages</li>
-    <li><a href="../languages.html">Languages</a></li>
-    <li><a href="cpp.html">C++</a></li>
+    <li><a href="pointers.html">Pointers</a></li>
   </ul>
 </nav>
 </div>
@@ -313,60 +310,276 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">C++</h1>
-<div class="sect1">
-<h2 id="_topics"><a class="anchor" href="#_topics"></a>Topics</h2>
+<h1 class="page">Pointers</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Pointers are just integers that represent memory addresses.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_raw_pointers"><a class="anchor" href="#_raw_pointers"></a>Raw Pointers</h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/DTxHyVn0ODg?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_defining_pointers"><a class="anchor" href="#_defining_pointers"></a>Defining Pointers</h3>
+<div class="paragraph">
+<p>A pointer is <em>just a memory address</em>&#8201;&#8212;&#8201;an integer, so it
+doesn&#8217;t need a type. Giving a pointer a type
+just states that the data at that address is the type
+we specified.</p>
+</div>
+<div class="paragraph">
+<p>Here we&#8217;ve defined a pointer with memory address <code>0</code>.
+Note that <code>0</code> is not a valid memory address. It&#8217;s
+the same as <code>NULL</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// These are all equivalent
+void *ptr = 0;
+void *ptr = NULL;
+void *ptr = nullptr;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What if we want to create a useful pointer that points to
+a valid memory address, like a variable in our program?</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int var = 16;
+
+// &amp;var is the memory address of var.
+// int * is our way of telling what the data type is that
+// ptr points to. Using void * would also be valid.
+int *ptr = &amp;var;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_pointers"><a class="anchor" href="#_using_pointers"></a>Using Pointers</h3>
+<div class="paragraph">
+<p>We can use a pointer to manipulate the data stored at its
+address, by <em>dereferencing</em> the pointer using a <code>*</code>.</p>
+</div>
+<div class="paragraph">
+<p>Using the snippet above as an example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int var = 16;
+int *ptr = &amp;var;
+
+// Writing from a pointer:
+// Go to the address stored in ptr and set the value there to 13
+*ptr = 13;
+
+// Reading from a pointer:
+// Retrieve the value at the address stored in ptr, save to myvar2
+int myvar2 = *ptr;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can allocate space on the heap, which returns a pointer to
+the beginning address, set all the values to 0, then clean up.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Allocate 8 chars in heap, and return a pointer to first one
+char *buffer = new char[8];
+
+// Sweep 8 bytes starting at buffer and set each value to 0.
+memset(buffer, 0, 8);
+
+// Clean up allocated memory.
+delete[] buffer;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_double_triple_pointers"><a class="anchor" href="#_double_triple_pointers"></a>Double, Triple Pointers</h3>
+<div class="paragraph">
+<p>Pointers themselves are stored in memory, and have a
+memory address of their own. You can create a pointer
+whose memory address references that of another pointer.
+These are essentially just pointers to pointers.</p>
+</div>
+<div class="paragraph">
+<p>An example of this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int var = 16;
+
+// Just like before, ptr1 is an int pointer
+int *ptr1 = &amp;var;
+
+// Store address of ptr1 in ptr2
+// ptr2 is a pointer to an int pointer, hence int **
+int **ptr2 = &amp;ptr1;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_smart_pointers"><a class="anchor" href="#_smart_pointers"></a>Smart Pointers</h2>
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/UOB7-B2MfwA?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="paragraph">
+<p>Smart pointers are a way to automate the process of allocating and freeing memory on the heap.
+They&#8217;re just a wrapper around a raw pointer.</p>
+</div>
+<div class="paragraph">
+<p>With raw pointers, we would need to do:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Allocate 8 chars in heap, and return a pointer to first one
+char *buffer = new char[8];
+
+// ... do something with buffer ...
+
+// Clean up allocated memory.
+delete[] buffer;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Different types of smart pointers:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="arrays.html" class="xref page">Arrays</a></p>
-</li>
-<li>
-<p><a href="branch_control.html" class="xref page">Branch Control</a></p>
-</li>
-<li>
-<p><a href="classes.html" class="xref page">Classes</a></p>
-</li>
-<li>
-<p><a href="compiling.html" class="xref page">Compiling and Executing</a></p>
-</li>
-<li>
-<p><a href="error_handling.html" class="xref page">Error Handling</a></p>
-</li>
-<li>
-<p><a href="functions.html" class="xref page">Functions</a></p>
-</li>
-<li>
-<p><a href="input_streams.html" class="xref page">Input Streams</a></p>
-</li>
-<li>
-<p><a href="macros.html" class="xref page">Macros</a></p>
-</li>
-<li>
-<p><a href="pointers.html" class="xref page">Pointers</a></p>
-</li>
-<li>
-<p><a href="references.html" class="xref page">References</a></p>
-</li>
-<li>
-<p><a href="structures.html" class="xref page">Stuctures</a></p>
-</li>
-<li>
-<p><a href="types.html" class="xref page">Types</a></p>
-</li>
-<li>
-<p><a href="vectors.html" class="xref page">Vectors</a></p>
+<p><code>std::unique_ptr</code>: When this pointer goes out of scope, it will be destroyed (<code>delete</code> will be called on it). These are scoped, so you can&#8217;t copy a <code>unique_ptr</code>, because when one copy of it dies, that memory is freed so all other copies just reference freed memory.
+*</p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_using_smart_pointers"><a class="anchor" href="#_using_smart_pointers"></a>Using Smart Pointers</h3>
 <div class="paragraph">
-<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+<p><a href="https://www.geeksforgeeks.org/smart-pointers-cpp/#">GeeksForGeeks - Smart Pointers</a></p>
+</div>
+<div class="paragraph">
+<p>The first thing we&#8217;ll have to do to get access to these smart pointers is to <code>#include &lt;memory&gt;</code>.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll be using the following class to demonstrate the
+functionality of smart pointers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;memory&gt;
+
+// Class to show creation/destruction of smart pointer
+class Entity {
+    public:
+
+        // Constructor
+        Entity() {
+            std::cout &lt;&lt; "Created Entity!\n";
+        }
+
+        // Destructor
+        ~Entity() {
+            std::cout &lt;&lt; "Destroyed Entity!\n";
+        }
+
+        void entityPrint() {
+            std::cout &lt;&lt; "print() invoked\n";
+        }
+};</code></pre>
+</div>
+</div>
+<hr>
+<div class="paragraph">
+<p><code>std::unique_ptr</code></p>
+</div>
+<div class="paragraph">
+<p>If we want to create a pointer that lives in a certain scope, we can do that like so:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int main() {
+    {
+        std::unique_ptr&lt;Entity&gt; entity = std::make_unique&lt;Entity&gt;();
+
+        entity-&gt;entityPrint();
+    }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can only have <strong>1</strong> copy in existence for the life of a <code>std::unique_ptr</code>. Its life and death is within the scope that it was defined in. For example, you cannot do something like
+<code>std::unique_ptr&lt;Entity&gt; e2 = entity</code>, this would not even compile.
+</td>
+</tr>
+</table>
+</div>
+<hr>
+<div class="paragraph">
+<p><code>std::shared_ptr</code></p>
+</div>
+<div class="paragraph">
+<p>By using <code>shared_ptr</code>, more than one pointer can point
+to this one object at a time and it’ll maintain a
+Reference Counter using the <code>use_count()</code> method
+(GeeksForGeeks).
+Each time a shared pointer falls out of scope,
+the allocated object&#8217;s reference counter is decremented.
+Once the reference count reaches zero, the object is
+deallocated and freed.</p>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int main() {
+
+    std::shared_ptr&lt;Entity&gt; e2;
+    {
+        std::shared_ptr&lt;Entity&gt; e1 = std::make_shared&lt;Entity&gt;();
+        std::cout &lt;&lt; e1.use_count() &lt;&lt; '\n';
+        e2 = e1;
+        e2-&gt;entityPrint();
+        std::cout &lt;&lt; e2.use_count() &lt;&lt; '\n';
+    }
+    std::cout &lt;&lt; e2.use_count() &lt;&lt; '\n';
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Entity constructed()
+1
+print() invoked
+2
+1
+Entity destructed()</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>C++ :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <title>Arrays :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/arrays.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -261,7 +261,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages.html">Languages</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="cpp.html">C++</a>
   </li>
 </ul>
@@ -301,10 +301,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Languages</li>
-    <li><a href="../languages.html">Languages</a></li>
-    <li><a href="cpp.html">C++</a></li>
+    <li><a href="arrays.html">Arrays</a></li>
   </ul>
 </nav>
 </div>
@@ -313,60 +310,303 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">C++</h1>
-<div class="sect1">
-<h2 id="_topics"><a class="anchor" href="#_topics"></a>Topics</h2>
+<h1 class="page">Arrays</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>A C++ <code>array</code> is a fixed-size sequential data structure; lower-level than vectors.</p>
+</div>
+<div class="paragraph">
+<p>References:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="arrays.html" class="xref page">Arrays</a></p>
-</li>
-<li>
-<p><a href="branch_control.html" class="xref page">Branch Control</a></p>
-</li>
-<li>
-<p><a href="classes.html" class="xref page">Classes</a></p>
-</li>
-<li>
-<p><a href="compiling.html" class="xref page">Compiling and Executing</a></p>
-</li>
-<li>
-<p><a href="error_handling.html" class="xref page">Error Handling</a></p>
-</li>
-<li>
-<p><a href="functions.html" class="xref page">Functions</a></p>
-</li>
-<li>
-<p><a href="input_streams.html" class="xref page">Input Streams</a></p>
-</li>
-<li>
-<p><a href="macros.html" class="xref page">Macros</a></p>
-</li>
-<li>
-<p><a href="pointers.html" class="xref page">Pointers</a></p>
-</li>
-<li>
-<p><a href="references.html" class="xref page">References</a></p>
-</li>
-<li>
-<p><a href="structures.html" class="xref page">Stuctures</a></p>
-</li>
-<li>
-<p><a href="types.html" class="xref page">Types</a></p>
-</li>
-<li>
-<p><a href="vectors.html" class="xref page">Vectors</a></p>
+<p><a href="https://cplusplus.com/doc/tutorial/arrays/">cplusplus - Arrays Tutorial</a></p>
 </li>
 </ul>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/ENDaJi08jCU?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
+<h2 id="_initialization"><a class="anchor" href="#_initialization"></a>Initialization</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+<p><a href="https://en.cppreference.com/w/c/language/array_initialization">Array Initialization</a></p>
+</div>
+<div class="sect2">
+<h3 id="_static_initialization"><a class="anchor" href="#_static_initialization"></a>Static Initialization</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://hank.feild.org/feild-guide-cpp/arrays.html">hank.feild - Static Arrays</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This allocates arrays on the stack in memory.</p>
+</div>
+<div class="paragraph">
+<p>Allocate an empty array of type <code>int</code>, and size 4;
+this will allocate 4 <code>int</code>-sized elements, but
+their values will be whatever was in memory before
+you made the array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int nums[4];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can initializing the array with values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Equivalent statements
+int nums[] = {1, 2, 3, 4};
+int nums[] {1, 2, 3, 4};
+
+// Create array of size 7, assign the first 4
+// values, then the rest leave as default values
+int nums[7] = {1, 2, 3, 4};
+
+// Create array of size 7, initialized to all zeroes
+// (the default value for int)
+int nums[7] = {};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_initialization"><a class="anchor" href="#_dynamic_initialization"></a>Dynamic Initialization</h3>
+<div class="paragraph">
+<p><a href="https://hank.feild.org/feild-guide-cpp/pointers.html#3">hank.feild - Dynamic Arrays</a></p>
+</div>
+<div class="paragraph">
+<p>Dynamically initializing an array will allocate space on the heap, rather than the stack, thus extending the lifetime of the array beyond the scope of where it was defined. The caveat to this is that you now have to deallocate that space manually.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Let user input define array size
+int n;
+std::cin &gt;&gt; n;
+
+// Initialize array on heap
+int *arr3 = new int[n];
+
+// Clean up
+delete[] arr3;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another way to achieve this, but with initializing
+every array element with zeros:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Initialize array on heap, size n, all zeros
+int *arr3 = new int[n] {};
+
+// Clean up
+delete[] arr3;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_array_elements"><a class="anchor" href="#_accessing_array_elements"></a>Accessing Array Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Use square brackets and an index to access values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">nums[0] = 53;
+std::cout &lt;&lt; nums[0] &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The square brackets <code>[]</code> are essentially just
+pointer dereferencing using the number provided the
+the square brackets as the offset.
+A more manual, but equivalent way of doing this is to
+manupulate the pointer yourself, then dereference:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int arr[5] = {0, 1, 2, 3, 4};
+std::cout &lt;&lt; "arr[2] = " &lt;&lt; *(arr + 2) &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">arr[2] = 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_multi_dimensional_arrays"><a class="anchor" href="#_multi_dimensional_arrays"></a>Multi-dimensional Arrays</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can create arrays of arrays, i.e. matrices:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">// Create an array of 3 rows, 5 columns
+int nums[3][5];
+
+// Set the second row, third column to 7
+nums[1][2] = 7;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Initializing them using curly braces like we did wih single-dimension arrays:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int height = 5; int width = 3;
+int nums[height][width] = {};
+
+for (int row = 0; row &lt; height; row++) {
+  for (int col = 0; col &lt; width; col++) {
+    std::cout &lt;&lt; '[' &lt;&lt; nums[row][col] &lt;&lt; ']';
+  }
+  std::cout &lt;&lt; '\n';
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[0][0][0]
+[0][0][0]
+[0][0][0]
+[0][0][0]
+[0][0][0]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>C++ will allocate all this memory contiguously, as if it were a single-dimensional array, but it will keep track of the offets for each sub-array.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_copying_an_array"><a class="anchor" href="#_copying_an_array"></a>Copying an Array</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The manual way of copying an array would be to go
+one-by-one, and copy each element into the new array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  for (int i = 0; i &lt; size; i++) {
+    new_arr[i] = arr[i];
+  }
+
+  std::cout &lt;&lt; "arr:     [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\nnew_arr: [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; new_arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">arr:     [ 1 2 3 4 5 ]
+new_arr: [ 1 2 3 4 5 ]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, we can make use of <code>memcpy</code> from the
+<code>&lt;cstring&gt;</code> library to copy a
+contiguous block of memory, using the syntax
+<code>memcpy(destination, source, number_of_bytes)</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;cstring&gt;
+
+int main() {
+
+  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  std::memcpy(new_arr, arr, 5 * sizeof(int));
+
+  std::cout &lt;&lt; "arr:     [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\nnew_arr: [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; new_arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\n";
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, we could make use of <code>std::copy</code> library.
+The format or this call is <code>std::copy(begin, end, destination);</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  std::copy(arr, arr + size, new_arr);
+
+  std::cout &lt;&lt; "arr:     [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\nnew_arr: [ ";
+  for (int i = 0; i &lt; size; i++) {
+    std::cout &lt;&lt; new_arr[i] &lt;&lt; " ";
+  }
+  std::cout &lt;&lt; "]\n";
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both of these, <code>std::memcpy</code> and <code>std::copy</code>, print:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">arr:     [ 1 2 3 4 5 ]
+new_arr: [ 1 2 3 4 5 ]</code></pre>
+</div>
 </div>
 </div>
 </div>

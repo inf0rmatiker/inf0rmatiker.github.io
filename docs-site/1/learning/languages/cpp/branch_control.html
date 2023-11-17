@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>C++ :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <title>Branch Control :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/branch_control.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -261,7 +261,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages.html">Languages</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="cpp.html">C++</a>
   </li>
 </ul>
@@ -301,10 +301,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Languages</li>
-    <li><a href="../languages.html">Languages</a></li>
-    <li><a href="cpp.html">C++</a></li>
+    <li><a href="branch_control.html">Branch Control</a></li>
   </ul>
 </nav>
 </div>
@@ -313,60 +310,151 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">C++</h1>
+<h1 class="page">Branch Control</h1>
 <div class="sect1">
-<h2 id="_topics"><a class="anchor" href="#_topics"></a>Topics</h2>
+<h2 id="_conditionals"><a class="anchor" href="#_conditionals"></a>Conditionals</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Example random number generator program with <code>if</code>/<code>else</code> blocks.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;ctime&gt;
+
+int main() {
+
+  // Create a number that's 0 or 1
+
+  srand (time(NULL));
+  int coin = rand() % 2;
+
+  // If number is 0: Heads
+  // If it is not 0: Tails
+  if (coin == 0) {
+    std::cout &lt;&lt; "Heads\n";
+  }
+  else {
+    std::cout &lt;&lt; "Tails\n";
+  }
+
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_switch_statements"><a class="anchor" href="#_switch_statements"></a>Switch Statements</h3>
+<div class="paragraph">
+<p>Example program with switch statements. If you don&#8217;t include the <code>break</code> for a condition, it will execute that block and "fall through" to the next one.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int number = 9;
+
+  switch(number) {
+
+    case 1 :
+      std::cout &lt;&lt; "Bulbusaur\n";
+      break;
+    case 2 :
+      std::cout &lt;&lt; "Ivysaur\n";
+      break;
+    case 3 :
+      std::cout &lt;&lt; "Venusaur\n";
+      break;
+    case 4 :
+      std::cout &lt;&lt; "Charmander\n";
+      break;
+    case 5 :
+      std::cout &lt;&lt; "Charmeleon\n";
+      break;
+    case 6 :
+      std::cout &lt;&lt; "Charizard\n";
+      break;
+    default :
+      std::cout &lt;&lt; "Unknown\n";
+      break;
+
+  }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loops"><a class="anchor" href="#_loops"></a>Loops</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Repeat instructions while some condition is met.</p>
+</div>
+<div class="sect2">
+<h3 id="_while_loops"><a class="anchor" href="#_while_loops"></a>While Loops</h3>
+<div class="paragraph">
+<p>Example <code>enter_pin.cpp</code> program using a <code>while</code> loop:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+int main() {
+
+  int pin = 0;
+  int tries = 0;
+
+  std::cout &lt;&lt; "BANK OF CODECADEMY\n";
+
+  std::cout &lt;&lt; "Enter your PIN: ";
+  std::cin &gt;&gt; pin;
+
+  tries++;
+
+  while (pin != 1234 &amp;&amp; tries &lt; 3) {
+
+    std::cout &lt;&lt; "Enter your PIN: ";
+    std::cin &gt;&gt; pin;
+    tries++;
+
+  }
+
+  if (pin == 1234) {
+
+    std::cout &lt;&lt; "PIN accepted!\n";
+    std::cout &lt;&lt; "You now have access.\n";
+
+  }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_for_loops"><a class="anchor" href="#_for_loops"></a>For Loops</h3>
+<div class="paragraph">
+<p>Structure: <code>for (int i = 0; i &lt; 20; i++)</code>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="arrays.html" class="xref page">Arrays</a></p>
-</li>
-<li>
-<p><a href="branch_control.html" class="xref page">Branch Control</a></p>
-</li>
-<li>
-<p><a href="classes.html" class="xref page">Classes</a></p>
-</li>
-<li>
-<p><a href="compiling.html" class="xref page">Compiling and Executing</a></p>
-</li>
-<li>
-<p><a href="error_handling.html" class="xref page">Error Handling</a></p>
-</li>
-<li>
-<p><a href="functions.html" class="xref page">Functions</a></p>
-</li>
-<li>
-<p><a href="input_streams.html" class="xref page">Input Streams</a></p>
-</li>
-<li>
-<p><a href="macros.html" class="xref page">Macros</a></p>
-</li>
-<li>
-<p><a href="pointers.html" class="xref page">Pointers</a></p>
-</li>
-<li>
-<p><a href="references.html" class="xref page">References</a></p>
-</li>
-<li>
-<p><a href="structures.html" class="xref page">Stuctures</a></p>
-</li>
-<li>
-<p><a href="types.html" class="xref page">Types</a></p>
-</li>
-<li>
-<p><a href="vectors.html" class="xref page">Vectors</a></p>
+<p>3 parts: <code>( &lt;initialization&gt; ; &lt;condition&gt; ; &lt;action&gt; )</code></p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">for (int i = 99; i &gt;= 0; i--) {
+    std::cout &lt;&lt; i &lt;&lt; " bottles of beer on the wall...\n";
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>

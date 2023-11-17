@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>C++ :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <title>C++ Data Types :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/types.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -261,7 +261,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages.html">Languages</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="cpp.html">C++</a>
   </li>
 </ul>
@@ -301,10 +301,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Languages</li>
-    <li><a href="../languages.html">Languages</a></li>
-    <li><a href="cpp.html">C++</a></li>
+    <li><a href="types.html">C++ Data Types</a></li>
   </ul>
 </nav>
 </div>
@@ -313,60 +310,86 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">C++</h1>
-<div class="sect1">
-<h2 id="_topics"><a class="anchor" href="#_topics"></a>Topics</h2>
+<h1 class="page">C++ Data Types</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.codecademy.com/resources/docs/cpp/data-types?page_ref=catalog">Types Catalog</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_datatype_modifiers"><a class="anchor" href="#_datatype_modifiers"></a>Datatype Modifiers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As the name implies, datatype modifiers are used with built-in data types to modify the length of data that a particular data type can hold. Data type modifiers in C++ are:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="arrays.html" class="xref page">Arrays</a></p>
+<p><code>signed</code></p>
 </li>
 <li>
-<p><a href="branch_control.html" class="xref page">Branch Control</a></p>
+<p><code>unsigned</code></p>
 </li>
 <li>
-<p><a href="classes.html" class="xref page">Classes</a></p>
+<p><code>short</code></p>
 </li>
 <li>
-<p><a href="compiling.html" class="xref page">Compiling and Executing</a></p>
-</li>
-<li>
-<p><a href="error_handling.html" class="xref page">Error Handling</a></p>
-</li>
-<li>
-<p><a href="functions.html" class="xref page">Functions</a></p>
-</li>
-<li>
-<p><a href="input_streams.html" class="xref page">Input Streams</a></p>
-</li>
-<li>
-<p><a href="macros.html" class="xref page">Macros</a></p>
-</li>
-<li>
-<p><a href="pointers.html" class="xref page">Pointers</a></p>
-</li>
-<li>
-<p><a href="references.html" class="xref page">References</a></p>
-</li>
-<li>
-<p><a href="structures.html" class="xref page">Stuctures</a></p>
-</li>
-<li>
-<p><a href="types.html" class="xref page">Types</a></p>
-</li>
-<li>
-<p><a href="vectors.html" class="xref page">Vectors</a></p>
+<p><code>long</code></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
+<h2 id="_const"><a class="anchor" href="#_const"></a>Const</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+<p><code>const</code> (constant) variables cannot be changed by your program during execution.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">const double quarter = 0.25;
+// and now variable quarter can only be 0.25</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Simply add the keyword <code>const</code> before the data type during declaration to make the variable not modifiable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_type_conversion"><a class="anchor" href="#_type_conversion"></a>Type Conversion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A type cast is basically a conversion from one type to another.</p>
+</div>
+<div class="paragraph">
+<p>The notation <code>(type) value</code> means "convert value to type". So for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">double weight1;
+int weight2;
+
+weight1 = 154.49;
+weight2 = (int) weight1;
+
+// weight2 is now 154</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Going from a <code>double</code> to an <code>int</code> simply removes the decimal. There&#8217;s no rounding involved.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>

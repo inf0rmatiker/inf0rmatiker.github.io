@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>C++ :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/cpp.html">
+    <title>Vectors :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/vectors.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -261,7 +261,7 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages.html">Languages</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
+  <li class="nav-item" data-depth="4">
     <a class="nav-link" href="cpp.html">C++</a>
   </li>
 </ul>
@@ -301,10 +301,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Languages</li>
-    <li><a href="../languages.html">Languages</a></li>
-    <li><a href="cpp.html">C++</a></li>
+    <li><a href="vectors.html">Vectors</a></li>
   </ul>
 </nav>
 </div>
@@ -313,60 +310,150 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">C++</h1>
-<div class="sect1">
-<h2 id="_topics"><a class="anchor" href="#_topics"></a>Topics</h2>
+<h1 class="page">Vectors</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>Essentially resizable arrays with built-in functions for manipulation, metadata, and safety checking.</p>
+</div>
+<div class="paragraph">
+<p>Reference: <a href="https://cplusplus.com/reference/vector/vector/">vector</a></p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/PocJ5jXv8No?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_initialization"><a class="anchor" href="#_initialization"></a>Initialization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <code>vector</code> is a sequence of elements that you can access by index.</p>
+</div>
+<div class="paragraph">
+<p>Include <code>&lt;vector&gt;</code> then declare it like: <code>std::vector&lt;type&gt; name;</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+int main() {
+
+  # Declare vector of doubles
+  std::vector&lt;double&gt; subway_adult;
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can initialize a <code>vector</code> by assigning values at the same time as declaration, like you would with an array.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location = {42.651443, -73.749302};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or,</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location(2);
+location[0] = 42.651443;
+location[1] = -73.749302;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s many ways to initialize a C++ <code>vector</code>. Check out this article to see more ways:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="arrays.html" class="xref page">Arrays</a></p>
-</li>
-<li>
-<p><a href="branch_control.html" class="xref page">Branch Control</a></p>
-</li>
-<li>
-<p><a href="classes.html" class="xref page">Classes</a></p>
-</li>
-<li>
-<p><a href="compiling.html" class="xref page">Compiling and Executing</a></p>
-</li>
-<li>
-<p><a href="error_handling.html" class="xref page">Error Handling</a></p>
-</li>
-<li>
-<p><a href="functions.html" class="xref page">Functions</a></p>
-</li>
-<li>
-<p><a href="input_streams.html" class="xref page">Input Streams</a></p>
-</li>
-<li>
-<p><a href="macros.html" class="xref page">Macros</a></p>
-</li>
-<li>
-<p><a href="pointers.html" class="xref page">Pointers</a></p>
-</li>
-<li>
-<p><a href="references.html" class="xref page">References</a></p>
-</li>
-<li>
-<p><a href="structures.html" class="xref page">Stuctures</a></p>
-</li>
-<li>
-<p><a href="types.html" class="xref page">Types</a></p>
-</li>
-<li>
-<p><a href="vectors.html" class="xref page">Vectors</a></p>
+<p><a href="https://www.geeksforgeeks.org/initialize-a-vector-in-cpp-different-ways/#">Different ways to initialize a CPP vector</a></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_c_style_guide"><a class="anchor" href="#_c_style_guide"></a>C++ Style Guide</h2>
+<h2 id="_accessing_vector_elements"><a class="anchor" href="#_accessing_vector_elements"></a>Accessing Vector Elements</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://google.github.io/styleguide/cppguide.html">Google Style Guide</a></p>
+<p>Using square brackets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};
+std::cout &lt;&lt; location[1] &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This doesn&#8217;t prevent you from accessing elements outside the indices range of the vector. For example, one could use <code>location[5]</code>, which would take the beginning
+of <code>location</code>, add 5 <code>double</code>-sized spaces, then use whatever is there in memory.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>.at()</code> function for safety/bounds checking:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;double&gt; location{42.651443, -73.749302};
+std::cout &lt;&lt; location.at(1) &lt;&lt; "\n";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This makes sure that the index you passed in is within the bounds of the size of the vector. This is an example of an error thrown when going out of bounds.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 4) &gt;= this-&gt;size() (which is 3)
+[1]    17482 abort (core dumped)  ./a.out</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_and_removing_elements"><a class="anchor" href="#_adding_and_removing_elements"></a>Adding and Removing Elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>.push_back()</code> adds a new element to the end of the array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;std::string&gt; last_jedi;
+last_jedi.push_back("kylo");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>.pop_back()</code> removes an element from the end of the array:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::vector&lt;std::string&gt; last_jedi{"kylo", "rey"};
+last_jedi.pop_back();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>.pop_back()</code> has no return value.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_viewing_size"><a class="anchor" href="#_viewing_size"></a>Viewing Size</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>.size()</code> function returns the number of elements in the vector.</p>
 </div>
 </div>
 </div>

@@ -359,6 +359,48 @@ apt-get install \
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_installing_open_source_nvidia_drivers"><a class="anchor" href="#_installing_open_source_nvidia_drivers"></a>Installing Open-Source Nvidia Drivers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For Ubuntu 22.04, follow <a href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&amp;target_arch=x86_64&amp;Distribution=Ubuntu&amp;target_version=22.04&amp;target_type=deb_local">Nvidia CUDA Toolkit Installation Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>Base installer installation instructions for CUDA 12.3:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin
+sudo mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+wget https://developer.download.nvidia.com/compute/cuda/12.3.1/local_installers/cuda-repo-ubuntu2204-12-3-local_12.3.1-545.23.08-1_amd64.deb
+sudo dpkg -i cuda-repo-ubuntu2204-12-3-local_12.3.1-545.23.08-1_amd64.deb
+sudo cp /var/cuda-repo-ubuntu2204-12-3-local/cuda-*-keyring.gpg /usr/share/keyrings/
+sudo apt-get update
+sudo apt-get -y install cuda-toolkit-12-3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/#meta-packages">Additional installation options</a></p>
+</div>
+<div class="paragraph">
+<p>NVIDIA driver installation instructions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sudo apt-get install -y nvidia-kernel-open-545
+sudo apt-get install -y cuda-drivers-545</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_removing_cuda_toolkit_and_drivers"><a class="anchor" href="#_removing_cuda_toolkit_and_drivers"></a>Removing CUDA Toolkit and Drivers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#removing-cuda-toolkit-and-driver">Nvidia - Removing CUDA Toolkit and Drivers</a></p>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>

@@ -1,0 +1,128 @@
+= Branch Control
+
+== Conditionals
+
+Example random number generator program with `if`/`else` blocks.
+
+[,cpp]
+----
+#include <iostream>
+#include <stdlib.h>
+#include <ctime>
+
+int main() {
+  
+  // Create a number that's 0 or 1
+  
+  srand (time(NULL));
+  int coin = rand() % 2;
+  
+  // If number is 0: Heads
+  // If it is not 0: Tails  
+  if (coin == 0) {
+    std::cout << "Heads\n";
+  }
+  else {
+    std::cout << "Tails\n";
+  }
+  
+}
+----
+
+=== Switch Statements
+
+Example program with switch statements. If you don't include the `break` for a condition, it will execute that block and "fall through" to the next one.
+
+[,cpp]
+----
+#include <iostream>
+
+int main() {
+  
+  int number = 9;
+  
+  switch(number) {
+    
+    case 1 :
+      std::cout << "Bulbusaur\n";
+      break;
+    case 2 :
+      std::cout << "Ivysaur\n";
+      break;
+    case 3 :
+      std::cout << "Venusaur\n";
+      break;
+    case 4 :
+      std::cout << "Charmander\n";
+      break;
+    case 5 :
+      std::cout << "Charmeleon\n";
+      break;
+    case 6 :
+      std::cout << "Charizard\n";
+      break;
+    default :
+      std::cout << "Unknown\n";
+      break;
+  
+  }
+  
+}
+----
+
+== Loops
+
+Repeat instructions while some condition is met.
+
+=== While Loops
+
+Example `enter_pin.cpp` program using a `while` loop:
+
+[,cpp]
+----
+#include <iostream>
+
+int main() {
+  
+  int pin = 0;
+  int tries = 0;
+  
+  std::cout << "BANK OF CODECADEMY\n";
+  
+  std::cout << "Enter your PIN: ";
+  std::cin >> pin;
+
+  tries++;
+
+  while (pin != 1234 && tries < 3) {
+    
+    std::cout << "Enter your PIN: ";
+    std::cin >> pin;
+    tries++;
+    
+  }
+  
+  if (pin == 1234) {
+    
+    std::cout << "PIN accepted!\n";
+    std::cout << "You now have access.\n"; 
+    
+  }
+  
+}
+----
+
+=== For Loops
+
+Structure: `for (int i = 0; i < 20; i++)`:
+
+* 3 parts: `( <initialization> ; <condition> ; <action> )`
+
+Example:
+
+[,cpp]
+----
+for (int i = 99; i >= 0; i--) {
+    std::cout << i << " bottles of beer on the wall...\n";
+}
+----

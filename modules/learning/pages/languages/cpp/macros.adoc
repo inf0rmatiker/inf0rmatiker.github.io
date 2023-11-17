@@ -1,0 +1,14 @@
+= Macros
+
+You can define macros to do things like logging, similar 
+to aliases in bash. The compiler will replace these instances in
+the code with whatever you defined in the macro.
+
+[,cpp]
+----
+#define LOG(x) std::cout << x << std::endl
+
+// Then, use it in code
+int myvar = 3;
+LOG(myvar);
+----

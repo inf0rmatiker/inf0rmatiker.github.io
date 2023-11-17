@@ -141,7 +141,7 @@ mount -t lustre 192.168.0.103@o2ib:/lustre /mnt/lustre
 
 == Lustre Client Usage
 
-Show Lustre mounts on the system:
+=== Show Lustre mounts on the system
 
 [,console]
 ----
@@ -149,7 +149,9 @@ Show Lustre mounts on the system:
 192.168.0.101@o2ib:/lustre on /mnt/lustre type lustre (rw,seclabel,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt)
 ----
 
-Show Lustre client version:
+=== Show Lustre client version
+
+- By looking at `/proc/fs/lustre/version`
 
 [,console]
 ----
@@ -157,26 +159,18 @@ k8s-worker1-shira-mercury01:~ # cat /proc/fs/lustre/version
 lustre: 2.15.0.7_rc2_cray_3_g412d1c5
 ----
 
-By creating a new file in the filesystem, sanity test:
+- By using `lctl get_param version`
 
-. Create a directory on the Lustre filesystem: `mkdir /lus/ccarlson`
-. Create a new file under `/lus/ccarlson`:
-+
-[,bash]
-----
- touch /lus/ccarlson/dummyfile
-----
-
-. Verify `dummyfile` exists:
-+
 [,console]
 ----
- k8s-worker1-shira-mercury01:~ # ll /lus/ccarlson/
- total 1
- -rw-r--r-- 1 root root 17 Apr  7 14:29 dummyfile
+root@o186i221:~# lctl get_param version
+version=2.15.2.2_cray_189_gb367a17
+version=lustre: 2.15.2.2_cray_189_gb367a17
 ----
 
-By using the `lfs` utility to view information about the filesystem.
+=== Using Lustre client to check filesystem
+
+Using `lfs` utility to view information about the filesystem.
 
 `lfs check`: Display the status of MGTs, MDTs or OSTs (as specified in the command)
 or all the servers (MGTs, MDTs and OSTs).
@@ -478,6 +472,51 @@ peer:
               ping_count: 0
               next_ping: 0
 ----
+
+=== Replace Existing Lustre Client Installation
+
+On Ubuntu 22.04:
+
+1. Show Lustre filesystem mounts 
++
+[,console]
+----
+root@o186i221:~# mount -t lustre
+172.22.184.42@o2ib:172.22.184.43@o2ib:/seagate on /cstor type lustre (rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)
+172.22.187.183@o2ib,172.22.187.184@o2ib:172.22.187.185@o2ib,172.22.187.186@o2ib:/cstor1 on /mnt/cstor1 type lustre (rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)
+----
+
+2. Unmount Lustre filesystems
++
+[,console]
+----
+root@o186i221:~# umount -t lustre /mnt/cstor1
+umount: /mnt/cstor1: target is busy.
+----
+** Looks like something is using the filesystem. Find the PID of the processes using it and kill them:
++
+[,console]
+----
+root@o186i221:~# lsof /mnt/cstor1
+COMMAND     PID USER   FD   TYPE     DEVICE SIZE/OFF               NODE NAME
+tmux:\x20 46615 root  cwd    DIR 778,293024     4096 144116096797005002 /mnt/cstor1/ssamar/flash/results/resnet50/host4_run1
+bash      46616 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+bash      48218 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+bash      48325 root  cwd    DIR 778,293024     4096 144116077788400128 /mnt/cstor1/ssamar/flash/resnet50/HPE/benchmarks/resnet/implementations/mxnet
+root@o186i221:~# kill 46615 46616 48218 48325
+----
+** Now, retry the unmount operation and double check no more Lustre-typed filesystems are mounted.
++
+[,console]
+----
+root@o186i221:~# umount -t lustre /mnt/cstor1
+root@o186i221:~# umount -t lustre /cstor
+root@o186i221:~# mount -t lustre
+root@o186i221:~#
+----
+
+3. 
+
 
 == Building the Lustre Client
 

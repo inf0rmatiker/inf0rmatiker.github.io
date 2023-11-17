@@ -1,0 +1,21 @@
+= Functions
+
+Structure is as follows:
+
+----
+return_type function_name(<params>) {
+
+   // Code block here
+   return output_if_there_is_any;
+
+}
+----
+
+Example:
+
+[,cpp]
+----
+std::string always_blue() {
+  return "blue!\n";
+}
+----

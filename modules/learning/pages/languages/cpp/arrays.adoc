@@ -1,0 +1,251 @@
+= Arrays
+
+:toc: auto
+:showtitle:
+
+A C++ `array` is a fixed-size sequential data structure; lower-level than vectors.
+
+References:
+
+* https://cplusplus.com/doc/tutorial/arrays/[cplusplus - Arrays Tutorial]
+
+video::ENDaJi08jCU[youtube,width=960,height=440]
+
+== Initialization
+
+https://en.cppreference.com/w/c/language/array_initialization[Array Initialization]
+
+=== Static Initialization
+
+* https://hank.feild.org/feild-guide-cpp/arrays.html[hank.feild - Static Arrays]
+
+This allocates arrays on the stack in memory.
+
+Allocate an empty array of type `int`, and size 4; 
+this will allocate 4 `int`-sized elements, but
+their values will be whatever was in memory before
+you made the array.
+
+[,cpp]
+----
+int nums[4];
+----
+
+You can initializing the array with values.
+
+[,cpp]
+----
+// Equivalent statements
+int nums[] = {1, 2, 3, 4};
+int nums[] {1, 2, 3, 4};
+
+// Create array of size 7, assign the first 4
+// values, then the rest leave as default values
+int nums[7] = {1, 2, 3, 4};
+
+// Create array of size 7, initialized to all zeroes
+// (the default value for int)
+int nums[7] = {};
+----
+
+=== Dynamic Initialization
+
+https://hank.feild.org/feild-guide-cpp/pointers.html#3[hank.feild - Dynamic Arrays]
+
+Dynamically initializing an array will allocate space on the heap, rather than the stack, thus extending the lifetime of the array beyond the scope of where it was defined. The caveat to this is that you now have to deallocate that space manually.
+
+[,cpp]
+----
+// Let user input define array size
+int n;
+std::cin >> n;
+
+// Initialize array on heap
+int *arr3 = new int[n];
+
+// Clean up
+delete[] arr3;
+----
+
+Another way to achieve this, but with initializing
+every array element with zeros:
+
+[,cpp]
+----
+// Initialize array on heap, size n, all zeros
+int *arr3 = new int[n] {};
+
+// Clean up
+delete[] arr3;
+----
+
+== Accessing Array Elements
+
+Use square brackets and an index to access values.
+
+[,cpp]
+----
+nums[0] = 53;
+std::cout << nums[0] << "\n";
+----
+
+The square brackets `[]` are essentially just 
+pointer dereferencing using the number provided the
+the square brackets as the offset. 
+A more manual, but equivalent way of doing this is to
+manupulate the pointer yourself, then dereference:
+
+[,cpp]
+----
+int arr[5] = {0, 1, 2, 3, 4};
+std::cout << "arr[2] = " << *(arr + 2) << "\n";
+----
+
+Prints:
+
+[,console]
+----
+arr[2] = 2
+----
+
+== Multi-dimensional Arrays
+
+You can create arrays of arrays, i.e. matrices:
+
+[,cpp]
+----
+// Create an array of 3 rows, 5 columns
+int nums[3][5];
+
+// Set the second row, third column to 7
+nums[1][2] = 7;
+----
+
+Initializing them using curly braces like we did wih single-dimension arrays:
+
+[,cpp]
+----
+int height = 5; int width = 3;
+int nums[height][width] = {};
+
+for (int row = 0; row < height; row++) {
+  for (int col = 0; col < width; col++) {
+    std::cout << '[' << nums[row][col] << ']';
+  }
+  std::cout << '\n';
+}
+----
+
+Prints:
+
+[,console]
+----
+[0][0][0]
+[0][0][0]
+[0][0][0]
+[0][0][0]
+[0][0][0]
+----
+
+C++ will allocate all this memory contiguously, as if it were a single-dimensional array, but it will keep track of the offets for each sub-array.
+
+== Copying an Array
+
+The manual way of copying an array would be to go
+one-by-one, and copy each element into the new array:
+
+[,cpp]
+----
+  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  for (int i = 0; i < size; i++) {
+    new_arr[i] = arr[i];
+  }
+
+  std::cout << "arr:     [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << arr[i] << " ";
+  }
+  std::cout << "]\nnew_arr: [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << new_arr[i] << " ";
+  }
+  std::cout << "]\n";
+----
+
+Prints:
+
+[,console]
+----
+arr:     [ 1 2 3 4 5 ]
+new_arr: [ 1 2 3 4 5 ]
+----
+
+However, we can make use of `memcpy` from the
+`<cstring>` library to copy a
+contiguous block of memory, using the syntax
+`memcpy(destination, source, number_of_bytes)`
+
+[,cpp]
+----
+#include <iostream>
+#include <cstring>
+
+int main() {
+
+  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  std::memcpy(new_arr, arr, 5 * sizeof(int));
+
+  std::cout << "arr:     [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << arr[i] << " ";
+  }
+  std::cout << "]\nnew_arr: [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << new_arr[i] << " ";
+  }
+  std::cout << "]\n";
+
+}
+----
+
+Or, we could make use of `std::copy` library.
+The format or this call is `std::copy(begin, end, destination);`
+
+[,cpp]
+----
+#include <iostream>
+
+int main() {
+
+  int size = 5;
+  int arr[size] = {1, 2, 3, 4, 5};
+  int new_arr[size];
+
+  std::copy(arr, arr + size, new_arr);
+
+  std::cout << "arr:     [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << arr[i] << " ";
+  }
+  std::cout << "]\nnew_arr: [ ";
+  for (int i = 0; i < size; i++) {
+    std::cout << new_arr[i] << " ";
+  }
+  std::cout << "]\n";
+
+}
+----
+
+Both of these, `std::memcpy` and `std::copy`, print:
+
+[,console]
+----
+arr:     [ 1 2 3 4 5 ]
+new_arr: [ 1 2 3 4 5 ]
+----

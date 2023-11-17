@@ -1,0 +1,107 @@
+= Vectors
+
+Essentially resizable arrays with built-in functions for manipulation, metadata, and safety checking.
+
+Reference: https://cplusplus.com/reference/vector/vector/[vector]
+
+video::PocJ5jXv8No[youtube,width=960,height=440]
+
+== Initialization
+
+A `vector` is a sequence of elements that you can access by index. 
+
+Include `<vector>` then declare it like: `std::vector<type> name;`
+
+[,cpp]
+----
+#include <iostream>
+#include <vector>
+
+int main() {
+   
+  # Declare vector of doubles
+  std::vector<double> subway_adult;
+
+}
+----
+
+You can initialize a `vector` by assigning values at the same time as declaration, like you would with an array.
+
+[,cpp]
+----
+std::vector<double> location = {42.651443, -73.749302};
+----
+
+or,
+
+[,cpp]
+----
+std::vector<double> location{42.651443, -73.749302};
+----
+
+or,
+
+[,cpp]
+----
+std::vector<double> location(2);
+location[0] = 42.651443;
+location[1] = -73.749302;
+----
+
+There's many ways to initialize a C++ `vector`. Check out this article to see more ways:
+
+* https://www.geeksforgeeks.org/initialize-a-vector-in-cpp-different-ways/#[Different ways to initialize a CPP vector]
+
+== Accessing Vector Elements
+
+Using square brackets:
+
+[,cpp]
+----
+std::vector<double> location{42.651443, -73.749302};
+std::cout << location[1] << "\n";
+----
+
+This doesn't prevent you from accessing elements outside the indices range of the vector. For example, one could use `location[5]`, which would take the beginning
+of `location`, add 5 `double`-sized spaces, then use whatever is there in memory.
+
+Using `.at()` function for safety/bounds checking:
+
+[,cpp]
+----
+std::vector<double> location{42.651443, -73.749302};
+std::cout << location.at(1) << "\n";
+----
+
+This makes sure that the index you passed in is within the bounds of the size of the vector. This is an example of an error thrown when going out of bounds.
+
+[,console]
+----
+terminate called after throwing an instance of 'std::out_of_range'
+  what():  vector::_M_range_check: __n (which is 4) >= this->size() (which is 3)
+[1]    17482 abort (core dumped)  ./a.out
+----
+
+== Adding and Removing Elements
+
+`.push_back()` adds a new element to the end of the array:
+
+[,cpp]
+----
+std::vector<std::string> last_jedi;
+last_jedi.push_back("kylo");
+----
+
+`.pop_back()` removes an element from the end of the array:
+
+[,cpp]
+----
+std::vector<std::string> last_jedi{"kylo", "rey"};
+last_jedi.pop_back();
+----
+
+`.pop_back()` has no return value.
+
+== Viewing Size
+
+The `.size()` function returns the number of elements in the vector.

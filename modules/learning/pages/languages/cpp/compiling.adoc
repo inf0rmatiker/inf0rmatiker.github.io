@@ -1,0 +1,46 @@
+= Compiling and Executing
+
+:toc: auto
+:showtitle:
+
+Given some basic program, `hello.cpp` below, how can we compile and execute our code?
+
+[,cpp]
+----
+#include <iostream>
+
+int main() {
+  
+  std::cout << "Hello World!\n";
+  return 0;
+
+}
+----
+
+To compile a simple `.cpp` file alone to `a.out`, you can run:
+
+[,bash]
+----
+g++ hello.cpp
+./a.out
+----
+
+Example:
+
+[,console]
+----
+➜  simple1 g++ hello.cpp
+➜  simple1 ls
+a.out  hello.cpp
+➜  simple1 ./a.out
+Hello World
+----
+
+To compile our `.cpp` file to binary and give it a name:
+
+[,bash]
+----
+g++ hello.cpp -o hello
+----
+
+A compiler translates the C++ program into machine language code which it stores on the disk as a file with the extension `.o` (e.g. `hello.o`). A linker then links the object code with standard library routines that the program may use and creates an executable image which is also saved on disk, usually as a file with the file name without any extension (e.g. `hello`).

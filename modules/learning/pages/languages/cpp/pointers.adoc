@@ -1,0 +1,223 @@
+= Pointers
+
+:toc: auto
+:showtitle:
+
+Pointers are just integers that represent memory addresses.
+
+== Raw Pointers
+
+video::DTxHyVn0ODg[youtube,width=960,height=440]
+
+=== Defining Pointers
+
+A pointer is _just a memory address_ -- an integer, so it 
+doesn't need a type. Giving a pointer a type
+just states that the data at that address is the type
+we specified.
+
+Here we've defined a pointer with memory address `0`.
+Note that `0` is not a valid memory address. It's
+the same as `NULL`. 
+
+[,cpp]
+----
+// These are all equivalent
+void *ptr = 0;
+void *ptr = NULL;
+void *ptr = nullptr;
+----
+
+What if we want to create a useful pointer that points to
+a valid memory address, like a variable in our program?
+
+[,cpp]
+----
+int var = 16;
+
+// &var is the memory address of var.
+// int * is our way of telling what the data type is that
+// ptr points to. Using void * would also be valid.
+int *ptr = &var;
+----
+
+=== Using Pointers
+
+We can use a pointer to manipulate the data stored at its 
+address, by _dereferencing_ the pointer using a `*`.
+
+Using the snippet above as an example:
+
+[,cpp]
+----
+int var = 16;
+int *ptr = &var;
+
+// Writing from a pointer:
+// Go to the address stored in ptr and set the value there to 13
+*ptr = 13;
+
+// Reading from a pointer:
+// Retrieve the value at the address stored in ptr, save to myvar2
+int myvar2 = *ptr;
+----
+
+We can allocate space on the heap, which returns a pointer to
+the beginning address, set all the values to 0, then clean up.
+
+[,cpp]
+----
+// Allocate 8 chars in heap, and return a pointer to first one
+char *buffer = new char[8];
+
+// Sweep 8 bytes starting at buffer and set each value to 0.
+memset(buffer, 0, 8);
+
+// Clean up allocated memory.
+delete[] buffer;
+----
+
+
+=== Double, Triple Pointers
+
+Pointers themselves are stored in memory, and have a 
+memory address of their own. You can create a pointer
+whose memory address references that of another pointer. 
+These are essentially just pointers to pointers.
+
+An example of this:
+
+[,cpp]
+----
+int var = 16;
+
+// Just like before, ptr1 is an int pointer
+int *ptr1 = &var;
+
+// Store address of ptr1 in ptr2
+// ptr2 is a pointer to an int pointer, hence int **
+int **ptr2 = &ptr1;
+----
+
+== Smart Pointers
+
+video::UOB7-B2MfwA[youtube,width=960,height=440]
+
+Smart pointers are a way to automate the process of allocating and freeing memory on the heap. 
+They're just a wrapper around a raw pointer.
+
+With raw pointers, we would need to do:
+
+[,cpp]
+----
+// Allocate 8 chars in heap, and return a pointer to first one
+char *buffer = new char[8];
+
+// ... do something with buffer ...
+
+// Clean up allocated memory.
+delete[] buffer;
+----
+
+Different types of smart pointers:
+
+* `std::unique_ptr`: When this pointer goes out of scope, it will be destroyed (`delete` will be called on it). These are scoped, so you can't copy a `unique_ptr`, because when one copy of it dies, that memory is freed so all other copies just reference freed memory.
+* 
+
+=== Using Smart Pointers
+
+https://www.geeksforgeeks.org/smart-pointers-cpp/#[GeeksForGeeks - Smart Pointers]
+
+The first thing we'll have to do to get access to these smart pointers is to `#include <memory>`.
+
+We'll be using the following class to demonstrate the
+functionality of smart pointers:
+
+[,cpp]
+----
+#include <iostream>
+#include <string>
+#include <memory>
+
+// Class to show creation/destruction of smart pointer
+class Entity {
+    public:
+    
+        // Constructor
+        Entity() {
+            std::cout << "Created Entity!\n"; 
+        }
+    
+        // Destructor
+        ~Entity() {
+            std::cout << "Destroyed Entity!\n";
+        }
+        
+        void entityPrint() {
+            std::cout << "print() invoked\n";
+        }
+};
+----
+
+--- 
+
+`std::unique_ptr`
+
+If we want to create a pointer that lives in a certain scope, we can do that like so:
+
+[,cpp]
+----
+int main() {
+    {
+        std::unique_ptr<Entity> entity = std::make_unique<Entity>();
+        
+        entity->entityPrint();
+    }
+}
+----
+
+NOTE: You can only have *1* copy in existence for the life of a `std::unique_ptr`. Its life and death is within the scope that it was defined in. For example, you cannot do something like
+`std::unique_ptr<Entity> e2 = entity`, this would not even compile.
+
+---
+
+`std::shared_ptr`
+
+By using `shared_ptr`, more than one pointer can point 
+to this one object at a time and it’ll maintain a 
+Reference Counter using the `use_count()` method
+(GeeksForGeeks). 
+Each time a shared pointer falls out of scope, 
+the allocated object's reference counter is decremented.
+Once the reference count reaches zero, the object is
+deallocated and freed.
+
+Example:
+
+[,cpp]
+----
+int main() {
+
+    std::shared_ptr<Entity> e2;
+    {
+        std::shared_ptr<Entity> e1 = std::make_shared<Entity>();
+        std::cout << e1.use_count() << '\n';
+        e2 = e1;
+        e2->entityPrint();
+        std::cout << e2.use_count() << '\n';
+    }
+    std::cout << e2.use_count() << '\n';
+}
+----
+
+Example output:
+
+[,console]
+----
+Entity constructed()
+1
+print() invoked
+2
+1
+Entity destructed()
+----

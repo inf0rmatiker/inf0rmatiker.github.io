@@ -1,0 +1,75 @@
+= References
+
+* https://www.geeksforgeeks.org/references-in-cpp/#[GeeksForGeeks - References]
+
+A reference variable is a reference to an existing variable. 
+When a variable is declared as a reference, it 
+becomes an alternative name, or an alias, for an 
+existing variable.
+A variable can be declared as a reference by putting `&` in 
+the declaration (GeeksForGeeks).
+
+video::IzoFn3dfsPA[youtube,width=960,height=440]
+
+Example:
+
+[,cpp]
+----
+int x = 10;
+ 
+// ref is a reference to x.
+// Now how you put "&" as part of type.
+int& ref = x;
+
+// Value of x is now changed to 20
+ref = 20;
+cout << "x = " << x << '\n';
+
+// Value of x is now changed to 30
+x = 30;
+cout << "ref = " << ref << '\n';
+
+return 0;
+----
+
+This does not create a new variable on the stack, 
+like you would if you used a pointer. It's essentially the 
+same variable, just by a different name.
+
+== Pass-by-copy vs. Pass-by-reference
+
+Consider the following two functions:
+
+[,cpp]
+----
+void increment(int val) {
+    val++;
+}
+
+int main() {
+    int a = 5;
+    increment(a);
+    std::cout << a << '\n';
+}
+----
+
+Here the `increment` function only increments _its copy_ of 
+`val`, not the original `a`. This is because the value 
+of `a` was copied into the increment function instead of being
+passed in by reference.
+
+
+To pass by reference, we can change the parameter to a reference type `&int`. The compiler will handle converting `val` to an alias of `a`.
+
+[,cpp]
+----
+void increment(int& val) {
+    val++;
+}
+
+int main() {
+    int a = 5;
+    increment(a);
+    std::cout << a << '\n';
+}
+----

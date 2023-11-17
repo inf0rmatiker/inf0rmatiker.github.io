@@ -1,0 +1,24 @@
+= Structures
+
+https://www.geeksforgeeks.org/structures-in-cpp/[GeeksForGeeks - Structures in C++]
+
+A `struct` is more or less a grouping of variables, and is defined like:
+
+[,cpp]
+----
+// -------- Option 1 ----------
+struct Point {
+   int x, y;
+} p1;  // The variable p1 is declared with 'Point'
+// -------- Option 2 ----------
+// Delared without initializing a variable to it.
+struct Point {
+   int x;
+   int y;
+};
+
+int main() {
+    // You can initialize a variable after the struct definition.
+    struct Point p1;
+}
+----

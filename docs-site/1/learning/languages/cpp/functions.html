@@ -258,7 +258,52 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="cpp.html">C++</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="arrays.html">Arrays</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="branch_control.html">Branch Control</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="classes.html">Classes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="compiling.html">Compiling and Executing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="development_environment.html">Development Environment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="error_handling.html">Error Handling</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="functions.html">Functions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="input_streams.html">Input Streams</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="macros.html">Macros</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="pointers.html">Pointers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="structures.html">Stuctures</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="types.html">Types</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="vectors.html">Vectors</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -295,6 +340,9 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
+    <li>Learning</li>
+    <li>Languages</li>
+    <li><a href="cpp.html">C++</a></li>
     <li><a href="functions.html">Functions</a></li>
   </ul>
 </nav>
@@ -305,6 +353,13 @@
 </aside>
 <article class="doc">
 <h1 class="page">Functions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/V9zuox47zr0?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
 <div class="paragraph">
 <p>Structure is as follows:</p>
 </div>
@@ -326,6 +381,95 @@
 <pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">std::string always_blue() {
   return "blue!\n";
 }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_function_pointers"><a class="anchor" href="#_function_pointers"></a>Function Pointers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Just like how we can create pointers to variables in our program and reference their
+memory addresses, we can also create pointers to functions and call them using their
+memory addresses.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.geeksforgeeks.org/function-pointer-in-cpp/#">GeeksForGeeks - Function Pointers</a></p>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/p4sDgQ-jao4?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+<div class="paragraph">
+<p>The syntax is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">return_type (*FuncPtr) (parameter type, ....);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">int multiply(int a, int b) { return a * b; }
+
+int main()
+{
+  // func points to the multiply function address
+  int (*func)(int, int) = multiply;
+
+  int prod = func(15, 2);
+  std::cout &lt;&lt; "The value of the product is: " &lt;&lt; prod &lt;&lt; std::endl;
+
+  return 0;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_callback_functions"><a class="anchor" href="#_callback_functions"></a>Callback Functions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Functions can be passed as function pointers, allowing you to defer execution of a function until later if needed. This is helpful in the case of asynchronous execution, where you can&#8217;t guarantee one function will finish before the other.
+It also helps generalize operations in event-driven programming.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following program, in which we define two functions
+with similar signatures, but who perform different operations on the
+two integers <code>a</code> and <code>b</code> passed in:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;iostream&gt;
+
+// A multiply function that can be used as a callback
+int multiply(int a, int b) {
+  return a * b;
+}
+
+// An add function that can be used as a callback
+int add(int a, int b) {
+  return a + b;
+}
+
+int calculate(int a, int b, int (*operation)(int, int)) {
+  return operation(a, b);
+}
+
+int main() {
+  int result = calculate(5, 3, &amp;multiply);
+  std::cout &lt;&lt; "Result of calculate(): " &lt;&lt; result &lt;&lt; std::endl;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can create a pointer to the function <code>&amp;multiply</code> or <code>&amp;add</code>, and
+give it to the <code>calcuate</code> function which abstracts away the operation itself.</p>
+</div>
 </div>
 </div>
 </article>

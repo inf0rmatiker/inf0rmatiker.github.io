@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Macros :: Caleb Carlson | Documentation</title>
+    <title>Preprocessor Directives :: Caleb Carlson | Documentation</title>
     <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/cpp/macros.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
@@ -258,7 +258,52 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="cpp.html">C++</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="arrays.html">Arrays</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="branch_control.html">Branch Control</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="classes.html">Classes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="compiling.html">Compiling and Executing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="development_environment.html">Development Environment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="error_handling.html">Error Handling</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="functions.html">Functions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="input_streams.html">Input Streams</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="macros.html">Macros</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="pointers.html">Pointers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="structures.html">Stuctures</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="types.html">Types</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="vectors.html">Vectors</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -295,6 +340,9 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
+    <li>Learning</li>
+    <li>Languages</li>
+    <li><a href="cpp.html">C++</a></li>
     <li><a href="macros.html">Macros</a></li>
   </ul>
 </nav>
@@ -304,7 +352,84 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Macros</h1>
+<h1 class="page">Preprocessor Directives</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A preprocessor directive are lines in the code that begin with a hash <code>#</code>,
+and are evaluated by the C++ preprocessor <em>before</em> compilation time.</p>
+</div>
+<div class="paragraph">
+<p>Commonly used categories include things like macro definitions, conditional inclusions, pragma directives, and source file inclusions.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://cplusplus.com/doc/tutorial/preprocessor/">cplusplus - preprocessor directives</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conditional_inclusions"><a class="anchor" href="#_conditional_inclusions"></a>Conditional Inclusions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These directives allow to include or discard part of the code of a program if a certain condition is met.</p>
+</div>
+<div class="paragraph">
+<p><code>#ifdef</code> allows a section of a program to be compiled only if the macro that is specified as the parameter has been defined, no matter which its value is. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#ifdef TABLE_SIZE
+int table[TABLE_SIZE];
+#endif</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, the line of code <code>int table[TABLE_SIZE];</code> is only compiled if <code>TABLE_SIZE</code> was previously defined with <code>#define</code>, independently of its value. If it was not defined, that line will not be included in the program compilation.</p>
+</div>
+<div class="paragraph">
+<p><code>#ifndef</code> serves for the exact opposite: the code between <code>#ifndef</code> and <code>#endif</code> directives is only compiled if the specified identifier has not been previously defined. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#ifndef TABLE_SIZE
+#define TABLE_SIZE 100
+#endif
+int table[TABLE_SIZE];</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_source_file_inclusion"><a class="anchor" href="#_source_file_inclusion"></a>Source File Inclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>#include</code> directive is used to replace the <code>#include</code> line with the entirety
+of the source file specified.</p>
+</div>
+<div class="paragraph">
+<p>There are two ways to <code>#include</code> a header file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#include &lt;header&gt;
+#include "file"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the first case, a header is specified between angle-brackets <code>&lt;&gt;</code>. This is used to include <strong>headers</strong> provided by the implementation, such as the headers that compose the standard library (<code>iostream</code>, <code>string</code>, &#8230;&#8203;). Whether the headers are actually files or exist in some other form is <strong>implementation-defined</strong>, but in any case they shall be properly included with this directive.</p>
+</div>
+<div class="paragraph">
+<p>The syntax used in the second <code>#include</code> uses quotes, and includes a <strong>file</strong>. The file is searched for in an <strong>implementation-defined</strong> manner, which generally includes the current path. In the case that the <strong>file</strong> is not found, the compiler interprets the directive as a <strong>header</strong> inclusion, just as if the quotes (<code>""</code>) were replaced by angle-brackets (<code>&lt;&gt;</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_macros"><a class="anchor" href="#_macros"></a>Macros</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>You can define macros to do things like logging, similar
 to aliases in bash. The compiler will replace these instances in
@@ -317,6 +442,33 @@ the code with whatever you defined in the macro.</p>
 // Then, use it in code
 int myvar = 3;
 LOG(myvar);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also just define global constants with <code>#define</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-cpp hljs" data-lang="cpp">#define BEGIN 0
+#define END 10
+
+for (int i = BEGIN; i &lt; END; i++) {
+    // do something
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pragma_directive"><a class="anchor" href="#_pragma_directive"></a>Pragma Directive</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>#pragma once</code> directive ensures that a header file is only included <em>once</em> in the <a href="https://en.wikipedia.org/wiki/Translation_unit_(programming)">translation unit</a> during compilation.</p>
+</div>
+<div class="paragraph">
+<p>When you include this at the top of your header file, it provides include guards
+that prevent the file from being included multiple times in the same place.</p>
+</div>
 </div>
 </div>
 </article>

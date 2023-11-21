@@ -61,3 +61,17 @@
 
 * Languages
 ** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]
+*** xref:docs-site:learning:languages/cpp/arrays.adoc[Arrays]
+*** xref:docs-site:learning:languages/cpp/branch_control.adoc[Branch Control]
+*** xref:docs-site:learning:languages/cpp/classes.adoc[Classes]
+*** xref:docs-site:learning:languages/cpp/compiling.adoc[Compiling and Executing]
+*** xref:docs-site:learning:languages/cpp/development_environment.adoc[Development Environment]
+*** xref:docs-site:learning:languages/cpp/error_handling.adoc[Error Handling]
+*** xref:docs-site:learning:languages/cpp/functions.adoc[Functions]
+*** xref:docs-site:learning:languages/cpp/input_streams.adoc[Input Streams]
+*** xref:docs-site:learning:languages/cpp/macros.adoc[Macros]
+*** xref:docs-site:learning:languages/cpp/pointers.adoc[Pointers]
+*** xref:docs-site:learning:languages/cpp/references.adoc[References]
+*** xref:docs-site:learning:languages/cpp/structures.adoc[Stuctures]
+*** xref:docs-site:learning:languages/cpp/types.adoc[Types]
+*** xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]

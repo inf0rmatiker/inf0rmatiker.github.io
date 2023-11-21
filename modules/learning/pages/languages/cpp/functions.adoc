@@ -1,5 +1,10 @@
 = Functions
 
+:toc: auto
+:showtitle:
+
+video::V9zuox47zr0[youtube,width=960,height=440]
+
 Structure is as follows:
 
 ----
@@ -19,3 +24,73 @@ std::string always_blue() {
   return "blue!\n";
 }
 ----
+
+== Function Pointers
+
+Just like how we can create pointers to variables in our program and reference their
+memory addresses, we can also create pointers to functions and call them using their
+memory addresses.
+
+https://www.geeksforgeeks.org/function-pointer-in-cpp/#[GeeksForGeeks - Function Pointers]
+
+video::p4sDgQ-jao4[youtube,width=960,height=440]
+
+The syntax is as follows:
+
+----
+return_type (*FuncPtr) (parameter type, ....);  
+----
+
+Example:
+
+[,cpp]
+----
+int multiply(int a, int b) { return a * b; }
+ 
+int main()
+{
+  // func points to the multiply function address
+  int (*func)(int, int) = multiply;
+
+  int prod = func(15, 2);
+  std::cout << "The value of the product is: " << prod << std::endl;
+
+  return 0;
+}
+----
+
+== Callback Functions
+
+Functions can be passed as function pointers, allowing you to defer execution of a function until later if needed. This is helpful in the case of asynchronous execution, where you can't guarantee one function will finish before the other.
+It also helps generalize operations in event-driven programming.
+
+Consider the following program, in which we define two functions
+with similar signatures, but who perform different operations on the
+two integers `a` and `b` passed in:
+
+[,cpp]
+----
+#include <iostream>
+
+// A multiply function that can be used as a callback
+int multiply(int a, int b) {
+  return a * b;
+}
+
+// An add function that can be used as a callback
+int add(int a, int b) {
+  return a + b;
+}
+
+int calculate(int a, int b, int (*operation)(int, int)) {
+  return operation(a, b);
+}
+
+int main() {
+  int result = calculate(5, 3, &multiply);
+  std::cout << "Result of calculate(): " << result << std::endl;
+}
+----
+
+We can create a pointer to the function `&multiply` or `&add`, and 
+give it to the `calcuate` function which abstracts away the operation itself.

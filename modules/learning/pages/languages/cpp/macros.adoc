@@ -1,4 +1,56 @@
-= Macros
+= Preprocessor Directives
+
+A preprocessor directive are lines in the code that begin with a hash `#`, 
+and are evaluated by the C++ preprocessor _before_ compilation time.
+
+Commonly used categories include things like macro definitions, conditional inclusions, pragma directives, and source file inclusions.
+
+* https://cplusplus.com/doc/tutorial/preprocessor/[cplusplus - preprocessor directives]
+
+== Conditional Inclusions
+
+These directives allow to include or discard part of the code of a program if a certain condition is met.
+
+`#ifdef` allows a section of a program to be compiled only if the macro that is specified as the parameter has been defined, no matter which its value is. For example:
+
+[,cpp]
+----
+#ifdef TABLE_SIZE
+int table[TABLE_SIZE];
+#endif
+---- 
+
+In this case, the line of code `int table[TABLE_SIZE];` is only compiled if `TABLE_SIZE` was previously defined with `#define`, independently of its value. If it was not defined, that line will not be included in the program compilation.
+
+`#ifndef` serves for the exact opposite: the code between `#ifndef` and `#endif` directives is only compiled if the specified identifier has not been previously defined. For example:
+
+[,cpp]
+----
+#ifndef TABLE_SIZE
+#define TABLE_SIZE 100
+#endif
+int table[TABLE_SIZE];
+----
+
+== Source File Inclusion
+
+The `#include` directive is used to replace the `#include` line with the entirety
+of the source file specified.
+
+There are two ways to `#include` a header file:
+
+[,cpp]
+----
+#include <header>
+#include "file"
+----
+
+In the first case, a header is specified between angle-brackets `<>`. This is used to include *headers* provided by the implementation, such as the headers that compose the standard library (`iostream`, `string`, ...). Whether the headers are actually files or exist in some other form is *implementation-defined*, but in any case they shall be properly included with this directive.
+
+The syntax used in the second `#include` uses quotes, and includes a *file*. The file is searched for in an *implementation-defined* manner, which generally includes the current path. In the case that the *file* is not found, the compiler interprets the directive as a *header* inclusion, just as if the quotes (`""`) were replaced by angle-brackets (`<>`).
+
+
+== Macros
 
 You can define macros to do things like logging, similar 
 to aliases in bash. The compiler will replace these instances in
@@ -12,3 +64,23 @@ the code with whatever you defined in the macro.
 int myvar = 3;
 LOG(myvar);
 ----
+
+You can also just define global constants with `#define`:
+
+[,cpp]
+----
+#define BEGIN 0
+#define END 10
+
+for (int i = BEGIN; i < END; i++) {
+    // do something
+}
+----
+
+== Pragma Directive
+
+The `#pragma once` directive ensures that a header file is only included _once_ in the https://en.wikipedia.org/wiki/Translation_unit_(programming)[translation unit] during compilation.
+
+When you include this at the top of your header file, it provides include guards
+that prevent the file from being included multiple times in the same place.
+

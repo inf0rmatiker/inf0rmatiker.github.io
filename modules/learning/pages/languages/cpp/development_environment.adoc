@@ -7,5 +7,5 @@ This document covers setting up C++ development for Mac, Windows, and Linux
 
 == Windows
 
-Here we'll be using Windows 10, but the process for Windows 11 will be similar
+Here we'll be using Windows 10, but the process for Windows 11 will be similar.
 

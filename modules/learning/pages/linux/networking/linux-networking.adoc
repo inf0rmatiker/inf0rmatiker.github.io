@@ -95,9 +95,145 @@ setenforce 0
 
 The newer style of managing Linux networking, particularly in Rocky Linux 9.X going forward. The older `ifconfig` network scripts are no longer being used.
 
-* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/getting_started_with_networkmanager[RHEL: Getting Started with NetworkManager]
+* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index#doc-wrapper[RHEL 9: Configuring and Managing Networking]
 
 In NetworkManager, _devices_ need to be mapped to _connections_. A connection is a set of configuration options that can be applied to a device. A device can only have one active connection at a time.
 
+NOTE:
+Network Manager stores its connections in `/etc/NetworkManager/system-connections`:
 
+[,console]
+----
+[root@mawenzi-06 ~]# ls /etc/NetworkManager/system-connections
+ens10f0.nmconnection  ens10f1.nmconnection  ibs1.nmconnection  ibs2.nmconnection
+----
 
+Cracking one of these open we can find critical information about the connection:
+
+.Example
+[,console]
+----
+[root@mawenzi-06 ~]# cat /etc/NetworkManager/system-connections/ibs1.nmconnection
+[connection]
+id=ibs1
+uuid=bb07b153-64ef-40a9-a703-6beb14b779da
+type=infiniband
+interface-name=ibs1
+timestamp=1702504605
+
+[infiniband]
+transport-mode=datagram
+
+[ipv4]
+address1=192.168.0.106/24
+method=manual
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]
+----
+
+=== Network Manager CLI (`nmcli`)
+
+CLI tool to manage network connections and devices.
+
+* https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index#configuring-an-ethernet-connection-by-using-nmcli_configuring-an-ethernet-connection[RHEL 9: Configuring an Ethernet connection by using nmcli]
+
+==== Basic Usage
+
+.Show active connections
+[,console]
+----
+[root@mawenzi-06 ~]# nmcli connection show --active
+NAME     UUID                                  TYPE        DEVICE
+ens10f0  8a649da4-5810-42a2-b166-2040fddf936c  ethernet    ens10f0
+ibs1     bb07b153-64ef-40a9-a703-6beb14b779da  infiniband  ibs1
+lo       60cee16c-b863-49a7-a05b-0799d42d0a8f  loopback    lo
+----
+
+.Show all connections
+[,console]
+----
+[root@mawenzi-06 ~]# nmcli connection show
+NAME     UUID                                  TYPE        DEVICE
+ens10f0  8a649da4-5810-42a2-b166-2040fddf936c  ethernet    ens10f0
+ibs1     bb07b153-64ef-40a9-a703-6beb14b779da  infiniband  ibs1
+lo       60cee16c-b863-49a7-a05b-0799d42d0a8f  loopback    lo
+ens10f1  31322100-19b2-4893-83a7-c144ad23ec40  ethernet    --
+ibs2     95566e3f-d259-40c7-8cec-744694d0ba38  infiniband  --
+----
+
+.Show device statuses
+[,console]
+----
+[root@mawenzi-06 ~]# nmcli device status
+DEVICE   TYPE        STATE                   CONNECTION
+ens10f0  ethernet    connected               ens10f0
+ibs1     infiniband  connected               ibs1
+lo       loopback    connected (externally)  lo
+ens10f1  ethernet    unavailable             --
+ibs2     infiniband  unavailable             --
+----
+
+.Show device configuration (active device)
+[,console]
+----
+[root@mawenzi-06 ~]# nmcli device show ibs1
+GENERAL.DEVICE:                         ibs1
+GENERAL.TYPE:                           infiniband
+GENERAL.HWADDR:                         00:00:10:29:FE:80:00:00:00:00:00:00:94:40:C9:FF:FF:B3:3B:60
+GENERAL.MTU:                            2044
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     ibs1
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/3
+IP4.ADDRESS[1]:                         192.168.0.106/24
+IP4.GATEWAY:                            --
+IP4.ROUTE[1]:                           dst = 192.168.0.0/24, nh = 0.0.0.0, mt = 150
+IP6.ADDRESS[1]:                         fe80::9640:c9ff:ffb3:3b60/64
+IP6.GATEWAY:                            --
+IP6.ROUTE[1]:                           dst = fe80::/64, nh = ::, mt = 1024
+----
+
+.Show device configuration (inactive)
+[,console]
+----
+[root@mawenzi-06 ~]# nmcli device show ibs2
+GENERAL.DEVICE:                         ibs2
+GENERAL.TYPE:                           infiniband
+GENERAL.HWADDR:                         00:00:10:29:FE:80:00:00:00:00:00:00:94:40:C9:FF:FF:88:DD:98
+GENERAL.MTU:                            4092
+GENERAL.STATE:                          20 (unavailable)
+GENERAL.CONNECTION:                     --
+GENERAL.CON-PATH:                       --
+IP4.GATEWAY:                            --
+IP6.GATEWAY:                            --
+----
+
+==== Set Static IP Address
+
+Per the docs:
+
+_To set a static IPv4 address, network mask, default gateway, DNS servers, and search domain, enter:_
+
+[,bash]
+----
+nmcli connection modify ibs1 ipv4.method manual ipv4.addresses 192.168.0.106/24
+----
+
+==== Bring up a Connection
+
+[,bash]
+----
+nmcli connection up <connection_name>
+----
+
+==== Make a Connection Autoconnect
+
+Enabling this will enable the connection upon boot of the system:
+
+[,console]
+----
+nmcli connection modify ibs1 connection.autoconnect yes
+----

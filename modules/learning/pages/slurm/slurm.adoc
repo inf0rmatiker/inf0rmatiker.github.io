@@ -1,0 +1,67 @@
+= Slurm Workload Manager
+
+:toc: auto
+:showtitle:
+
+https://slurm.schedmd.com/documentation.html[Slurm Documentation]
+
+== Usage
+
+=== Check Cluster State 
+
+`sinfo`
+
+.Example
+[,console]
+----
+[carlsonc@aihst-login ~]$ sinfo
+PARTITION     AVAIL  TIMELIMIT  NODES  STATE NODELIST
+NICT             up 30-00:00:0      1  down* aixl675dn01
+NICT             up 30-00:00:0      3   idle aixl675dn[02,08-09]
+short_all*       up    4:00:00      6   idle aixl645dn[02-04],aixl675dn[03-05]
+short_tusken     up    4:00:00      3   idle aixl675dn[03-05]
+normal_tusken    up 1-00:00:00      3   idle aixl675dn[03-05]
+long_tusken      up 7-00:00:00      3   idle aixl675dn[03-05]
+short_bantha     up    4:00:00      3   idle aixl645dn[02-04]
+normal_bantha    up 1-00:00:00      3   idle aixl645dn[02-04]
+long_bantha      up 7-00:00:00      3   idle aixl645dn[02-04]
+----
+
+=== Allocate a Node to Partition
+
+`salloc`
+
+.Example
+[,console]
+----
+[carlsonc@aihst-login ~]$ salloc -p short_tusken --nodelist=aixl675dn04
+salloc: Granted job allocation 2942
+----
+
+=== View Allocations
+
+`squeue`
+
+.Example
+[,console]
+----
+[carlsonc@aihst-login ~]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+              2942 short_tus interact carlsonc  R       0:17      1 aixl675dn04
+----
+
+=== Free a Node from Allocation
+
+`scancel <job_id>`
+
+Use `squeue` to get the job ID for your node.
+
+.Example
+[,console]
+----
+[carlsonc@aixl675dn04 gdsio]$ squeue
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+              2942 short_tus interact carlsonc  R    1:22:29      1 aixl675dn04
+[carlsonc@aixl675dn04 gdsio]$ scancel 2942
+salloc: Job allocation 2942 has been revoked.
+----

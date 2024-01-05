@@ -49,8 +49,6 @@
 * Machine Learning
 ** xref:docs-site:learning:machine-learning/benchmarks.adoc[Benchmarks]
 ** xref:docs-site:learning:machine-learning/determinedai.adoc[Determined AI]
-** xref:docs-site:learning:machine-learning/nvidia.adoc[Nvidia]
-** xref:docs-site:learning:machine-learning/numa.adoc[NUMA]
 
 * REST APIs
 ** xref:docs-site:learning:rest-apis/api-security.adoc[Secure Development]
@@ -75,3 +73,10 @@
 *** xref:docs-site:learning:languages/cpp/structures.adoc[Stuctures]
 *** xref:docs-site:learning:languages/cpp/types.adoc[Types]
 *** xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]
+
+* Slurm
+** xref:docs-site:learning:slurm/slurm.adoc[Slurm]
+
+* GPUs
+** xref:docs-site:learning:gpus/gds.adoc[GPUDirect Storage]
+** xref:docs-site:learning:gpus/numa.adoc[NUMA]

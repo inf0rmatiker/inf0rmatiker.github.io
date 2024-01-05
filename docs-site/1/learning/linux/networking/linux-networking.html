@@ -224,12 +224,6 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../machine-learning/nvidia.html">Nvidia</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../machine-learning/numa.html">NUMA</a>
-  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -304,6 +298,27 @@
     <a class="nav-link" href="../../languages/cpp/vectors.html">Vectors</a>
   </li>
 </ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Slurm</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../slurm/slurm.html">Slurm</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GPUs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/gds.html">GPUDirect Storage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -503,12 +518,167 @@ systemctl disable firewalld</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/getting_started_with_networkmanager">RHEL: Getting Started with NetworkManager</a></p>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index#doc-wrapper">RHEL 9: Configuring and Managing Networking</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>In NetworkManager, <em>devices</em> need to be mapped to <em>connections</em>. A connection is a set of configuration options that can be applied to a device. A device can only have one active connection at a time.</p>
+</div>
+<div class="paragraph">
+<p>NOTE:
+Network Manager stores its connections in <code>/etc/NetworkManager/system-connections</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# ls /etc/NetworkManager/system-connections
+ens10f0.nmconnection  ens10f1.nmconnection  ibs1.nmconnection  ibs2.nmconnection</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Cracking one of these open we can find critical information about the connection:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# cat /etc/NetworkManager/system-connections/ibs1.nmconnection
+[connection]
+id=ibs1
+uuid=bb07b153-64ef-40a9-a703-6beb14b779da
+type=infiniband
+interface-name=ibs1
+timestamp=1702504605
+
+[infiniband]
+transport-mode=datagram
+
+[ipv4]
+address1=192.168.0.106/24
+method=manual
+
+[ipv6]
+addr-gen-mode=eui64
+method=auto
+
+[proxy]</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_network_manager_cli_nmcli"><a class="anchor" href="#_network_manager_cli_nmcli"></a>Network Manager CLI (<code>nmcli</code>)</h3>
+<div class="paragraph">
+<p>CLI tool to manage network connections and devices.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html-single/configuring_and_managing_networking/index#configuring-an-ethernet-connection-by-using-nmcli_configuring-an-ethernet-connection">RHEL 9: Configuring an Ethernet connection by using nmcli</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_basic_usage"><a class="anchor" href="#_basic_usage"></a>Basic Usage</h4>
+<div class="listingblock">
+<div class="title">Show active connections</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# nmcli connection show --active
+NAME     UUID                                  TYPE        DEVICE
+ens10f0  8a649da4-5810-42a2-b166-2040fddf936c  ethernet    ens10f0
+ibs1     bb07b153-64ef-40a9-a703-6beb14b779da  infiniband  ibs1
+lo       60cee16c-b863-49a7-a05b-0799d42d0a8f  loopback    lo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Show all connections</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# nmcli connection show
+NAME     UUID                                  TYPE        DEVICE
+ens10f0  8a649da4-5810-42a2-b166-2040fddf936c  ethernet    ens10f0
+ibs1     bb07b153-64ef-40a9-a703-6beb14b779da  infiniband  ibs1
+lo       60cee16c-b863-49a7-a05b-0799d42d0a8f  loopback    lo
+ens10f1  31322100-19b2-4893-83a7-c144ad23ec40  ethernet    --
+ibs2     95566e3f-d259-40c7-8cec-744694d0ba38  infiniband  --</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Show device statuses</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# nmcli device status
+DEVICE   TYPE        STATE                   CONNECTION
+ens10f0  ethernet    connected               ens10f0
+ibs1     infiniband  connected               ibs1
+lo       loopback    connected (externally)  lo
+ens10f1  ethernet    unavailable             --
+ibs2     infiniband  unavailable             --</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Show device configuration (active device)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# nmcli device show ibs1
+GENERAL.DEVICE:                         ibs1
+GENERAL.TYPE:                           infiniband
+GENERAL.HWADDR:                         00:00:10:29:FE:80:00:00:00:00:00:00:94:40:C9:FF:FF:B3:3B:60
+GENERAL.MTU:                            2044
+GENERAL.STATE:                          100 (connected)
+GENERAL.CONNECTION:                     ibs1
+GENERAL.CON-PATH:                       /org/freedesktop/NetworkManager/ActiveConnection/3
+IP4.ADDRESS[1]:                         192.168.0.106/24
+IP4.GATEWAY:                            --
+IP4.ROUTE[1]:                           dst = 192.168.0.0/24, nh = 0.0.0.0, mt = 150
+IP6.ADDRESS[1]:                         fe80::9640:c9ff:ffb3:3b60/64
+IP6.GATEWAY:                            --
+IP6.ROUTE[1]:                           dst = fe80::/64, nh = ::, mt = 1024</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Show device configuration (inactive)</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# nmcli device show ibs2
+GENERAL.DEVICE:                         ibs2
+GENERAL.TYPE:                           infiniband
+GENERAL.HWADDR:                         00:00:10:29:FE:80:00:00:00:00:00:00:94:40:C9:FF:FF:88:DD:98
+GENERAL.MTU:                            4092
+GENERAL.STATE:                          20 (unavailable)
+GENERAL.CONNECTION:                     --
+GENERAL.CON-PATH:                       --
+IP4.GATEWAY:                            --
+IP6.GATEWAY:                            --</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_static_ip_address"><a class="anchor" href="#_set_static_ip_address"></a>Set Static IP Address</h4>
+<div class="paragraph">
+<p>Per the docs:</p>
+</div>
+<div class="paragraph">
+<p><em>To set a static IPv4 address, network mask, default gateway, DNS servers, and search domain, enter:</em></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">nmcli connection modify ibs1 ipv4.method manual ipv4.addresses 192.168.0.106/24</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_bring_up_a_connection"><a class="anchor" href="#_bring_up_a_connection"></a>Bring up a Connection</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">nmcli connection up &lt;connection_name&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_make_a_connection_autoconnect"><a class="anchor" href="#_make_a_connection_autoconnect"></a>Make a Connection Autoconnect</h4>
+<div class="paragraph">
+<p>Enabling this will enable the connection upon boot of the system:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nmcli connection modify ibs1 connection.autoconnect yes</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>

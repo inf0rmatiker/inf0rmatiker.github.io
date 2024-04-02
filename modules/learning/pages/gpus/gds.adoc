@@ -162,13 +162,14 @@ Verify your GDS installation works on your platform with Lustre by running `/usr
 .Example
 [,console]
 ----
-[carlsonc@aixl675dn04 gdsio]$ gdscheck.py -p
- GDS release version: 1.8.1.2
- nvidia_fs version:  2.18 libcufile version: 2.12
+ccarlson@o186i225:~$ /usr/local/cuda-12.4/gds/tools/gdscheck -p
+ GDS release version: 1.9.0.20
+ nvidia_fs version:  2.19 libcufile version: 2.12
  Platform: x86_64
  ============
  ENVIRONMENT:
  ============
+ CUFILE_ENV_PATH_JSON : /home/ccarlson/gds/cufile.json
  =====================
  DRIVER CONFIGURATION:
  =====================
@@ -179,22 +180,22 @@ Verify your GDS installation works on your platform with Lustre by running `/usr
  NVMesh             : Unsupported
  DDN EXAScaler      : Supported
  IBM Spectrum Scale : Unsupported
- NFS                : Unsupported
+ NFS                : Supported
  BeeGFS             : Unsupported
- WekaFS             : Unsupported
- Userspace RDMA     : Unsupported
+ WekaFS             : Supported
+ Userspace RDMA     : Supported
  --Mellanox PeerDirect : Enabled
- --rdma library        : Not Loaded (libcufile_rdma.so)
- --rdma devices        : Not configured
- --rdma_device_status  : Up: 0 Down: 0
+ --rdma library        : Loaded (libcufile_rdma.so)
+ --rdma devices        : Configured
+ --rdma_device_status  : Up: 4 Down: 0
  =====================
  CUFILE CONFIGURATION:
  =====================
- properties.use_compat_mode : true
+ properties.use_compat_mode : false
  properties.force_compat_mode : false
  properties.gds_rdma_write_support : true
  properties.use_poll_mode : false
- properties.poll_mode_max_size_kb : 4
+ properties.poll_mode_max_size_kb : 4096
  properties.max_batch_io_size : 128
  properties.max_batch_io_timeout_msecs : 5
  properties.max_direct_io_size_kb : 16384
@@ -202,10 +203,13 @@ Verify your GDS installation works on your platform with Lustre by running `/usr
  properties.max_device_pinned_mem_size_kb : 33554432
  properties.posix_pool_slab_size_kb : 4 1024 16384
  properties.posix_pool_slab_count : 128 64 32
- properties.rdma_peer_affinity_policy : RoundRobin
- properties.rdma_dynamic_routing : 0
+ properties.rdma_peer_affinity_policy : RoundRobinMaxMin
+ properties.rdma_dynamic_routing : 1
+ properties.rdma_dynamic_routing_order : GPU_MEM_NVLINKS GPU_MEM SYS_MEM P2P
  fs.generic.posix_unaligned_writes : false
  fs.lustre.posix_gds_min_kb: 0
+ fs.lustre.mount_table :
+ /e1000  dev_id 1199770272 : 172.22.186.225 172.22.194.225 172.22.202.225 172.22.210.225
  fs.beegfs.posix_gds_min_kb: 0
  fs.weka.rdma_write_support: false
  fs.gpfs.gds_write_support: false
@@ -234,26 +238,22 @@ Verify your GDS installation works on your platform with Lustre by running `/usr
  PLATFORM INFO:
  ==============
  IOMMU: disabled
- Nvidia Driver Info Status: Unsupported(Nvidia Open Driver Not Installed)
- Cuda Driver Version Installed:  12030
- Platform: ProLiant XL675d Gen10 Plus, Arch: x86_64(Linux 4.18.0-372.9.1.el8.x86_64)
+ Nvidia Driver Info Status: Supported(Nvidia Open Driver Installed)
+ Cuda Driver Version Installed:  12040
+ Platform: ProLiant XL675d Gen10 Plus, Arch: x86_64(Linux 5.15.0-100-generic)
  Platform verification succeeded
 ----
 
 * Note the `DDN EXAScaler      : Supported`: this indicates Lustre is supported.
-* Note the `Nvidia Driver Info Status: Unsupported(Nvidia Open Driver Not Installed)`: we installed a non-GPL (not opensource) version of the drivers
-because this is RHEL 8.6, which doesn't prevent you from loading non-GPL protected kernel modules yet. Once we upgrade to a newer Linux kernel version,
-we'll have to install the opensource kernel modules from Nvidia.
 
-You can check the GDS filesystem support by running `/usr/local/cuda-12.3/gds/tools/gdscheck.py -V`:
+You can check the GDS filesystem support by running `/usr/local/cuda-<version>/gds/tools/gdscheck.py -V`:
 
 .Example
 [,console]
 ----
-[carlsonc@aixl675dn04 gdsio]$ gdscheck.py -V
 FILESYSTEM VERSION CHECK:
 Pre-requisite:
-nv_peer_mem is loaded as required
+nvidia_peermem is loaded as required
 nvme module is loaded
 nvme module is not patched or not loaded
 nvme-rdma module is not loaded
@@ -261,19 +261,18 @@ ScaleFlux module is not loaded
 NVMesh module is not loaded
 Lustre module is loaded
 Lustre module is correctly patched
-BeeGFS module is not loaded
+BeeGFS module is loaded
+BeeGFS module is not patched or not loaded
 GPFS module is not loaded
-rpcrdma module is not loaded
+rpcrdma module is loaded
+rpcrdma module is correctly patched
 Lustre:
-current version: Unknown
+current version: 2.15.4 (Supported)
 min version supported: 2.12.3_ddn28
 ofed_info:
-current version: MLNX_OFED_LINUX-5.8-3.0.7.0: (Supported)
+current version: MLNX_OFED_LINUX-24.01-0.3.3.1: (Supported)
 min version supported: MLNX_OFED_LINUX-4.6-1.0.1.1
 ----
-
-* Note under the `Lustre:` section, it states that the `current version: Unknown`. This is because our version of Lustre `2.15.1.2_cray_30_gb58d43f`
-does not have `ddn` as a substring, so it's not being recognized by the `gdscheck.py` script. 
 
 === Removing CUDA Toolkit and Drivers
 
@@ -289,12 +288,13 @@ NOTE: Make sure to have xref:docs-site:learning:lustre/lustre-client.adoc#_lustr
 
 ==== Lustre Filesystem
 
-The Lustre filesystem is being served from 2 InfiniBand HDR High-speed Channel Adapters (HCAs):
+The Lustre filesystem is being served from 4 InfiniBand HDR High-speed Channel Adapters (HCAs):
 
 [,console]
 ----
-[carlsonc@aixl675dn04 ~]$ mount -t lustre
-10.10.100.4@o2ib:10.10.100.5@o2ib:/aiholus1 on /lus/aiholus1 type lustre (rw,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)
+ccarlson@o186i225:~$ mount -t lustre
+172.22.184.42@o2ib:172.22.184.43@o2ib:/seagate on /cstor type lustre (rw,nochecksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,noencrypt)
+172.22.187.183@o2ib,172.22.187.184@o2ib:172.22.187.185@o2ib,172.22.187.186@o2ib:/cstor1 on /e1000 type lustre (rw,nochecksum,noflock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt)
 ----
 
 The filesystem server layout is as follows:
@@ -304,46 +304,52 @@ The filesystem server layout is as follows:
 
 [,console]
 ----
-[carlsonc@aixl675dn04 ~]$ lfs df
+ccarlson@o186i225:~$ lfs df /e1000
 UUID                   1K-blocks        Used   Available Use% Mounted on
-aiholus1-MDT0000_UUID 12680735564    10968908 12498965876   1% /lus/aiholus1[MDT:0]
-aiholus1-MDT0001_UUID 12680735564        5796 12509928988   1% /lus/aiholus1[MDT:1]
-aiholus1-OST0000_UUID 32538651848 15317345936 16893156596  48% /lus/aiholus1[OST:0]
-aiholus1-OST0001_UUID 32538651848 13260316416 18950186116  42% /lus/aiholus1[OST:1]
-aiholus1-OST0002_UUID 157250471944 37758317204 117906358688  25% /lus/aiholus1[OST:2]
-aiholus1-OST0003_UUID 157250471944 30354604840 125310071052  20% /lus/aiholus1[OST:3]
-aiholus1-OST0004_UUID 157250471944 27426779692 128237896200  18% /lus/aiholus1[OST:4]
-aiholus1-OST0005_UUID 157250471944 32777133788 122887542104  22% /lus/aiholus1[OST:5]
+cstor1-MDT0000_UUID  12680735564     4607868 12505326916   1% /e1000[MDT:0]
+cstor1-MDT0001_UUID  12680735564      424632 12509510152   1% /e1000[MDT:1]
+cstor1-OST0000_UUID  65092016776 43759881420 20675704416  68% /e1000[OST:0]
+cstor1-OST0001_UUID  65092016776 44857958320 19577627516  70% /e1000[OST:1]
+cstor1-OST0002_UUID  624268859304 23013721776 594959810400   4% /e1000[OST:2]
+cstor1-OST0003_UUID  624268859304 23178814712 594794717464   4% /e1000[OST:3]
+cstor1-OST0004_UUID  624268859304 22864999736 595108532440   4% /e1000[OST:4]
+cstor1-OST0005_UUID  624268859304 23018661112 594954871064   4% /e1000[OST:5]
+cstor1-OST0006_UUID  624268859304 24916151264 593057380912   5% /e1000[OST:6]
+cstor1-OST0007_UUID  624268859304 25205560176 592767972000   5% /e1000[OST:7]
+cstor1-OST0008_UUID  624268859304 24378180764 593595351412   4% /e1000[OST:8]
+cstor1-OST0009_UUID  624268859304 24641586624 593331945552   4% /e1000[OST:9]
+cstor1-OST000a_UUID  32551608660  9894559412 22328769268  31% /e1000[OST:10]
+cstor1-OST000b_UUID  32551608660  9907463744 22315864936  31% /e1000[OST:11]
 
-filesystem_summary:  694079191472 156894497876 530185210756  23% /lus/aiholus1
+filesystem_summary:  5189438125304 299637539060 4837468547380   6% /e1000
 ----
 
-We've got a directory, `/lus/aiholus1/flash/carlsonc`, which has its stripe set to the flash pool only:
+We've got a directory, `/e1000/ccarlson`, which has its stripe set to the flash pool only:
 
 [,console]
 ----
-[carlsonc@aixl675dn04 ~]$ lfs getstripe /lus/aiholus1/flash/carlsonc
-/lus/aiholus1/flash/carlsonc
+ccarlson@o186i225:~$ lfs getstripe /e1000/ccarlson
+/e1000/ccarlson
+stripe_count:  1 stripe_size:   1048576 pattern:       0 stripe_offset: -1
+
+/e1000/ccarlson/fio
+stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash
+
+/e1000/ccarlson/ior
+stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash
+
+/e1000/ccarlson/gds
 stripe_count:  1 stripe_size:   1048576 pattern:       raid0 stripe_offset: -1 pool:          flash
 ----
 
-And we've created directories for each GPU to write to:
+You can set the stripe to flash on a directory using the following command:
 
-[,console]
+[,bash]
 ----
-[carlsonc@aixl675dn04 ~]$ tree /lus/aiholus1/flash/carlsonc/
-/lus/aiholus1/flash/carlsonc/
-├── gpu0
-├── gpu1
-├── gpu2
-├── gpu3
-├── gpu4
-├── gpu5
-├── gpu6
-└── gpu7
+lfs setstripe -c 1 -p cstor1.flash /e1000/ccarlson/fio
+----
 
-8 directories, 0 files
-----
+Where `cstor1` is the filesystem name and `/e1000/ccarlson/fio` is the directory.
 
 ==== `cufile.json`
 
@@ -359,7 +365,7 @@ and have populated it with the following parameters:
 
   "logging": {
     // log directory, if not enabled will create log file under current working directory
-    "dir": "/home/hpcd/carlsonc/gdsio/cufile_logs",
+    "dir": "/home/ccarlson/gds/cufile_logs",
     // NOTICE|ERROR|WARN|INFO|DEBUG|TRACE (in decreasing order of severity)
     "level": "INFO"
   },
@@ -395,7 +401,7 @@ and have populated it with the following parameters:
     // Note : currently the overall IO will still be synchronous
     "use_poll_mode" : false,
     // maximum IO request size (parameter should be 4K aligned) within or equal to which library will use polling for IO completion
-    "poll_mode_max_size_kb": 4,
+    "poll_mode_max_size_kb": 4096,
     // allow compat mode, this will enable use of cuFile posix read/writes
     "allow_compat_mode": false,
     // enable GDS write support for RDMA based storage
@@ -404,14 +410,14 @@ and have populated it with the following parameters:
     "io_batchsize": 128,
     // enable io priority w.r.t compute streams
     // valid options are "default", "low", "med", "high"
-    "io_priority": "default",
+    "io_priority": "high",
     // client-side rdma addr list for user-space file-systems(e.g ["10.0.1.0", "10.0.2.0"])
-    "rdma_dev_addr_list": [ "10.10.0.3" ],
+    "rdma_dev_addr_list": [ "172.22.186.225", "172.22.194.225", "172.22.202.225", "172.22.210.225" ],
     // load balancing policy for RDMA memory registration(MR), (RoundRobin, RoundRobinMaxMin)
     // In RoundRobin, MRs will be distributed uniformly across NICS closest to a GPU
     // In RoundRobinMaxMin, MRs will be distributed across NICS closest to a GPU
     // with minimal sharing of NICS acros GPUS
-    "rdma_load_balancing_policy": "RoundRobin",
+    "rdma_load_balancing_policy": "RoundRobinMaxMin",
     //32-bit dc key value in hex
     //"rdma_dc_key": "0xffeeddcc",
     //To enable/disable different rdma OPs use the below bit map
@@ -425,7 +431,7 @@ and have populated it with the following parameters:
     // might help improve overall BW provided there exists a GPU(s) with Root Port common to that of the storage NIC(s).
     // If this feature is enabled, please provide the ip addresses used by the mount either in file-system specific
     // section for mount_table or in the rdma_dev_addr_list property in properties section
-    "rdma_dynamic_routing": false,
+    "rdma_dynamic_routing": true,
     // The order describes the sequence in which a policy is selected for dynamic routing for cross Root Port transfers
     // If the first policy is not applicable, it will fallback to the next and so on.
     // policy GPU_MEM_NVLINKS: use GPU memory with NVLink to transfer data between GPUs
@@ -446,17 +452,12 @@ and have populated it with the following parameters:
       "posix_gds_min_kb" : 0,
       // To restrict the IO to selected IP list, when dynamic routing is enabled
       // if using a single lustre mount, provide the ip addresses here (use : sudo lnetctl net show)
-      "rdma_dev_addr_list" : [ "10.10.0.3" ]
       // if using multiple lustre mounts, provide ip addresses used by respective mount here
-      //"mount_table" : {
-      //                    "/lustre/ai200_01/client" : {
-      //                                    "rdma_dev_addr_list" : ["172.172.1.40", "172.172.1.42"]
-      //                    },
-
-      //                    "/lustre/ai200_02/client" : {
-      //                                    "rdma_dev_addr_list" : ["172.172.2.40", "172.172.2.42"]
-      //                    }
-      //}
+      "mount_table" : {
+        "/e1000" : {
+	  "rdma_dev_addr_list": ["172.22.186.225", "172.22.194.225", "172.22.202.225", "172.22.210.225"]
+	}
+      }
     },
     "nfs": {},
     "gpfs": {},
@@ -486,9 +487,9 @@ and have populated it with the following parameters:
 
 Some things to note about the above `cufile.json`:
 
-* We'll be using _this_ cuFile spec, overriding the default one, by exporting `CUFILE_ENV_PATH_JSON="/home/hpcd/carlsonc/gdsio/cufile.json"`
+* We'll be using _this_ cuFile spec, overriding the default one, by exporting `CUFILE_ENV_PATH_JSON="/home/ccarlson/gds/cufile.json"`
 before our `gdsio` execution.
-* I've turned up logging to `INFO` and am outputting logs to my directory `home/hpcd/carlsonc/gdsio/cufile_logs`.
+* I've turned up logging to `INFO` and am outputting logs to my directory `/home/ccarlson/gds/cufile_logs`.
 
 ==== GDSIO Jobfile
 
@@ -519,15 +520,15 @@ xfer_type=0
 #IO type, rw=read, rw=write, rw=randread, rw=randwrite
 rw=write
 #block size, for variable block size can specify range e.g. bs=1M:4M:1M, (1M : start block size, 4M : end block size, 1M :steps in which size is varied)
-bs=1M
+bs=4M
 #file-size
-size=2G
+size=4G
 #secs
-#runtime=60
+runtime=60
 #use 1 for enabling verification
 do_verify=0
 #skip cufile buffer registration, ignored in cpu mode
-skip_bufregister=1
+skip_bufregister=0
 #set up NVlinks, recommended if p2p traffic is cross node
 enable_nvlinks=1
 #use random seed
@@ -543,6 +544,7 @@ start_offset=0
 #alignment size for random IO
 #alignment_size=64K
 
+
 [job0]
 #numa node
 #numa_node=0
@@ -551,9 +553,9 @@ gpu_dev_id=0
 #For Xfer mode 6, num_threads will be used as batch_size
 num_threads=$NUM_GDS_THREADS_PER_GPU
 #enable either directory or filename or url
-directory=/lus/aiholus1/flash/carlsonc/gpu0
+directory=/e1000/ccarlson/gds/o186i221/gpu0
 #filename=/mnt/test0/gds-01
-#rdma_url=sockfs://192.168.0.1:18515
+#rdma_url=sockfs://192.186.0.1:18515
 #The following parameter can be used to specify per job start offset. If not defined global section's start offset would be used.
 #start_offset=0
 #The following parameter can be used to define the size of IO for this job. If not defined, the global size parameter would be used.
@@ -564,37 +566,37 @@ directory=/lus/aiholus1/flash/carlsonc/gpu0
 [job1]
 gpu_dev_id=1
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu1
+directory=/e1000/ccarlson/gds/o186i221/gpu1
 
 [job2]
 gpu_dev_id=2
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu2
+directory=/e1000/ccarlson/gds/o186i221/gpu2
 
 [job3]
 gpu_dev_id=3
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu3
+directory=/e1000/ccarlson/gds/o186i221/gpu3
 
 [job4]
 gpu_dev_id=4
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu4
+directory=/e1000/ccarlson/gds/o186i221/gpu4
 
 [job5]
 gpu_dev_id=5
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu5
+directory=/e1000/ccarlson/gds/o186i221/gpu5
 
 [job6]
 gpu_dev_id=6
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu6
+directory=/e1000/ccarlson/gds/o186i221/gpu6
 
 [job7]
 gpu_dev_id=7
 num_threads=$NUM_GDS_THREADS_PER_GPU
-directory=/lus/aiholus1/flash/carlsonc/gpu7
+directory=/e1000/ccarlson/gds/o186i221/gpu7
 ----
 
 Here we have:
@@ -615,28 +617,33 @@ Lastly, we have a `benchmark.sh` shell script which kicks off `gdsio` using the 
 #!/bin/bash
 
 # Benchmark script to run gdsio using a .gdsio job file
-
-# Make sure you've added gdsio to your $PATH.
-# It can usually be found under /usr/local/cuda-<version>/gds/tools
-if ! command -v gdsio &> /dev/null; then
-  echo "'gdsio' command not found. Make sure CUDA toolkit is installed, and "
-  echo "/usr/local/cuda-<version>/gds/tools has been added to your \$PATH var."
-  exit 1
-fi
+[[ $# -ne 1 ]] && echo "Usage: ./benchmark.sh write.gdsio" && exit 1
 
 # Use a custom cufile.json instead of the default /etc/cufile.json
-export CUFILE_ENV_PATH_JSON="/home/hpcd/carlsonc/gdsio/cufile.json"
-export NUM_GDS_THREADS_PER_GPU=8
-export GDSIO_OUTPUT_ROOT="/lus/aiholus1/flash/carlsonc"
+export CUFILE_ENV_PATH_JSON="/home/ccarlson/gds/cufile.json"
 
-gdsio write.gdsio
+GDSIO="/usr/local/cuda-12.3/gds/tools/gdsio"
+JOBFILE=$1
+JOB_NAME=${JOBFILE%.gdsio}  # remove .gdsio suffix
+THREADS_ARRAY=(8)
+RESULTS_DIR="single_node_results"
+HOSTNAME=$(hostname)
+RESULTS_FILE="${RESULTS_DIR}/${HOSTNAME}_${JOB_NAME}_results.out"
+
+rm -f $RESULTS_FILE
+touch $RESULTS_FILE
+for THREADS in ${THREADS_ARRAY[@]}; do
+  echo "Results for $THREADS threads per GPU:" >> $RESULTS_FILE
+  export NUM_GDS_THREADS_PER_GPU=$THREADS
+  $GDSIO $JOBFILE >> $RESULTS_FILE
+done
 ----
 
 All in all, this is what the directory structure looks like for my benchmarks:
 
 [,console]
 ----
-[carlsonc@aixl675dn04 gdsio]$ tree .
+ccarlson@o186i225:~/gds$ tree .
 .
 ├── benchmark.sh
 ├── cufile.json
@@ -657,6 +664,6 @@ With the above configuration set in place, we can run `./benchmark.sh`:
 
 [,console]
 ----
-[carlsonc@aixl675dn04 gdsio]$ ./benchmark.sh
+ccarlson@o186i225:~/gds$ ./benchmark.sh
 IoType: WRITE XferType: GPUD Threads: 64 DataSetSize: 261804032/134217728(KiB) IOSize: 1024(KiB) Throughput: 6.930582 GiB/sec, Avg_Latency: 9004.751902 usecs ops: 255668 total_time 36.025224 secs
 ----

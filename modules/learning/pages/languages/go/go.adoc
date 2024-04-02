@@ -1,0 +1,12 @@
+= Go
+
+:toc: auto
+:source-highlighter: highlight.js
+
+== Documentation
+
+* https://go.dev/doc/[Go Documentation]
+* https://go.dev/tour/welcome/1[Go Tour]
+
+== Topics
+

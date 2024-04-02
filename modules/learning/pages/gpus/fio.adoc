@@ -1,0 +1,72 @@
+= Flexible I/O (fio)
+
+:toc: auto
+
+== Building `fio` with CUDA/libcufile Support
+
+By default, fio does not compile with libcufile support so we won't be able to
+use GDS as an IO path: https://github.com/axboe/fio/blob/master/configure#L183
+
+You'll have to override the `CFLAGS` and `LDFLAGS` variables and configure
+the build of `fio` with `--enable-cuda` and `--enable-libcufile`.
+
+This is the commit that added GDS support to fio, and includes an explanation
+of how to use it: https://github.com/axboe/fio/commit/10756b2c95ef275501d4dbda060caac072cf6973
+
+.Example
+[,bash]
+----
+CFLAGS="-I/usr/local/cuda/include -I/usr/local/cuda/lib64" \
+LDFLAGS="-L/usr/local/cuda/lib64" \
+./configure --enable-cuda --enable-libcufile
+----
+
+You should see this in your `./configure` output:
+
+[,console]
+----
+cuda                          yes
+libcufile                     yes
+----
+
+Compile `fio`:
+
+[,bash]
+----
+make
+----
+
+Using a FIO jobfile with libcufile as its engine, we can get read and write
+throughput values:
+
+[,console]
+----
+# Example libcufile job, using cufile I/O
+#
+# Required environment variables:
+#     GPU_DEV_IDS : refer to option 'gpu_dev_ids'
+#     FIO_DIR     : 'directory'. This job uses cuda_io=cufile, so path(s) must
+#                   point to GPUDirect Storage filesystem(s)
+#
+
+[global]
+ioengine=libcufile
+directory=/e1000/ccarlson/fio
+gpu_dev_ids=0:1:2:3:4:5:6:7
+cuda_io=cufile
+# 'direct' must be 1 when using cuda_io=cufile
+direct=1
+# Performance is negatively affected if 'bs' is not a multiple of 4k.
+# Refer to GDS cuFile documentation.
+bs=16M
+size=4G
+numjobs=16
+# cudaMalloc fails if too many processes attach to the GPU, use threads.
+thread
+
+[write]
+rw=write
+
+[read]
+rw=read
+----

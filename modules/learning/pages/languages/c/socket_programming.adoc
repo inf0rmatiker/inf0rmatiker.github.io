@@ -1,0 +1,146 @@
+= C Socket Programming
+
+:showtitle:
+:toc: auto
+
+== Needed Includes
+
+* `<stdio.h>`: Contains declarations for most I/O and `printf()` and `scanf()` are a part of this.
+* `<sys/types.h>`: Contains definitions of a number of data types.
+* `<sys/socket.h>`: Contains socket-related definitions, e.g. `sockaddr`, `bind()`, `listen()`, `accept()`
+* `<netin/in.h>`: Contains constants and structures needed for internet-related domain addresses, e.g. `sockaddr_in`
+* `<stdlib.h>`: Defines variables and macros for performing general functions.
+** Example: `int atoi(const char* str)` which converts a string (ascii const char *) to int.
+
+== Socket Client-Server Model
+
+https://www.keil.com/pack/doc/mw6/Network/html/using_network_sockets_bsd.html[Using BSD Network Sockets]
+
+image::docs-site:learning:languages/c/socket_client_server_model.png[Sockets Model]
+
+From the above link:
+
+> The BSD server creates a socket, uses `bind` to attach that socket to a port, and configures it as a listening socket. This allows the server to receive incoming connection requests. Afterwards, `accept` is called, which will block the socket, until an incoming connection request is received. When `accept` returns, the `SOCKADDR` structure will have been filled out with the originating IP Address and port of the incoming connection. Then, `accept` creates a new socket, which is then used to receive data until the connection is closed by the other side.
+
+https://man7.org/linux/man-pages/man2/socket.2.html[`int socket(int domain, int type, int protocol);`]
+
+`socket()` creates an endpoint for communication and returns a file
+descriptor that refers to that endpoint.  The file descriptor
+returned by a successful call will be the lowest-numbered file
+descriptor not currently open for the process.
+
+* `domain`: The domain argument specifies a communication domain;
+this selects the protocol family which will be used for communication.
+** Here we'll be using `AF_INET`, which is the IPv4 Internet protocol.
+* `type`: Specifies the communication semantics.
+** Here we'll be using `SOCK_STREAM` for a TCP stream.
+* `protocol`: specifies a particular protocol to be used with the socket.
+Normally only a single protocol exists to support a
+particular socket type within a given protocol family, in which
+case protocol can be specified as `0`.
+** Here we'll be using `0`.
+
+https://man7.org/linux/man-pages/man2/bind.2.html[`int bind(int sockfd, const struct sockaddr *addr,
+                socklen_t addrlen);`]
+
+When a socket is created with `socket()`, it exists in a name
+space (address family) but has no address assigned to it. `bind()`
+assigns the address specified by `addr` to the socket referred to
+by the file descriptor `sockfd`. `addrlen` specifies the size, in
+bytes, of the address structure pointed to by `addr`.
+Traditionally, this operation is called "assigning a name to a
+socket".
+
+https://man7.org/linux/man-pages/man3/sockaddr.3type.html[`sockaddr_in`]
+
+Describes an IPv4 Internet domain socket address.  The
+`sin_port` and `sin_addr` members are stored in network byte
+order.
+
+.Definition
+[,c]
+----
+struct sockaddr_in {
+           sa_family_t     sin_family;     /* AF_INET */
+           in_port_t       sin_port;       /* Port number */
+           struct in_addr  sin_addr;       /* IPv4 address */
+       };
+----
+
+See more information about `sockaddr_in` and `in_addr` here:
+https://www.gta.ufrj.br/ensino/eel878/sockets/sockaddr_inman.html
+
+https://man7.org/linux/man-pages/man2/listen.2.html[`int listen(int sockfd, int backlog);`]
+
+`listen()` marks the socket referred to by `sockfd` as a passive
+socket, that is, as a socket that will be used to accept incoming
+connection requests using https://man7.org/linux/man-pages/man2/accept.2.html[`accept(2)`].
+
+
+https://man7.org/linux/man-pages/man2/accept.2.html[`int accept(int sockfd, struct sockaddr *_Nullable restrict addr,
+                  socklen_t *_Nullable restrict addrlen);`]
+
+The `accept()` system call is used with connection-based socket
+types (`SOCK_STREAM`, `SOCK_SEQPACKET`).  It extracts the first
+connection request on the queue of pending connections for the
+listening socket, `sockfd`, creates a new connected socket, and
+returns a new file descriptor referring to that socket.  The
+newly created socket is not in the listening state.  The original
+socket `sockfd` is unaffected by this call.
+
+https://man7.org/linux/man-pages/man2/read.2.html[`ssize_t read(int fd, void buf\[.count\], size_t count);`]
+
+`read()` attempts to read up to `count` bytes from file descriptor `fd`
+into the buffer starting at `buf`.
+
+Finally, we'll need to clean up any file descriptors we opened for sockets.
+
+https://man7.org/linux/man-pages/man2/close.2.html[`int close(int fd);`]
+
+`close()` closes a file descriptor, so that it no longer refers to
+any file and may be reused.  Any record locks (see
+https://man7.org/linux/man-pages/man2/fcntl.2.html[`fcntl(2)`]) held
+on the file it was associated with, and owned by the process, are
+removed (regardless of the file descriptor that was used to
+obtain the lock).
+
+If `fd` is the last file descriptor referring to the underlying
+open file description (see
+https://man7.org/linux/man-pages/man2/open.2.html[`open(2)`]),
+the resources associated
+with the open file description are freed; if the file descriptor
+was the last reference to a file which has been removed using
+https://man7.org/linux/man-pages/man2/unlink.2.html[`unlink(2)`],
+the file is deleted.
+
+https://man7.org/linux/man-pages/man3/getaddrinfo.3.html[`int getaddrinfo()`]
+
+Given `node` and `service`, which identify an Internet host and a
+service, `getaddrinfo()` returns one or more `addrinfo` structures,
+each of which contains an Internet address that can be specified
+in a call to https://man7.org/linux/man-pages/man2/bind.2.html[`bind(2)`]
+or https://man7.org/linux/man-pages/man2/connect.2.html[`connect(2)`].
+The `getaddrinfo()` function combines the functionality provided by the 
+https://man7.org/linux/man-pages/man3/gethostbyname.3.html[`gethostbyname(3)`]
+and https://man7.org/linux/man-pages/man3/getservbyname.3.html[`getservbyname(3)`] 
+functions into a single interface, but unlike the latter functions, 
+`getaddrinfo()` is reentrant and allows programs to eliminate 
+IPv4-versus-IPv6 dependencies.
+
+.Definition
+[,c]
+----
+int getaddrinfo(const char *restrict node,
+                const char *restrict service,
+                const struct addrinfo *restrict hints,
+                struct addrinfo **restrict res);
+----
+
+https://man7.org/linux/man-pages/man3/inet_ntop.3.html[`const char *inet_ntop(int af, const void *restrict src,
+                             char dst[restrict .size], socklen_t size);`]
+
+This function converts the network address structure `src` in the
+`af` address family into a character string.  The resulting string
+is copied to the buffer pointed to by `dst`, which must be a non-
+null pointer.  The caller specifies the number of bytes available
+in this buffer in the argument `size`.

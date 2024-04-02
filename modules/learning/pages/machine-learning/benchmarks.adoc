@@ -382,62 +382,6 @@ Example output for multiple nodes:
 
 == GPU Direct Storage (GDS)
 
-=== Prerequisites
-
-To use NVIDIA CUDA on your system, you will need the following installed:
-CUDA Toolkit (available at https://developer.nvidia.com/cuda-downloads)
-
-https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#install-prereqs[Install Prerequisites]
-
-=== Installation
-
-* https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html[CUDA Installation]
-* https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#gds-installing[GDS Installation]
-* https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#install-gpudirect-storage[GDS Installation via CUDA]
-
-It's easiest to just install the CUDA toolkit and drivers, along with `nvidia-fs` via `apt` which includes GDS.
-
-[,bash]
-----
-#!/bin/bash
-
-apt-get install \
-	cuda-drivers-535="535.104.05-1" \
-	cuda-drivers-fabricmanager-535="535.104.05-1" \
-	cuda-drivers-fabricmanager="535.104.05-1" \
-        cuda-toolkit-12-2-config-common="12.2.140-1" \
-        cuda-toolkit-12-config-common="12.2.140-1" \
-        cuda-toolkit-config-common="12.2.140-1" \
-	libnvidia-cfg1-535="535.104.05-0ubuntu1" \
-	libnvidia-common-535="535.104.05-0ubuntu1" \
-	libnvidia-compute-535="535.104.05-0ubuntu1" \
-	libnvidia-container-tools="1.14.1-1" \
-	libnvidia-container1="1.14.1-1" \
-	libnvidia-decode-535="535.104.05-0ubuntu1" \
-	libnvidia-encode-535="535.104.05-0ubuntu1" \
-	libnvidia-extra-535="535.104.05-0ubuntu1" \
-	libnvidia-fbc1-535="535.104.05-0ubuntu1" \
-	libnvidia-gl-535="535.104.05-0ubuntu1" \
-	nvidia-compute-utils-535="535.104.05-0ubuntu1" \
-	nvidia-container-toolkit-base="1.14.1-1" \
-	nvidia-container-toolkit="1.14.1-1" \
-	nvidia-dkms-535="535.104.05-0ubuntu1" \
-	nvidia-docker2="2.13.0-1" \
-	nvidia-driver-535="535.104.05-0ubuntu1" \
-	nvidia-fabricmanager-535="535.104.05-1" \
-	nvidia-fs-dkms="2.17.5-1" \
-	nvidia-fs="2.17.5-1" \
-	nvidia-gds-12-2="12.2.2-1" \
-	nvidia-gds="12.2.2-1" \
-	nvidia-kernel-common-535="535.104.05-0ubuntu1" \
-	nvidia-kernel-source-535="535.104.05-0ubuntu1" \
-	nvidia-modprobe="535.104.05-0ubuntu1" \
-	nvidia-prime="0.8.17.1" \
-	nvidia-settings="535.104.05-0ubuntu1" \
-	nvidia-utils-535="535.104.05-0ubuntu1" \
-	xserver-xorg-video-nvidia-535="535.104.05-0ubuntu1"
-----
-
 You can verify the installation by running
 
 [,bash]
@@ -812,4 +756,63 @@ tree $POOL_DIR
 
 # Run gdsio directly
 gdsio -I 1 -i 1024K -s 256M -p -x 0 -d 0 -w 256 -D /mnt/cstor1/ccarlson/flash/$(hostname)/0
+----
+
+==== `fio`
+
+Configure `fio` with CUDA/libcufile support:
+
+[,bash]
+----
+CFLAGS="-I/usr/local/cuda/include -I/usr/local/cuda/lib64" LDFLAGS="-L/usr/local/cuda/lib64" ./configure --enable-cuda --enable-libcufile
+----
+
+You should see this in your `./configure` output:
+
+[,console]
+----
+cuda                          yes
+libcufile                     yes
+----
+
+Compile `fio`:
+
+[,bash]
+----
+make
+----
+
+Using a FIO jobfile with libcufile as its engine, we can get read and write
+throughput values:
+
+[,console]
+----
+# Example libcufile job, using cufile I/O
+#
+# Required environment variables:
+#     GPU_DEV_IDS : refer to option 'gpu_dev_ids'
+#     FIO_DIR     : 'directory'. This job uses cuda_io=cufile, so path(s) must
+#                   point to GPUDirect Storage filesystem(s)
+#
+
+[global]
+ioengine=libcufile
+directory=/e1000/ccarlson/fio
+gpu_dev_ids=0:1:2:3:4:5:6:7
+cuda_io=cufile
+# 'direct' must be 1 when using cuda_io=cufile
+direct=1
+# Performance is negatively affected if 'bs' is not a multiple of 4k.
+# Refer to GDS cuFile documentation.
+bs=16M
+size=4G
+numjobs=16
+# cudaMalloc fails if too many processes attach to the GPU, use threads.
+thread
+
+[write]
+rw=write
+
+[read]
+rw=read
 ----

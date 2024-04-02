@@ -32,9 +32,9 @@ Using the [Makefile](./Makefile):
      ```console
      ➜  inf0rmatiker.github.io git:(master) ✗ make module
      scripts/make_module.sh
-     Module name: 
+     Module name:
      My Module
-     Module category (i.e. learning, blog): 
+     Module category (i.e. learning, blog):
      learning
 
      Created structure in modules/learning/pages/my-module:
@@ -44,7 +44,7 @@ Using the [Makefile](./Makefile):
      1 directory, 1 file
 
      Created new entry in modules/learning/partials/nav.adoc
- 
+
      * My Module
      ** xref:docs-site:learning:my-module/my-module.adoc[My Module]
      ```

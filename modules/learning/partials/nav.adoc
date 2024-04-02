@@ -58,6 +58,8 @@
 ** xref:docs-site:learning:infiniband/monitoring.adoc[Fabric Monitoring]
 
 * Languages
+** C
+*** xref:docs-site:learning:languages/c/socket_programming.adoc[Socket Programming]
 ** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]
 *** xref:docs-site:learning:languages/cpp/arrays.adoc[Arrays]
 *** xref:docs-site:learning:languages/cpp/branch_control.adoc[Branch Control]
@@ -73,6 +75,7 @@
 *** xref:docs-site:learning:languages/cpp/structures.adoc[Stuctures]
 *** xref:docs-site:learning:languages/cpp/types.adoc[Types]
 *** xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]
+** xref:docs-site:learning:languages/go/go.adoc[Go]
 
 * Slurm
 ** xref:docs-site:learning:slurm/slurm.adoc[Slurm]

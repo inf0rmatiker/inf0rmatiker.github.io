@@ -253,6 +253,15 @@
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
+    <span class="nav-text">C</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../languages/c/socket_programming.html">Socket Programming</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <a class="nav-link" href="../languages/cpp/cpp.html">C++</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
@@ -298,6 +307,9 @@
     <a class="nav-link" href="../languages/cpp/vectors.html">Vectors</a>
   </li>
 </ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../languages/go/go.html">Go</a>
   </li>
 </ul>
   </li>
@@ -905,75 +917,6 @@ We have to include the <code>eth0</code> interface for MPI to communicate over, 
 <div class="sect1">
 <h2 id="_gpu_direct_storage_gds"><a class="anchor" href="#_gpu_direct_storage_gds"></a>GPU Direct Storage (GDS)</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
-<div class="paragraph">
-<p>To use NVIDIA CUDA on your system, you will need the following installed:
-CUDA Toolkit (available at <a href="https://developer.nvidia.com/cuda-downloads" class="bare">https://developer.nvidia.com/cuda-downloads</a>)</p>
-</div>
-<div class="paragraph">
-<p><a href="https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#install-prereqs">Install Prerequisites</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_installation_2"><a class="anchor" href="#_installation_2"></a>Installation</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html">CUDA Installation</a></p>
-</li>
-<li>
-<p><a href="https://docs.nvidia.com/gpudirect-storage/troubleshooting-guide/index.html#gds-installing">GDS Installation</a></p>
-</li>
-<li>
-<p><a href="https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#install-gpudirect-storage">GDS Installation via CUDA</a></p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>It&#8217;s easiest to just install the CUDA toolkit and drivers, along with <code>nvidia-fs</code> via <code>apt</code> which includes GDS.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
-
-apt-get install \
-	cuda-drivers-535="535.104.05-1" \
-	cuda-drivers-fabricmanager-535="535.104.05-1" \
-	cuda-drivers-fabricmanager="535.104.05-1" \
-        cuda-toolkit-12-2-config-common="12.2.140-1" \
-        cuda-toolkit-12-config-common="12.2.140-1" \
-        cuda-toolkit-config-common="12.2.140-1" \
-	libnvidia-cfg1-535="535.104.05-0ubuntu1" \
-	libnvidia-common-535="535.104.05-0ubuntu1" \
-	libnvidia-compute-535="535.104.05-0ubuntu1" \
-	libnvidia-container-tools="1.14.1-1" \
-	libnvidia-container1="1.14.1-1" \
-	libnvidia-decode-535="535.104.05-0ubuntu1" \
-	libnvidia-encode-535="535.104.05-0ubuntu1" \
-	libnvidia-extra-535="535.104.05-0ubuntu1" \
-	libnvidia-fbc1-535="535.104.05-0ubuntu1" \
-	libnvidia-gl-535="535.104.05-0ubuntu1" \
-	nvidia-compute-utils-535="535.104.05-0ubuntu1" \
-	nvidia-container-toolkit-base="1.14.1-1" \
-	nvidia-container-toolkit="1.14.1-1" \
-	nvidia-dkms-535="535.104.05-0ubuntu1" \
-	nvidia-docker2="2.13.0-1" \
-	nvidia-driver-535="535.104.05-0ubuntu1" \
-	nvidia-fabricmanager-535="535.104.05-1" \
-	nvidia-fs-dkms="2.17.5-1" \
-	nvidia-fs="2.17.5-1" \
-	nvidia-gds-12-2="12.2.2-1" \
-	nvidia-gds="12.2.2-1" \
-	nvidia-kernel-common-535="535.104.05-0ubuntu1" \
-	nvidia-kernel-source-535="535.104.05-0ubuntu1" \
-	nvidia-modprobe="535.104.05-0ubuntu1" \
-	nvidia-prime="0.8.17.1" \
-	nvidia-settings="535.104.05-0ubuntu1" \
-	nvidia-utils-535="535.104.05-0ubuntu1" \
-	xserver-xorg-video-nvidia-535="535.104.05-0ubuntu1"</code></pre>
-</div>
-</div>
 <div class="paragraph">
 <p>You can verify the installation by running</p>
 </div>
@@ -1056,7 +999,6 @@ apt-get install \
  ==============
  IOMMU: disabled
  Platform verification succeeded</code></pre>
-</div>
 </div>
 </div>
 <div class="sect2">
@@ -1356,6 +1298,70 @@ tree $POOL_DIR
 
 # Run gdsio directly
 gdsio -I 1 -i 1024K -s 256M -p -x 0 -d 0 -w 256 -D /mnt/cstor1/ccarlson/flash/$(hostname)/0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fio"><a class="anchor" href="#_fio"></a><code>fio</code></h4>
+<div class="paragraph">
+<p>Configure <code>fio</code> with CUDA/libcufile support:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CFLAGS="-I/usr/local/cuda/include -I/usr/local/cuda/lib64" LDFLAGS="-L/usr/local/cuda/lib64" ./configure --enable-cuda --enable-libcufile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see this in your <code>./configure</code> output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cuda                          yes
+libcufile                     yes</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compile <code>fio</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">make</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using a FIO jobfile with libcufile as its engine, we can get read and write
+throughput values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># Example libcufile job, using cufile I/O
+#
+# Required environment variables:
+#     GPU_DEV_IDS : refer to option 'gpu_dev_ids'
+#     FIO_DIR     : 'directory'. This job uses cuda_io=cufile, so path(s) must
+#                   point to GPUDirect Storage filesystem(s)
+#
+
+[global]
+ioengine=libcufile
+directory=/e1000/ccarlson/fio
+gpu_dev_ids=0:1:2:3:4:5:6:7
+cuda_io=cufile
+# 'direct' must be 1 when using cuda_io=cufile
+direct=1
+# Performance is negatively affected if 'bs' is not a multiple of 4k.
+# Refer to GDS cuFile documentation.
+bs=16M
+size=4G
+numjobs=16
+# cudaMalloc fails if too many processes attach to the GPU, use threads.
+thread
+
+[write]
+rw=write
+
+[read]
+rw=read</code></pre>
 </div>
 </div>
 </div>

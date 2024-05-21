@@ -16,11 +16,13 @@
 
 https://www.keil.com/pack/doc/mw6/Network/html/using_network_sockets_bsd.html[Using BSD Network Sockets]
 
-image::docs-site:learning:languages/c/socket_client_server_model.png[Sockets Model]
+image::docs-site:learning:linux/networking/socket_client_server_model.png[Sockets Model]
 
 From the above link:
 
 > The BSD server creates a socket, uses `bind` to attach that socket to a port, and configures it as a listening socket. This allows the server to receive incoming connection requests. Afterwards, `accept` is called, which will block the socket, until an incoming connection request is received. When `accept` returns, the `SOCKADDR` structure will have been filled out with the originating IP Address and port of the incoming connection. Then, `accept` creates a new socket, which is then used to receive data until the connection is closed by the other side.
+
+=== Server Setup
 
 https://man7.org/linux/man-pages/man2/socket.2.html[`int socket(int domain, int type, int protocol);`]
 
@@ -93,6 +95,8 @@ https://man7.org/linux/man-pages/man2/read.2.html[`ssize_t read(int fd, void buf
 `read()` attempts to read up to `count` bytes from file descriptor `fd`
 into the buffer starting at `buf`.
 
+=== Server Teardown
+
 Finally, we'll need to clean up any file descriptors we opened for sockets.
 
 https://man7.org/linux/man-pages/man2/close.2.html[`int close(int fd);`]
@@ -112,6 +116,8 @@ with the open file description are freed; if the file descriptor
 was the last reference to a file which has been removed using
 https://man7.org/linux/man-pages/man2/unlink.2.html[`unlink(2)`],
 the file is deleted.
+
+=== Client Setup
 
 https://man7.org/linux/man-pages/man3/getaddrinfo.3.html[`int getaddrinfo()`]
 
@@ -144,3 +150,5 @@ This function converts the network address structure `src` in the
 is copied to the buffer pointed to by `dst`, which must be a non-
 null pointer.  The caller specifies the number of bytes available
 in this buffer in the argument `size`.
+
+

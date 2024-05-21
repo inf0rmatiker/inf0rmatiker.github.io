@@ -8,6 +8,7 @@
 * Lustre
 ** xref:docs-site:learning:lustre/benchmarks.adoc[Benchmarks]
 ** xref:docs-site:learning:lustre/compiling-lustre.adoc[Compiling Lustre]
+** xref:docs-site:learning:lustre/development.adoc[Development]
 ** xref:docs-site:learning:lustre/lustre-client.adoc[Lustre Client]
 ** xref:docs-site:learning:lustre/lustre-server.adoc[Lustre Server]
 ** xref:docs-site:learning:lustre/lustre-networking.adoc[Lustre Networking]
@@ -24,6 +25,8 @@
 *** xref:docs-site:learning:linux/networking/linux-networking.adoc[Linux]
 *** xref:docs-site:learning:linux/networking/mpi.adoc[MPI]
 *** xref:docs-site:learning:linux/networking/proxies.adoc[Proxies]
+*** xref:docs-site:learning:linux/networking/rdma.adoc[RDMA Programming]
+*** xref:docs-site:learning:linux/networking/socket_programming.adoc[Socket Programming]
 *** xref:docs-site:learning:linux/networking/ssh.adoc[SSH]
 ** Storage
 *** xref:docs-site:learning:linux/storage/benchmarks.adoc[Benchmarks]
@@ -31,6 +34,7 @@
 *** xref:docs-site:learning:linux/storage/drives.adoc[Drives]
 
 * Docker
+** xref:docs-site:learning:docker/multiarch-building.adoc[Multi-Architecture Builds]
 ** xref:docs-site:learning:docker/registry-proxy.adoc[Registry Proxy]
 
 * Asciinema
@@ -59,7 +63,6 @@
 
 * Languages
 ** C
-*** xref:docs-site:learning:languages/c/socket_programming.adoc[Socket Programming]
 ** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]
 *** xref:docs-site:learning:languages/cpp/arrays.adoc[Arrays]
 *** xref:docs-site:learning:languages/cpp/branch_control.adoc[Branch Control]

@@ -1,0 +1,340 @@
+= RDMA Programming Guide
+
+:toc: auto
+:showtitle:
+
+== RDMA Object Types
+
+=== Protection Domain
+
+`ibv_pd`: High-level container for other objects
+
+Contains the work queues, memory regions, etc. Ensures that work queues can only access memory regions residing
+in the same protection domain. Applies to both local and remote operations. An incoming request can only access
+memory that it's allowed to.
+
+=== Queue Pair
+
+`ibv_qp_ex`: Encapsulates a queue for posting receive work requests and a queue for posting send work requests
+
+NOTE:
+Due to evolution of this stack, `_ex` version is the extended, more modern variant of old `ibv_qp` API.
+
+Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.
+
+=== Completion Queue
+
+`ibv_cq_ex`: Queue that receives completion notifications for send and receive work requests; may be attached to
+one or more work queues
+
+Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to the same CQ if you want.
+
+=== Memory Region
+
+`ibv_mr`: Represents a memory buffer that can be targeted by work requests; has a local key (`L_Key`) for use
+in local work requests and a remote key (`R_Key`) that can be shared with a peer for use in remote one-sided
+operations
+
+Simplest form of memory registration. When registered, you can decide whether to allow remote access, like reads
+and writes.
+
+When you do a registration, you get some keys back, one for local work, and another for remote work.
+If remote key, you'll have to get this `R_Key` to the remote side so it can refer to this memory.
+
+== Exchanging Data via Reliable Connected (RC) QP
+
+Key steps:
+
+1. Register buffers that will be used for communication
+2. Create and connect a QP via `librdmacm`
+3. Post receive work requests
+4. Post send work requests
+5. Poll for completion of work requests
+
+See examples in https://github.com/linux-rdma/rdma-core
+
+Examples: https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples
+
+== Examples
+
+=== Types
+
+`rdma_addrinfo`
+
+https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182
+
+[,c]
+----
+struct rdma_addrinfo {
+	int			ai_flags;
+	int			ai_family;
+	int			ai_qp_type;
+	int			ai_port_space;
+	socklen_t		ai_src_len;
+	socklen_t		ai_dst_len;
+	struct sockaddr		*ai_src_addr;
+	struct sockaddr		*ai_dst_addr;
+	char			*ai_src_canonname;
+	char			*ai_dst_canonname;
+	size_t			ai_route_len;
+	void			*ai_route;
+	size_t			ai_connect_len;
+	void			*ai_connect;
+	struct rdma_addrinfo	*ai_next;
+};
+----
+
+`rdma_event_channel`
+
+https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html
+
+[,c]
+----
+struct rdma_event_channel {
+	int fd;
+};
+----
+
+`rdma_cm_id`
+
+[,c]
+----
+struct rdma_cm_id {
+	struct ibv_context	*verbs;
+	struct rdma_event_channel *channel;
+	void			*context;
+	struct ibv_qp		*qp;
+	struct rdma_route	 route;
+	enum rdma_port_space	 ps;
+	uint8_t			 port_num;
+	struct rdma_cm_event	*event;
+	struct ibv_comp_channel *send_cq_channel;
+	struct ibv_cq		*send_cq;
+	struct ibv_comp_channel *recv_cq_channel;
+	struct ibv_cq		*recv_cq;
+	struct ibv_srq		*srq;
+	struct ibv_pd		*pd;
+	enum ibv_qp_type	qp_type;
+};
+----
+
+`rdma_cm_event`
+
+[,c]
+----
+struct rdma_cm_event {
+	struct rdma_cm_id	*id;
+	struct rdma_cm_id	*listen_id;
+	enum rdma_cm_event_type	 event;
+	int			 status;
+	union {
+		struct rdma_conn_param conn;
+		struct rdma_ud_param   ud;
+	} param;
+};
+----
+
+=== Server Setup
+
+*Create a Communication Manager (CM) event channel*:
+
+https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html
+
+[,c]
+----
+struct rdma_event_channel * rdma_create_event_channel(void);
+----
+
+Event channels are used to direct all events on an `rdma_cm_id`.
+For many clients, a single event channel may be sufficient,
+however, when managing a large number of connections or `cm_id`'s,
+users may find it useful to direct events for different `cm_id`'s
+to different channels for processing.
+
+All created event channels must be destroyed by calling
+`rdma_destroy_event_channel`.  Users should call `rdma_get_cm_event`
+to retrieve events on an event channel.
+
+Each event channel is mapped to a file descriptor.  The
+associated file descriptor can be used and manipulated like any
+other `fd` to change its behavior.  Users may make the `fd` non-
+blocking, poll or select the `fd`, etc.
+
+*Create RDMA connection id*:
+
+https://linux.die.net/man/3/rdma_create_id
+
+[,c]
+----
+int rdma_create_id(struct rdma_event_channel *channel,
+		   struct rdma_cm_id **id,
+		   void *context,
+		   enum rdma_port_space ps);
+----
+
+`rdma_cm_id` is conceptually equivalent to a socket for RDMA communication.
+The difference is that RDMA communication requires explicitly binding to a
+specified RDMA device before communication can occur, and most operations are
+asynchronous in nature. Asynchronous communication events on an `rdma_cm_id` are
+reported through the associated event channel. If the channel parameter is `NULL`,
+the `rdma_cm_id` will be placed into synchronous operation. While operating
+synchronously, calls that result in an event will block until the operation
+completes. The event will be returned to the user through the `rdma_cm_id`
+structure, and be available for access until another `rdma_cm` call is made.
+Users must release the `rdma_cm_id` by calling `rdma_destroy_id`.
+
+*Bind to an address*:
+
+https://man7.org/linux/man-pages/man3/rdma_bind_addr.3.html
+
+[,c]
+----
+int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr);
+----
+
+Associates a source address with an `rdma_cm_id`. The address may
+be wildcarded. If binding to a specific local address, the
+`rdma_cm_id` will also be bound to a local RDMA device.
+
+*Listen for CM events*:
+
+https://man7.org/linux/man-pages/man3/rdma_listen.3.html
+
+[,c]
+----
+int rdma_listen(struct rdma_cm_id *id, int backlog);
+----
+
+Initiates a listen for incoming connection requests or datagram
+service lookup.  The listen will be restricted to the locally
+bound source address.
+
+Users must have bound the `rdma_cm_id` to a local address by
+calling `rdma_bind_addr` before calling this routine.  If the
+`rdma_cm_id` is bound to a specific IP address, the listen will be
+restricted to that address and the associated RDMA device.  If
+the `rdma_cm_id` is bound to an RDMA port number only, the listen
+will occur across all RDMA devices.
+
+However, unlike a normal TCP listen, this is a non-blocking call.
+When a new client is connected, a new connection management (CM)
+event is generated on the RDMA CM event channel from where the
+listening id was created. Here we have only one channel, so it is easy.
+
+*Block for client connection event*:
+
+https://man7.org/linux/man-pages/man3/rdma_get_cm_event.3.html
+
+[,c]
+----
+int rdma_get_cm_event(struct rdma_event_channel *channel, struct rdma_cm_event **event);
+----
+
+Retrieves a communication event.  If no events are pending, by
+default, the call will block until an event is received.
+
+The default synchronous behavior of this routine can be changed
+by modifying the file descriptor associated with the given
+channel.  All events that are reported must be acknowledged by
+calling `rdma_ack_cm_event`.  Destruction of an `rdma_cm_id` will
+block until related events have been acknowledged.
+
+*Acknowledge CM event*:
+
+https://man7.org/linux/man-pages/man3/rdma_ack_cm_event.3.html
+
+[,c]
+----
+int rdma_ack_cm_event(struct rdma_cm_event *event);
+----
+
+All events which are allocated by `rdma_get_cm_event` must be
+released, there should be a one-to-one correspondence between
+successful gets and acks.  This call frees the event structure
+and any memory that it references.
+
+
+=== Server Teardown
+
+*Destroy CM id*:
+
+https://man7.org/linux/man-pages/man3/rdma_destroy_id.3.html
+
+Destroys the specified rdma_cm_id and cancels any outstanding
+asynchronous operation.
+
+[,c]
+----
+int rdma_destroy_id(struct rdma_cm_id *id);
+----
+
+*Destroy CM event channel*:
+
+https://man7.org/linux/man-pages/man3/rdma_destroy_event_channel.3.html
+
+[,c]
+----
+void rdma_destroy_event_channel(struct rdma_event_channel *channel);
+----
+
+=== Client Setup
+
+Open a Connection Manager (CM) event channel for asynchronous communication events:
+
+[,c]
+----
+struct rdma_event_channel *cm_event_channel = rdma_create_event_channel();
+----
+
+Create CM id to track communication information:
+
+[,c]
+----
+int ret = rdma_create_id(cm_event_channel, &cm_client_id, NULL, RDMA_PS_TCP);
+----
+
+Set up a `sockaddr_in` struct for the server's RDMA address information,
+and optionally one for the client's RDMA address info.
+Use these, cast to `struct sockaddr*`, as the src/dst fields to
+`rdma_resolve_addr`. If successful, the specified `rdma_cm_id` will be bound
+to a local device.
+
+[,c]
+----
+const char *client_host = "192.168.0.104";
+const char *server_host = "192.168.0.106";
+int server_port = 20021;
+
+struct sockaddr_in server_sockaddr;
+memset(&server_sockaddr, 0, sizeof(server_sockaddr));
+server_sockaddr.sin_family = AF_INET;
+server_sockaddr.sinaddr.s_addr = inet_addr(server_host);
+server_sockaddr.sin_port = htons(server_port);
+
+/* Optional: set up client sockaddr_in information */
+struct sockaddr_in client_sockaddr;
+memset(&client_sockaddr, 0, sizeof(client_sockaddr));
+client_sockaddr.sin_family = AF_INET;
+client_sockaddr.sinaddr.s_addr = inet_addr(client_host);
+
+int timeout_ms = 2000;
+ret = rdma_resolve_addr(cm_client_id,
+			(struct sockaddr*)&client_sockaddr,
+			(struct sockaddr*)&server_sockaddr,
+			timeout_ms);
+----
+
+https://man7.org/linux/man-pages/man3/rdma_resolve_addr.3.html
+
+Resolve destination and optional source addresses from IP
+addresses to an RDMA address.  If successful, the specified
+`rdma_cm_id` will be bound to a local device.
+
+[,c]
+----
+int rdma_resolve_addr (struct rdma_cm_id *id, struct sockaddr *src_addr,
+		       struct sockaddr *dst_addr, int timeout_ms);
+----
+
+=== Client Teardown
+

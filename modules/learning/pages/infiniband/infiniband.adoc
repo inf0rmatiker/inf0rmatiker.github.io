@@ -8,6 +8,8 @@ Details and notes for IB management, commands, notes, configuration, and install
 == Learning
 
 * https://en.wikipedia.org/wiki/InfiniBand[Wikipedia - InfiniBand]
+* https://network.nvidia.com/pdf/whitepapers/IB_Intro_WP_190.pdf[Nvidia - Intro to InfiniBand Whitepaper]
+* https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma-aware+programming+overview[Nvidia - RDMA-Aware Programming Overview]
 * https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/ch-configure_infiniband_and_rdma_networks[RedHat - Understanding InfiniBand and RDMA technologies]
 * https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/networking_guide/sec-infiniband_and_rdma_related_software_packages[RedHat - InfiniBand and RMDA related software packages]
 * https://people.redhat.com/dledford/infiniband_get_started.html[RedHat - Getting Started with InfiniBand]

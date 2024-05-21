@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RDMA Programming Guide :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/rdma.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Documentation</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="../../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/development.html">Development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="rdma.html">RDMA Programming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="socket_programming.html">Socket Programming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/multiarch-building.html">Multi-Architecture Builds</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Asciinema</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">BMC Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <span class="nav-text">C</span>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../languages/cpp/cpp.html">C++</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/arrays.html">Arrays</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/branch_control.html">Branch Control</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/classes.html">Classes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/compiling.html">Compiling and Executing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/development_environment.html">Development Environment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/error_handling.html">Error Handling</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/functions.html">Functions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/input_streams.html">Input Streams</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/macros.html">Macros</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/pointers.html">Pointers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/structures.html">Stuctures</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/types.html">Types</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/vectors.html">Vectors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../languages/go/go.html">Go</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Slurm</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../slurm/slurm.html">Slurm</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GPUs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/gds.html">GPUDirect Storage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/numa.html">NUMA</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="../../../index.html">Documentation</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Documentation</a></li>
+    <li>Learning</li>
+    <li>Linux</li>
+    <li>Networking</li>
+    <li><a href="rdma.html">RDMA Programming</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">RDMA Programming Guide</h1>
+<div class="sect1">
+<h2 id="_rdma_object_types"><a class="anchor" href="#_rdma_object_types"></a>RDMA Object Types</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_protection_domain"><a class="anchor" href="#_protection_domain"></a>Protection Domain</h3>
+<div class="paragraph">
+<p><code>ibv_pd</code>: High-level container for other objects</p>
+</div>
+<div class="paragraph">
+<p>Contains the work queues, memory regions, etc. Ensures that work queues can only access memory regions residing
+in the same protection domain. Applies to both local and remote operations. An incoming request can only access
+memory that it&#8217;s allowed to.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_queue_pair"><a class="anchor" href="#_queue_pair"></a>Queue Pair</h3>
+<div class="paragraph">
+<p><code>ibv_qp_ex</code>: Encapsulates a queue for posting receive work requests and a queue for posting send work requests</p>
+</div>
+<div class="paragraph">
+<p>NOTE:
+Due to evolution of this stack, <code>_ex</code> version is the extended, more modern variant of old <code>ibv_qp</code> API.</p>
+</div>
+<div class="paragraph">
+<p>Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_completion_queue"><a class="anchor" href="#_completion_queue"></a>Completion Queue</h3>
+<div class="paragraph">
+<p><code>ibv_cq_ex</code>: Queue that receives completion notifications for send and receive work requests; may be attached to
+one or more work queues</p>
+</div>
+<div class="paragraph">
+<p>Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to the same CQ if you want.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_memory_region"><a class="anchor" href="#_memory_region"></a>Memory Region</h3>
+<div class="paragraph">
+<p><code>ibv_mr</code>: Represents a memory buffer that can be targeted by work requests; has a local key (<code>L_Key</code>) for use
+in local work requests and a remote key (<code>R_Key</code>) that can be shared with a peer for use in remote one-sided
+operations</p>
+</div>
+<div class="paragraph">
+<p>Simplest form of memory registration. When registered, you can decide whether to allow remote access, like reads
+and writes.</p>
+</div>
+<div class="paragraph">
+<p>When you do a registration, you get some keys back, one for local work, and another for remote work.
+If remote key, you&#8217;ll have to get this <code>R_Key</code> to the remote side so it can refer to this memory.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exchanging_data_via_reliable_connected_rc_qp"><a class="anchor" href="#_exchanging_data_via_reliable_connected_rc_qp"></a>Exchanging Data via Reliable Connected (RC) QP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Key steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Register buffers that will be used for communication</p>
+</li>
+<li>
+<p>Create and connect a QP via <code>librdmacm</code></p>
+</li>
+<li>
+<p>Post receive work requests</p>
+</li>
+<li>
+<p>Post send work requests</p>
+</li>
+<li>
+<p>Poll for completion of work requests</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>See examples in <a href="https://github.com/linux-rdma/rdma-core" class="bare">https://github.com/linux-rdma/rdma-core</a></p>
+</div>
+<div class="paragraph">
+<p>Examples: <a href="https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples" class="bare">https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_types"><a class="anchor" href="#_types"></a>Types</h3>
+<div class="paragraph">
+<p><code>rdma_addrinfo</code></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182" class="bare">https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_addrinfo {
+	int			ai_flags;
+	int			ai_family;
+	int			ai_qp_type;
+	int			ai_port_space;
+	socklen_t		ai_src_len;
+	socklen_t		ai_dst_len;
+	struct sockaddr		*ai_src_addr;
+	struct sockaddr		*ai_dst_addr;
+	char			*ai_src_canonname;
+	char			*ai_dst_canonname;
+	size_t			ai_route_len;
+	void			*ai_route;
+	size_t			ai_connect_len;
+	void			*ai_connect;
+	struct rdma_addrinfo	*ai_next;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rdma_event_channel</code></p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel {
+	int fd;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rdma_cm_id</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_id {
+	struct ibv_context	*verbs;
+	struct rdma_event_channel *channel;
+	void			*context;
+	struct ibv_qp		*qp;
+	struct rdma_route	 route;
+	enum rdma_port_space	 ps;
+	uint8_t			 port_num;
+	struct rdma_cm_event	*event;
+	struct ibv_comp_channel *send_cq_channel;
+	struct ibv_cq		*send_cq;
+	struct ibv_comp_channel *recv_cq_channel;
+	struct ibv_cq		*recv_cq;
+	struct ibv_srq		*srq;
+	struct ibv_pd		*pd;
+	enum ibv_qp_type	qp_type;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rdma_cm_event</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_event {
+	struct rdma_cm_id	*id;
+	struct rdma_cm_id	*listen_id;
+	enum rdma_cm_event_type	 event;
+	int			 status;
+	union {
+		struct rdma_conn_param conn;
+		struct rdma_ud_param   ud;
+	} param;
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_setup"><a class="anchor" href="#_server_setup"></a>Server Setup</h3>
+<div class="paragraph">
+<p><strong>Create a Communication Manager (CM) event channel</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel * rdma_create_event_channel(void);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Event channels are used to direct all events on an <code>rdma_cm_id</code>.
+For many clients, a single event channel may be sufficient,
+however, when managing a large number of connections or `cm_id&#8217;s,
+users may find it useful to direct events for different `cm_id&#8217;s
+to different channels for processing.</p>
+</div>
+<div class="paragraph">
+<p>All created event channels must be destroyed by calling
+<code>rdma_destroy_event_channel</code>.  Users should call <code>rdma_get_cm_event</code>
+to retrieve events on an event channel.</p>
+</div>
+<div class="paragraph">
+<p>Each event channel is mapped to a file descriptor.  The
+associated file descriptor can be used and manipulated like any
+other <code>fd</code> to change its behavior.  Users may make the <code>fd</code> non-
+blocking, poll or select the <code>fd</code>, etc.</p>
+</div>
+<div class="paragraph">
+<p><strong>Create RDMA connection id</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://linux.die.net/man/3/rdma_create_id" class="bare">https://linux.die.net/man/3/rdma_create_id</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_create_id(struct rdma_event_channel *channel,
+		   struct rdma_cm_id **id,
+		   void *context,
+		   enum rdma_port_space ps);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>rdma_cm_id</code> is conceptually equivalent to a socket for RDMA communication.
+The difference is that RDMA communication requires explicitly binding to a
+specified RDMA device before communication can occur, and most operations are
+asynchronous in nature. Asynchronous communication events on an <code>rdma_cm_id</code> are
+reported through the associated event channel. If the channel parameter is <code>NULL</code>,
+the <code>rdma_cm_id</code> will be placed into synchronous operation. While operating
+synchronously, calls that result in an event will block until the operation
+completes. The event will be returned to the user through the <code>rdma_cm_id</code>
+structure, and be available for access until another <code>rdma_cm</code> call is made.
+Users must release the <code>rdma_cm_id</code> by calling <code>rdma_destroy_id</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Bind to an address</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_bind_addr.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_bind_addr.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_bind_addr(struct rdma_cm_id *id, struct sockaddr *addr);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Associates a source address with an <code>rdma_cm_id</code>. The address may
+be wildcarded. If binding to a specific local address, the
+<code>rdma_cm_id</code> will also be bound to a local RDMA device.</p>
+</div>
+<div class="paragraph">
+<p><strong>Listen for CM events</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_listen.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_listen.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_listen(struct rdma_cm_id *id, int backlog);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Initiates a listen for incoming connection requests or datagram
+service lookup.  The listen will be restricted to the locally
+bound source address.</p>
+</div>
+<div class="paragraph">
+<p>Users must have bound the <code>rdma_cm_id</code> to a local address by
+calling <code>rdma_bind_addr</code> before calling this routine.  If the
+<code>rdma_cm_id</code> is bound to a specific IP address, the listen will be
+restricted to that address and the associated RDMA device.  If
+the <code>rdma_cm_id</code> is bound to an RDMA port number only, the listen
+will occur across all RDMA devices.</p>
+</div>
+<div class="paragraph">
+<p>However, unlike a normal TCP listen, this is a non-blocking call.
+When a new client is connected, a new connection management (CM)
+event is generated on the RDMA CM event channel from where the
+listening id was created. Here we have only one channel, so it is easy.</p>
+</div>
+<div class="paragraph">
+<p><strong>Block for client connection event</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_get_cm_event.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_get_cm_event.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_get_cm_event(struct rdma_event_channel *channel, struct rdma_cm_event **event);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Retrieves a communication event.  If no events are pending, by
+default, the call will block until an event is received.</p>
+</div>
+<div class="paragraph">
+<p>The default synchronous behavior of this routine can be changed
+by modifying the file descriptor associated with the given
+channel.  All events that are reported must be acknowledged by
+calling <code>rdma_ack_cm_event</code>.  Destruction of an <code>rdma_cm_id</code> will
+block until related events have been acknowledged.</p>
+</div>
+<div class="paragraph">
+<p><strong>Acknowledge CM event</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_ack_cm_event.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_ack_cm_event.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_ack_cm_event(struct rdma_cm_event *event);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All events which are allocated by <code>rdma_get_cm_event</code> must be
+released, there should be a one-to-one correspondence between
+successful gets and acks.  This call frees the event structure
+and any memory that it references.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_server_teardown"><a class="anchor" href="#_server_teardown"></a>Server Teardown</h3>
+<div class="paragraph">
+<p><strong>Destroy CM id</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_destroy_id.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_destroy_id.3.html</a></p>
+</div>
+<div class="paragraph">
+<p>Destroys the specified rdma_cm_id and cancels any outstanding
+asynchronous operation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_destroy_id(struct rdma_cm_id *id);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Destroy CM event channel</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_destroy_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_destroy_event_channel.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">void rdma_destroy_event_channel(struct rdma_event_channel *channel);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_client_setup"><a class="anchor" href="#_client_setup"></a>Client Setup</h3>
+<div class="paragraph">
+<p>Open a Connection Manager (CM) event channel for asynchronous communication events:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel *cm_event_channel = rdma_create_event_channel();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create CM id to track communication information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int ret = rdma_create_id(cm_event_channel, &amp;cm_client_id, NULL, RDMA_PS_TCP);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set up a <code>sockaddr_in</code> struct for the server&#8217;s RDMA address information,
+and optionally one for the client&#8217;s RDMA address info.
+Use these, cast to <code>struct sockaddr*</code>, as the src/dst fields to
+<code>rdma_resolve_addr</code>. If successful, the specified <code>rdma_cm_id</code> will be bound
+to a local device.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">const char *client_host = "192.168.0.104";
+const char *server_host = "192.168.0.106";
+int server_port = 20021;
+
+struct sockaddr_in server_sockaddr;
+memset(&amp;server_sockaddr, 0, sizeof(server_sockaddr));
+server_sockaddr.sin_family = AF_INET;
+server_sockaddr.sinaddr.s_addr = inet_addr(server_host);
+server_sockaddr.sin_port = htons(server_port);
+
+/* Optional: set up client sockaddr_in information */
+struct sockaddr_in client_sockaddr;
+memset(&amp;client_sockaddr, 0, sizeof(client_sockaddr));
+client_sockaddr.sin_family = AF_INET;
+client_sockaddr.sinaddr.s_addr = inet_addr(client_host);
+
+int timeout_ms = 2000;
+ret = rdma_resolve_addr(cm_client_id,
+			(struct sockaddr*)&amp;client_sockaddr,
+			(struct sockaddr*)&amp;server_sockaddr,
+			timeout_ms);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_resolve_addr.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_resolve_addr.3.html</a></p>
+</div>
+<div class="paragraph">
+<p>Resolve destination and optional source addresses from IP
+addresses to an RDMA address.  If successful, the specified
+<code>rdma_cm_id</code> will be bound to a local device.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_resolve_addr (struct rdma_cm_id *id, struct sockaddr *src_addr,
+		       struct sockaddr *dst_addr, int timeout_ms);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_client_teardown"><a class="anchor" href="#_client_teardown"></a>Client Teardown</h3>
+
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

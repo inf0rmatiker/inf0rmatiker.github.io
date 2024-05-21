@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>C Socket Programming :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/languages/c/socket_programming.html">
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/socket_programming.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -96,6 +96,9 @@
     <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/development.html">Development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -115,37 +118,43 @@
     <span class="nav-text">Installs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/installs/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="../installs/rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+    <a class="nav-link" href="../installs/opensuse-install.html">OpenSUSE Linux Install</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/rpms.html">RPMs</a>
+    <a class="nav-link" href="../rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/tmux.html">Tmux</a>
+    <a class="nav-link" href="../tmux.html">Tmux</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../linux/user-management.html">User Management</a>
+    <a class="nav-link" href="../user-management.html">User Management</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/mpi.html">MPI</a>
+    <a class="nav-link" href="mpi.html">MPI</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/networking/ssh.html">SSH</a>
+    <a class="nav-link" href="rdma.html">RDMA Programming</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="4">
+    <a class="nav-link" href="socket_programming.html">Socket Programming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
   </li>
 </ul>
   </li>
@@ -154,13 +163,13 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../../linux/storage/drives.html">Drives</a>
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -170,6 +179,9 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Docker</span>
 <ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/multiarch-building.html">Multi-Architecture Builds</a>
+  </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
   </li>
@@ -252,64 +264,58 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <button class="nav-item-toggle"></button>
     <span class="nav-text">C</span>
-<ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="socket_programming.html">Socket Programming</a>
-  </li>
-</ul>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
-    <a class="nav-link" href="../cpp/cpp.html">C++</a>
+    <a class="nav-link" href="../../languages/cpp/cpp.html">C++</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/arrays.html">Arrays</a>
+    <a class="nav-link" href="../../languages/cpp/arrays.html">Arrays</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/branch_control.html">Branch Control</a>
+    <a class="nav-link" href="../../languages/cpp/branch_control.html">Branch Control</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/classes.html">Classes</a>
+    <a class="nav-link" href="../../languages/cpp/classes.html">Classes</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/compiling.html">Compiling and Executing</a>
+    <a class="nav-link" href="../../languages/cpp/compiling.html">Compiling and Executing</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/development_environment.html">Development Environment</a>
+    <a class="nav-link" href="../../languages/cpp/development_environment.html">Development Environment</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/error_handling.html">Error Handling</a>
+    <a class="nav-link" href="../../languages/cpp/error_handling.html">Error Handling</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/functions.html">Functions</a>
+    <a class="nav-link" href="../../languages/cpp/functions.html">Functions</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/input_streams.html">Input Streams</a>
+    <a class="nav-link" href="../../languages/cpp/input_streams.html">Input Streams</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/macros.html">Macros</a>
+    <a class="nav-link" href="../../languages/cpp/macros.html">Macros</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/pointers.html">Pointers</a>
+    <a class="nav-link" href="../../languages/cpp/pointers.html">Pointers</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/references.html">References</a>
+    <a class="nav-link" href="../../languages/cpp/references.html">References</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/structures.html">Stuctures</a>
+    <a class="nav-link" href="../../languages/cpp/structures.html">Stuctures</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/types.html">Types</a>
+    <a class="nav-link" href="../../languages/cpp/types.html">Types</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../cpp/vectors.html">Vectors</a>
+    <a class="nav-link" href="../../languages/cpp/vectors.html">Vectors</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../go/go.html">Go</a>
+    <a class="nav-link" href="../../languages/go/go.html">Go</a>
   </li>
 </ul>
   </li>
@@ -368,8 +374,8 @@
   <ul>
     <li><a href="../../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Languages</li>
-    <li>C</li>
+    <li>Linux</li>
+    <li>Networking</li>
     <li><a href="socket_programming.html">Socket Programming</a></li>
   </ul>
 </nav>
@@ -419,7 +425,7 @@
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../../_images/languages/c/socket_client_server_model.png" alt="Sockets Model">
+<img src="../../_images/linux/networking/socket_client_server_model.png" alt="Sockets Model">
 </div>
 </div>
 <div class="paragraph">
@@ -432,6 +438,8 @@
 </div>
 </blockquote>
 </div>
+<div class="sect2">
+<h3 id="_server_setup"><a class="anchor" href="#_server_setup"></a>Server Setup</h3>
 <div class="paragraph">
 <p><a href="https://man7.org/linux/man-pages/man2/socket.2.html"><code>int socket(int domain, int type, int protocol);</code></a></p>
 </div>
@@ -542,6 +550,9 @@ socket <code>sockfd</code> is unaffected by this call.</p>
 <p><code>read()</code> attempts to read up to <code>count</code> bytes from file descriptor <code>fd</code>
 into the buffer starting at <code>buf</code>.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_server_teardown"><a class="anchor" href="#_server_teardown"></a>Server Teardown</h3>
 <div class="paragraph">
 <p>Finally, we&#8217;ll need to clean up any file descriptors we opened for sockets.</p>
 </div>
@@ -566,6 +577,9 @@ was the last reference to a file which has been removed using
 <a href="https://man7.org/linux/man-pages/man2/unlink.2.html"><code>unlink(2)</code></a>,
 the file is deleted.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_client_setup"><a class="anchor" href="#_client_setup"></a>Client Setup</h3>
 <div class="paragraph">
 <p><a href="https://man7.org/linux/man-pages/man3/getaddrinfo.3.html"><code>int getaddrinfo()</code></a></p>
 </div>
@@ -601,6 +615,7 @@ IPv4-versus-IPv6 dependencies.</p>
 is copied to the buffer pointed to by <code>dst</code>, which must be a non-
 null pointer.  The caller specifies the number of bytes available
 in this buffer in the argument <code>size</code>.</p>
+</div>
 </div>
 </div>
 </div>

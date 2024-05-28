@@ -264,7 +264,13 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">C</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/c/getopt.html">Getopt</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
@@ -387,6 +393,105 @@
 <article class="doc">
 <h1 class="page">RDMA Programming Guide</h1>
 <div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Linux rdma-core</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/linux-rdma/rdma-core">GitHub: rdma-core</a></p>
+</li>
+<li>
+<p><a href="https://man7.org/linux/man-pages/man7/rdma_cm.7.html">rdma_cm manpages</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Nvidia</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/mlnxofedv497100lts/ip+over+infiniband+(ipoib)">IP over InfiniBand (IPoIB)</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17">RDMA Aware Networks Programming User Manual v1.7</a></p>
+</li>
+<li>
+<p>RDMA Architecture Overview</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/key+components">Key Components</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>RDMA Programming Overview</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/available+communication+operations">Available Communication Operations</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/transport+modes">Transport Modes</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/typical+application">Typical Application</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/key+concepts">Key Concepts</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>RDMA Connection Manager (CM) API</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/event+channel+operations">Event Channel Operations</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/connection+manager+(cm)+id+operations">Connection Manager (CM) ID Operations</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma_cm+event+handling+operations">CM Event Handling Operations</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>RDMA Verbs API</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma+protection+domain+operations">Protection Domain Operations</a></p>
+</li>
+<li>
+<p><a href="https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma+active+queue+pair+operations">Active Queue Pair (QP) Operations</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>RDMAmojo</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.rdmamojo.com/2015/02/16/ip-infiniband-ipoib-architecture/">IPoIB Architecture</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_rdma_object_types"><a class="anchor" href="#_rdma_object_types"></a>RDMA Object Types</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -467,10 +572,7 @@ If remote key, you&#8217;ll have to get this <code>R_Key</code> to the remote si
 </ol>
 </div>
 <div class="paragraph">
-<p>See examples in <a href="https://github.com/linux-rdma/rdma-core" class="bare">https://github.com/linux-rdma/rdma-core</a></p>
-</div>
-<div class="paragraph">
-<p>Examples: <a href="https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples" class="bare">https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples</a></p>
+<p>See examples in <a href="https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples" class="bare">https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples</a></p>
 </div>
 </div>
 </div>

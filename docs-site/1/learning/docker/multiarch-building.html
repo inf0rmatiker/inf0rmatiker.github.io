@@ -264,7 +264,13 @@
     <span class="nav-text">Languages</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
     <span class="nav-text">C</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../languages/c/getopt.html">Getopt</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
@@ -423,7 +429,7 @@ chmod +x ~/.docker/cli-plugins/docker-buildx</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>Building with Multi-platform Images</strong></p>
+<p><strong>Building with QEMU</strong></p>
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/docker/buildx?tab=readme-ov-file#building-multi-platform-images" class="bare">https://github.com/docker/buildx?tab=readme-ov-file#building-multi-platform-images</a></p>
@@ -480,6 +486,47 @@ installing: riscv64 OK
     "qemu-s390x"
   ]
 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Building with <code>docker-compose</code></strong></p>
+</div>
+<div class="listingblock">
+<div class="title">aarch64 example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">COMPOSE_DOCKER_CLI_BUILD=1 \
+DOCKER_BUILDKIT=1 \
+DOCKER_DEFAULT_PLATFORM=linux/arm64 \
+docker-compose build \
+        --no-cache \
+        --progress plain \
+        --build-arg hpe_github_token=${HPE_GITHUB_TOKEN} \
+        --build-arg dkms_only=${DKMS_ONLY} \
+        --build-arg kernel_version=${KERNEL_VERSION} \
+        --build-arg lustre_refspec=${LUSTRE_REFSPEC} \
+        --build-arg mofed_version=${MOFED_VERSION} \
+        --build-arg nvidia_driver_version=${NVIDIA_DRIVER_VERSION} \
+        --build-arg nvidia_fs_version=${NVIDIA_FS_VERSION} \
+        ${OS_VERSION}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">x86_64 example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">COMPOSE_DOCKER_CLI_BUILD=1 \
+DOCKER_BUILDKIT=1 \
+DOCKER_DEFAULT_PLATFORM=linux/amd64 \
+docker-compose build \
+        --no-cache \
+        --progress plain \
+        --build-arg hpe_github_token=${HPE_GITHUB_TOKEN} \
+        --build-arg dkms_only=${DKMS_ONLY} \
+        --build-arg kernel_version=${KERNEL_VERSION} \
+        --build-arg lustre_refspec=${LUSTRE_REFSPEC} \
+        --build-arg mofed_version=${MOFED_VERSION} \
+        --build-arg nvidia_driver_version=${NVIDIA_DRIVER_VERSION} \
+        --build-arg nvidia_fs_version=${NVIDIA_FS_VERSION} \
+        ${OS_VERSION}</code></pre>
 </div>
 </div>
 </div>

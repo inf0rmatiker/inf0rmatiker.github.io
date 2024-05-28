@@ -1,0 +1,104 @@
+= Getopt in C
+
+:toc: auto
+
+== References
+
+https://www.youtube.com/watch?v=SjyR74lbZOc&ab_channel=theurbanpenguin[C Programming using getopt Tutorial in Linux]
+
+https://man7.org/linux/man-pages/man3/getopt.3.html
+
+If there are no more option characters, `getopt()` returns `-1`.
+Then `optind` is the index in `argv` of the first `argv`-element that
+is not an option.
+
+If an option was successfully found, then `getopt()` returns the
+option character.  If all command-line options have been parsed,
+then `getopt()` returns `-1`.  If `getopt()` encounters an option
+character that was not in optstring, then `'?'` is returned.  If
+`getopt()` encounters an option with a missing argument, then the
+return value depends on the first character in `optstring`: if it
+is `':'`, then `':'` is returned; otherwise `'?'` is returned.
+
+== Includes
+
+In addition to your other includes, add in `#include <getopt.h>`:
+
+[,c]
+----
+#include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
+----
+
+== Example Program
+
+Here's an examply program with an option _with_ a required argument, and one without.
+
+[,c]
+----
+#include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+  int option;
+  while ((option = getopt(argc, argv, "a:b")) != -1) {
+    printf("debug: option=%d, ('%c')\n", option, option);
+    switch (option) {
+      case 'a':
+        printf("Specified -%c option with required optarg=%s\n", option, optarg);
+        break;
+      case 'b':
+        printf("Specified -%c option, no required optarg\n", option);
+        break;
+      default:
+        printf("unrecognized option\n");
+    }
+  }
+  printf("debug: getopt() returned -1\n");
+
+  return 0;
+}
+----
+
+Compile it:
+
+[,bash]
+----
+gcc -o options ./options.c
+----
+
+Running it a few different ways:
+
+[,console]
+----
+➜  getopt ./options -a 1234 -b
+debug: option=97, ('a')
+Specified -a option with required optarg=1234
+debug: option=98, ('b')
+Specified -b option, no required optarg
+debug: getopt() returned -1
+
+➜  getopt ./options hello -b
+debug: option=98, ('b')
+Specified -b option, no required optarg
+debug: getopt() returned -1
+
+➜  getopt ./options hello -a
+./options: option requires an argument -- 'a'
+debug: option=63, ('?')
+unrecognized option
+debug: getopt() returned -1
+
+➜  getopt ./options hello -x
+./options: invalid option -- 'x'
+debug: option=63, ('?')
+unrecognized option
+debug: getopt() returned -1
+
+➜  getopt ./options
+debug: getopt() returned -1
+----

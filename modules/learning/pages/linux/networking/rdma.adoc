@@ -3,6 +3,36 @@
 :toc: auto
 :showtitle:
 
+== References
+
+*Linux rdma-core*
+
+* https://github.com/linux-rdma/rdma-core[GitHub: rdma-core]
+* https://man7.org/linux/man-pages/man7/rdma_cm.7.html[rdma_cm manpages]
+
+*Nvidia*
+
+* https://docs.nvidia.com/networking/display/mlnxofedv497100lts/ip+over+infiniband+(ipoib)[IP over InfiniBand (IPoIB)]
+* https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17[RDMA Aware Networks Programming User Manual v1.7]
+* RDMA Architecture Overview
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/key+components[Key Components]
+* RDMA Programming Overview
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/available+communication+operations[Available Communication Operations]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/transport+modes[Transport Modes]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/typical+application[Typical Application]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/key+concepts[Key Concepts]
+* RDMA Connection Manager (CM) API
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/event+channel+operations[Event Channel Operations]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/connection+manager+(cm)+id+operations[Connection Manager (CM) ID Operations]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma_cm+event+handling+operations[CM Event Handling Operations]
+* RDMA Verbs API
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma+protection+domain+operations[Protection Domain Operations]
+** https://docs.nvidia.com/networking/display/rdmaawareprogrammingv17/rdma+active+queue+pair+operations[Active Queue Pair (QP) Operations]
+
+*RDMAmojo*
+
+* https://www.rdmamojo.com/2015/02/16/ip-infiniband-ipoib-architecture/[IPoIB Architecture]
+
 == RDMA Object Types
 
 === Protection Domain
@@ -51,9 +81,7 @@ Key steps:
 4. Post send work requests
 5. Poll for completion of work requests
 
-See examples in https://github.com/linux-rdma/rdma-core
-
-Examples: https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples
+See examples in https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/examples
 
 == Examples
 

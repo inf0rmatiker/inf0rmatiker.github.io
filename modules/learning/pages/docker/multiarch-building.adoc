@@ -33,13 +33,13 @@ cp docker-buildx ~/.docker/cli-plugins/
 chmod +x ~/.docker/cli-plugins/docker-buildx
 ----
 
-*Building with Multi-platform Images*
+*Building with QEMU*
 
 https://github.com/docker/buildx?tab=readme-ov-file#building-multi-platform-images
 
 > QEMU is the easiest way to get started if your node already supports it (for example. if you are using Docker Desktop).
 It requires no changes to your Dockerfile and BuildKit automatically detects the secondary architectures that are available.
-When BuildKit needs to run a binary for a different architecture, it automatically loads it through a binary 
+When BuildKit needs to run a binary for a different architecture, it automatically loads it through a binary
 registered in the `binfmt_misc` handler.
 
 Check out https://github.com/tonistiigi/binfmt
@@ -83,4 +83,44 @@ installing: riscv64 OK
     "qemu-s390x"
   ]
 }
+----
+
+*Building with `docker-compose`*
+
+.aarch64 example
+[,bash]
+----
+COMPOSE_DOCKER_CLI_BUILD=1 \
+DOCKER_BUILDKIT=1 \
+DOCKER_DEFAULT_PLATFORM=linux/arm64 \
+docker-compose build \
+        --no-cache \
+        --progress plain \
+        --build-arg hpe_github_token=${HPE_GITHUB_TOKEN} \
+        --build-arg dkms_only=${DKMS_ONLY} \
+        --build-arg kernel_version=${KERNEL_VERSION} \
+        --build-arg lustre_refspec=${LUSTRE_REFSPEC} \
+        --build-arg mofed_version=${MOFED_VERSION} \
+        --build-arg nvidia_driver_version=${NVIDIA_DRIVER_VERSION} \
+        --build-arg nvidia_fs_version=${NVIDIA_FS_VERSION} \
+        ${OS_VERSION}
+----
+
+.x86_64 example
+[,bash]
+----
+COMPOSE_DOCKER_CLI_BUILD=1 \
+DOCKER_BUILDKIT=1 \
+DOCKER_DEFAULT_PLATFORM=linux/amd64 \
+docker-compose build \
+        --no-cache \
+        --progress plain \
+        --build-arg hpe_github_token=${HPE_GITHUB_TOKEN} \
+        --build-arg dkms_only=${DKMS_ONLY} \
+        --build-arg kernel_version=${KERNEL_VERSION} \
+        --build-arg lustre_refspec=${LUSTRE_REFSPEC} \
+        --build-arg mofed_version=${MOFED_VERSION} \
+        --build-arg nvidia_driver_version=${NVIDIA_DRIVER_VERSION} \
+        --build-arg nvidia_fs_version=${NVIDIA_FS_VERSION} \
+        ${OS_VERSION}
 ----

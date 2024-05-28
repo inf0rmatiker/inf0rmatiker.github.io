@@ -63,6 +63,7 @@
 
 * Languages
 ** C
+*** xref:docs-site:learning:languages/c/getopt.adoc[Getopt]
 ** xref:docs-site:learning:languages/cpp/cpp.adoc[C++]
 *** xref:docs-site:learning:languages/cpp/arrays.adoc[Arrays]
 *** xref:docs-site:learning:languages/cpp/branch_control.adoc[Branch Control]

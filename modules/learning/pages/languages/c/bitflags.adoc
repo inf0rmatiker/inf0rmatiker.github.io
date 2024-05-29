@@ -1,0 +1,64 @@
+= Dealing with Bitflags in C
+
+:toc: auto
+:showtitle:
+
+== Printing Bitflags
+
+Below is an example program, `bitflags.c`, that defines a few flags, and prints
+them out in a human-readable concatenated string using the `flag_str` struct
+mapping between numerical values and the string counterpart.
+
+[,c]
+----
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <getopt.h>
+
+#define RAI_PASSIVE	0x00000001
+#define RAI_NUMERICHOST	0x00000002
+#define RAI_NOROUTE	0x00000004
+#define RAI_FAMILY	0x00000008
+
+/*
+ * Mapping between a bitflag and its enum string.
+ */
+struct flag_str {
+        int value;
+        const char* str;
+};
+
+void bitflags_to_str(struct flag_str *pairs, size_t count, int flags, char *res)
+{
+	int has_flag = 0;
+	for (int i = 0; i < count; i++) {
+		if (flags & (pairs[i]).value) {
+			if (has_flag) {
+				strcat(res, " | ");
+			}
+			strcat(res, pairs[i].str);
+			has_flag = 1;
+		}
+	}
+	strcat(res, "\0");
+	return;
+}
+
+int main(int argc, char **argv)
+{
+	int actual = RAI_PASSIVE | RAI_NOROUTE;
+	struct flag_str ai_flag_pairs[] = {
+		{RAI_PASSIVE, "RAI_PASSIVE"},
+		{RAI_NUMERICHOST, "RAI_NUMERICHOST"},
+		{RAI_NOROUTE, "RAI_NOROUTE"},
+		{RAI_FAMILY, "RAI_FAMILY"}
+	};
+
+	char ai_flags_str[64] = { 0 };
+	bitflags_to_str(ai_flag_pairs, 4, actual, ai_flags_str);
+	printf("bitflags=%s\n", ai_flags_str);
+	return;
+}
+----

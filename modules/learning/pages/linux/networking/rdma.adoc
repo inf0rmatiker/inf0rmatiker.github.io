@@ -33,7 +33,143 @@
 
 * https://www.rdmamojo.com/2015/02/16/ip-infiniband-ipoib-architecture/[IPoIB Architecture]
 
-== RDMA Object Types
+== RDMA Objects
+
+=== RDMA Address Info
+
+Stores RDMA device address information, similar to socket's `sockaddr`.
+
+`rdma_addrinfo`
+
+https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182
+
+[,c]
+----
+struct rdma_addrinfo {
+	int			ai_flags;
+	int			ai_family;
+	int			ai_qp_type;
+	int			ai_port_space;
+	socklen_t		ai_src_len;
+	socklen_t		ai_dst_len;
+	struct sockaddr		*ai_src_addr;
+	struct sockaddr		*ai_dst_addr;
+	char			*ai_src_canonname;
+	char			*ai_dst_canonname;
+	size_t			ai_route_len;
+	void			*ai_route;
+	size_t			ai_connect_len;
+	void			*ai_connect;
+	struct rdma_addrinfo	*ai_next;
+};
+----
+
+=== Connection Manager Event Channel
+
+`rdma_event_channel`
+
+Event channels are used to direct all events on an `rdma_cm_id`.
+For many clients, a single event channel may be sufficient,
+however, when managing a large number of connections or `cm_id`'s,
+users may find it useful to direct events for different `cm_id`'s
+to different channels for processing.
+
+All created event channels must be destroyed by calling
+`rdma_destroy_event_channel`.  Users should call `rdma_get_cm_event`
+to retrieve events on an event channel.
+
+Each event channel is mapped to a file descriptor.  The
+associated file descriptor can be used and manipulated like any
+other `fd` to change its behavior.  Users may make the `fd` non-
+blocking, poll or select the `fd`, etc.
+
+[,c]
+----
+struct rdma_event_channel {
+	int fd;
+};
+----
+
+*Create a Communication Manager (CM) event channel*:
+
+https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html
+
+[,c]
+----
+struct rdma_event_channel * rdma_create_event_channel(void);
+----
+
+=== Connection Manager ID
+
+`rdma_cm_id`
+
+`rdma_cm_id` is conceptually equivalent to a socket for RDMA communication.
+The difference is that RDMA communication requires explicitly binding to a
+specified RDMA device before communication can occur, and most operations are
+asynchronous in nature. Asynchronous communication events on an `rdma_cm_id` are
+reported through the associated event channel. If the channel parameter is `NULL`,
+the `rdma_cm_id` will be placed into synchronous operation. While operating
+synchronously, calls that result in an event will block until the operation
+completes. The event will be returned to the user through the `rdma_cm_id`
+structure, and be available for access until another `rdma_cm` call is made.
+Users must release the `rdma_cm_id` by calling `rdma_destroy_id`.
+
+https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L122
+
+[,c]
+----
+struct rdma_cm_id {
+	struct ibv_context		*verbs;
+	struct rdma_event_channel 	*channel;
+	void				*context;
+	struct ibv_qp			*qp;
+	struct rdma_route	 	route;
+	enum rdma_port_space	 	ps;
+	uint8_t			 	port_num;
+	struct rdma_cm_event		*event;
+	struct ibv_comp_channel 	*send_cq_channel;
+	struct ibv_cq			*send_cq;
+	struct ibv_comp_channel 	*recv_cq_channel;
+	struct ibv_cq			*recv_cq;
+	struct ibv_srq			*srq;
+	struct ibv_pd			*pd;
+	enum ibv_qp_type		qp_type;
+};
+----
+
+*Create RDMA connection id*:
+
+https://linux.die.net/man/3/rdma_create_id
+
+[,c]
+----
+int rdma_create_id(struct rdma_event_channel *channel,
+		   struct rdma_cm_id **id,
+		   void *context,
+		   enum rdma_port_space ps);
+----
+
+=== Connection Manager Event
+
+`rdma_cm_event`
+
+https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L166
+
+[,c]
+----
+struct rdma_cm_event {
+	struct rdma_cm_id	*id;
+	struct rdma_cm_id	*listen_id;
+	enum rdma_cm_event_type	event;
+	int			status;
+	union {
+		struct rdma_conn_param conn;
+		struct rdma_ud_param   ud;
+	} param;
+};
+----
+
+== IB Verbs Objects
 
 === Protection Domain
 
@@ -43,6 +179,38 @@ Contains the work queues, memory regions, etc. Ensures that work queues can only
 in the same protection domain. Applies to both local and remote operations. An incoming request can only access
 memory that it's allowed to.
 
+[,c]
+----
+struct ibv_pd {
+	struct ibv_context     *context;
+	uint32_t		handle;
+};
+----
+
+Allocate PD: https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/
+Deallocate PD: https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/
+
+https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html
+
+=== I/O Completion Channel
+
+`ibv_comp_channel`: Completion event channel for I/O events
+
+Completion event channel (CC) is an object that helps handling Work Completions in a
+userspace process using event mode rather than polling mode.
+
+[,c]
+----
+struct ibv_comp_channel {
+	struct ibv_context     *context;
+	int			fd;
+	int			refcnt;
+};
+----
+
+Create CC: https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/
+Destroy CC: https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/
+
 === Queue Pair
 
 `ibv_qp_ex`: Encapsulates a queue for posting receive work requests and a queue for posting send work requests
@@ -51,6 +219,31 @@ NOTE:
 Due to evolution of this stack, `_ex` version is the extended, more modern variant of old `ibv_qp` API.
 
 Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.
+
+[,c]
+----
+struct ibv_qp {
+	struct ibv_context     *context;
+	void		       *qp_context;
+	struct ibv_pd	       *pd;
+	struct ibv_cq	       *send_cq;
+	struct ibv_cq	       *recv_cq;
+	struct ibv_srq	       *srq;
+	uint32_t		handle;
+	uint32_t		qp_num;
+	enum ibv_qp_state       state;
+	enum ibv_qp_type	qp_type;
+
+	pthread_mutex_t		mutex;
+	pthread_cond_t		cond;
+	uint32_t		events_completed;
+};
+----
+
+Create QP: https://www.rdmamojo.com/2012/12/21/ibv_create_qp/
+Modify QP: https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/
+Query QP: https://www.rdmamojo.com/2013/01/19/ibv_query_qp/
+Destroy QP: https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/
 
 === Completion Queue
 
@@ -85,131 +278,11 @@ See examples in https://github.com/linux-rdma/rdma-core/tree/master/librdmacm/ex
 
 == Examples
 
-=== Types
-
-`rdma_addrinfo`
-
-https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182
-
-[,c]
-----
-struct rdma_addrinfo {
-	int			ai_flags;
-	int			ai_family;
-	int			ai_qp_type;
-	int			ai_port_space;
-	socklen_t		ai_src_len;
-	socklen_t		ai_dst_len;
-	struct sockaddr		*ai_src_addr;
-	struct sockaddr		*ai_dst_addr;
-	char			*ai_src_canonname;
-	char			*ai_dst_canonname;
-	size_t			ai_route_len;
-	void			*ai_route;
-	size_t			ai_connect_len;
-	void			*ai_connect;
-	struct rdma_addrinfo	*ai_next;
-};
-----
-
-`rdma_event_channel`
-
-https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html
-
-[,c]
-----
-struct rdma_event_channel {
-	int fd;
-};
-----
-
-`rdma_cm_id`
-
-[,c]
-----
-struct rdma_cm_id {
-	struct ibv_context	*verbs;
-	struct rdma_event_channel *channel;
-	void			*context;
-	struct ibv_qp		*qp;
-	struct rdma_route	 route;
-	enum rdma_port_space	 ps;
-	uint8_t			 port_num;
-	struct rdma_cm_event	*event;
-	struct ibv_comp_channel *send_cq_channel;
-	struct ibv_cq		*send_cq;
-	struct ibv_comp_channel *recv_cq_channel;
-	struct ibv_cq		*recv_cq;
-	struct ibv_srq		*srq;
-	struct ibv_pd		*pd;
-	enum ibv_qp_type	qp_type;
-};
-----
-
-`rdma_cm_event`
-
-[,c]
-----
-struct rdma_cm_event {
-	struct rdma_cm_id	*id;
-	struct rdma_cm_id	*listen_id;
-	enum rdma_cm_event_type	 event;
-	int			 status;
-	union {
-		struct rdma_conn_param conn;
-		struct rdma_ud_param   ud;
-	} param;
-};
-----
-
 === Server Setup
 
-*Create a Communication Manager (CM) event channel*:
 
-https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html
 
-[,c]
-----
-struct rdma_event_channel * rdma_create_event_channel(void);
-----
 
-Event channels are used to direct all events on an `rdma_cm_id`.
-For many clients, a single event channel may be sufficient,
-however, when managing a large number of connections or `cm_id`'s,
-users may find it useful to direct events for different `cm_id`'s
-to different channels for processing.
-
-All created event channels must be destroyed by calling
-`rdma_destroy_event_channel`.  Users should call `rdma_get_cm_event`
-to retrieve events on an event channel.
-
-Each event channel is mapped to a file descriptor.  The
-associated file descriptor can be used and manipulated like any
-other `fd` to change its behavior.  Users may make the `fd` non-
-blocking, poll or select the `fd`, etc.
-
-*Create RDMA connection id*:
-
-https://linux.die.net/man/3/rdma_create_id
-
-[,c]
-----
-int rdma_create_id(struct rdma_event_channel *channel,
-		   struct rdma_cm_id **id,
-		   void *context,
-		   enum rdma_port_space ps);
-----
-
-`rdma_cm_id` is conceptually equivalent to a socket for RDMA communication.
-The difference is that RDMA communication requires explicitly binding to a
-specified RDMA device before communication can occur, and most operations are
-asynchronous in nature. Asynchronous communication events on an `rdma_cm_id` are
-reported through the associated event channel. If the channel parameter is `NULL`,
-the `rdma_cm_id` will be placed into synchronous operation. While operating
-synchronously, calls that result in an event will block until the operation
-completes. The event will be returned to the user through the `rdma_cm_id`
-structure, and be available for access until another `rdma_cm` call is made.
-Users must release the `rdma_cm_id` by calling `rdma_destroy_id`.
 
 *Bind to an address*:
 
@@ -363,6 +436,3 @@ addresses to an RDMA address.  If successful, the specified
 int rdma_resolve_addr (struct rdma_cm_id *id, struct sockaddr *src_addr,
 		       struct sockaddr *dst_addr, int timeout_ms);
 ----
-
-=== Client Teardown
-

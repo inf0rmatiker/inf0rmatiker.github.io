@@ -492,7 +492,166 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_rdma_object_types"><a class="anchor" href="#_rdma_object_types"></a>RDMA Object Types</h2>
+<h2 id="_rdma_objects"><a class="anchor" href="#_rdma_objects"></a>RDMA Objects</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_rdma_address_info"><a class="anchor" href="#_rdma_address_info"></a>RDMA Address Info</h3>
+<div class="paragraph">
+<p>Stores RDMA device address information, similar to socket&#8217;s <code>sockaddr</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>rdma_addrinfo</code></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182" class="bare">https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_addrinfo {
+	int			ai_flags;
+	int			ai_family;
+	int			ai_qp_type;
+	int			ai_port_space;
+	socklen_t		ai_src_len;
+	socklen_t		ai_dst_len;
+	struct sockaddr		*ai_src_addr;
+	struct sockaddr		*ai_dst_addr;
+	char			*ai_src_canonname;
+	char			*ai_dst_canonname;
+	size_t			ai_route_len;
+	void			*ai_route;
+	size_t			ai_connect_len;
+	void			*ai_connect;
+	struct rdma_addrinfo	*ai_next;
+};</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connection_manager_event_channel"><a class="anchor" href="#_connection_manager_event_channel"></a>Connection Manager Event Channel</h3>
+<div class="paragraph">
+<p><code>rdma_event_channel</code></p>
+</div>
+<div class="paragraph">
+<p>Event channels are used to direct all events on an <code>rdma_cm_id</code>.
+For many clients, a single event channel may be sufficient,
+however, when managing a large number of connections or `cm_id&#8217;s,
+users may find it useful to direct events for different `cm_id&#8217;s
+to different channels for processing.</p>
+</div>
+<div class="paragraph">
+<p>All created event channels must be destroyed by calling
+<code>rdma_destroy_event_channel</code>.  Users should call <code>rdma_get_cm_event</code>
+to retrieve events on an event channel.</p>
+</div>
+<div class="paragraph">
+<p>Each event channel is mapped to a file descriptor.  The
+associated file descriptor can be used and manipulated like any
+other <code>fd</code> to change its behavior.  Users may make the <code>fd</code> non-
+blocking, poll or select the <code>fd</code>, etc.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel {
+	int fd;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Create a Communication Manager (CM) event channel</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel * rdma_create_event_channel(void);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connection_manager_id"><a class="anchor" href="#_connection_manager_id"></a>Connection Manager ID</h3>
+<div class="paragraph">
+<p><code>rdma_cm_id</code></p>
+</div>
+<div class="paragraph">
+<p><code>rdma_cm_id</code> is conceptually equivalent to a socket for RDMA communication.
+The difference is that RDMA communication requires explicitly binding to a
+specified RDMA device before communication can occur, and most operations are
+asynchronous in nature. Asynchronous communication events on an <code>rdma_cm_id</code> are
+reported through the associated event channel. If the channel parameter is <code>NULL</code>,
+the <code>rdma_cm_id</code> will be placed into synchronous operation. While operating
+synchronously, calls that result in an event will block until the operation
+completes. The event will be returned to the user through the <code>rdma_cm_id</code>
+structure, and be available for access until another <code>rdma_cm</code> call is made.
+Users must release the <code>rdma_cm_id</code> by calling <code>rdma_destroy_id</code>.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L122" class="bare">https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L122</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_id {
+	struct ibv_context		*verbs;
+	struct rdma_event_channel 	*channel;
+	void				*context;
+	struct ibv_qp			*qp;
+	struct rdma_route	 	route;
+	enum rdma_port_space	 	ps;
+	uint8_t			 	port_num;
+	struct rdma_cm_event		*event;
+	struct ibv_comp_channel 	*send_cq_channel;
+	struct ibv_cq			*send_cq;
+	struct ibv_comp_channel 	*recv_cq_channel;
+	struct ibv_cq			*recv_cq;
+	struct ibv_srq			*srq;
+	struct ibv_pd			*pd;
+	enum ibv_qp_type		qp_type;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Create RDMA connection id</strong>:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://linux.die.net/man/3/rdma_create_id" class="bare">https://linux.die.net/man/3/rdma_create_id</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_create_id(struct rdma_event_channel *channel,
+		   struct rdma_cm_id **id,
+		   void *context,
+		   enum rdma_port_space ps);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connection_manager_event"><a class="anchor" href="#_connection_manager_event"></a>Connection Manager Event</h3>
+<div class="paragraph">
+<p><code>rdma_cm_event</code></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L166" class="bare">https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L166</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_event {
+	struct rdma_cm_id	*id;
+	struct rdma_cm_id	*listen_id;
+	enum rdma_cm_event_type	event;
+	int			status;
+	union {
+		struct rdma_conn_param conn;
+		struct rdma_ud_param   ud;
+	} param;
+};</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ib_verbs_objects"><a class="anchor" href="#_ib_verbs_objects"></a>IB Verbs Objects</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_protection_domain"><a class="anchor" href="#_protection_domain"></a>Protection Domain</h3>
@@ -503,6 +662,44 @@
 <p>Contains the work queues, memory regions, etc. Ensures that work queues can only access memory regions residing
 in the same protection domain. Applies to both local and remote operations. An incoming request can only access
 memory that it&#8217;s allowed to.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_pd {
+	struct ibv_context     *context;
+	uint32_t		handle;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Allocate PD: <a href="https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/</a>
+Deallocate PD: <a href="https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html" class="bare">https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_io_completion_channel"><a class="anchor" href="#_io_completion_channel"></a>I/O Completion Channel</h3>
+<div class="paragraph">
+<p><code>ibv_comp_channel</code>: Completion event channel for I/O events</p>
+</div>
+<div class="paragraph">
+<p>Completion event channel (CC) is an object that helps handling Work Completions in a
+userspace process using event mode rather than polling mode.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_comp_channel {
+	struct ibv_context     *context;
+	int			fd;
+	int			refcnt;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create CC: <a href="https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/</a>
+Destroy CC: <a href="https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -516,6 +713,32 @@ Due to evolution of this stack, <code>_ex</code> version is the extended, more m
 </div>
 <div class="paragraph">
 <p>Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_qp {
+	struct ibv_context     *context;
+	void		       *qp_context;
+	struct ibv_pd	       *pd;
+	struct ibv_cq	       *send_cq;
+	struct ibv_cq	       *recv_cq;
+	struct ibv_srq	       *srq;
+	uint32_t		handle;
+	uint32_t		qp_num;
+	enum ibv_qp_state       state;
+	enum ibv_qp_type	qp_type;
+
+	pthread_mutex_t		mutex;
+	pthread_cond_t		cond;
+	uint32_t		events_completed;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create QP: <a href="https://www.rdmamojo.com/2012/12/21/ibv_create_qp/" class="bare">https://www.rdmamojo.com/2012/12/21/ibv_create_qp/</a>
+Modify QP: <a href="https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/" class="bare">https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/</a>
+Query QP: <a href="https://www.rdmamojo.com/2013/01/19/ibv_query_qp/" class="bare">https://www.rdmamojo.com/2013/01/19/ibv_query_qp/</a>
+Destroy QP: <a href="https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/" class="bare">https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -580,146 +803,7 @@ If remote key, you&#8217;ll have to get this <code>R_Key</code> to the remote si
 <h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_types"><a class="anchor" href="#_types"></a>Types</h3>
-<div class="paragraph">
-<p><code>rdma_addrinfo</code></p>
-</div>
-<div class="paragraph">
-<p><a href="https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182" class="bare">https://github.com/linux-rdma/rdma-core/blob/master/librdmacm/rdma_cma.h#L182</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_addrinfo {
-	int			ai_flags;
-	int			ai_family;
-	int			ai_qp_type;
-	int			ai_port_space;
-	socklen_t		ai_src_len;
-	socklen_t		ai_dst_len;
-	struct sockaddr		*ai_src_addr;
-	struct sockaddr		*ai_dst_addr;
-	char			*ai_src_canonname;
-	char			*ai_dst_canonname;
-	size_t			ai_route_len;
-	void			*ai_route;
-	size_t			ai_connect_len;
-	void			*ai_connect;
-	struct rdma_addrinfo	*ai_next;
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>rdma_event_channel</code></p>
-</div>
-<div class="paragraph">
-<p><a href="https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel {
-	int fd;
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>rdma_cm_id</code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_id {
-	struct ibv_context	*verbs;
-	struct rdma_event_channel *channel;
-	void			*context;
-	struct ibv_qp		*qp;
-	struct rdma_route	 route;
-	enum rdma_port_space	 ps;
-	uint8_t			 port_num;
-	struct rdma_cm_event	*event;
-	struct ibv_comp_channel *send_cq_channel;
-	struct ibv_cq		*send_cq;
-	struct ibv_comp_channel *recv_cq_channel;
-	struct ibv_cq		*recv_cq;
-	struct ibv_srq		*srq;
-	struct ibv_pd		*pd;
-	enum ibv_qp_type	qp_type;
-};</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>rdma_cm_event</code></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_cm_event {
-	struct rdma_cm_id	*id;
-	struct rdma_cm_id	*listen_id;
-	enum rdma_cm_event_type	 event;
-	int			 status;
-	union {
-		struct rdma_conn_param conn;
-		struct rdma_ud_param   ud;
-	} param;
-};</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_server_setup"><a class="anchor" href="#_server_setup"></a>Server Setup</h3>
-<div class="paragraph">
-<p><strong>Create a Communication Manager (CM) event channel</strong>:</p>
-</div>
-<div class="paragraph">
-<p><a href="https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html" class="bare">https://man7.org/linux/man-pages/man3/rdma_create_event_channel.3.html</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct rdma_event_channel * rdma_create_event_channel(void);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Event channels are used to direct all events on an <code>rdma_cm_id</code>.
-For many clients, a single event channel may be sufficient,
-however, when managing a large number of connections or `cm_id&#8217;s,
-users may find it useful to direct events for different `cm_id&#8217;s
-to different channels for processing.</p>
-</div>
-<div class="paragraph">
-<p>All created event channels must be destroyed by calling
-<code>rdma_destroy_event_channel</code>.  Users should call <code>rdma_get_cm_event</code>
-to retrieve events on an event channel.</p>
-</div>
-<div class="paragraph">
-<p>Each event channel is mapped to a file descriptor.  The
-associated file descriptor can be used and manipulated like any
-other <code>fd</code> to change its behavior.  Users may make the <code>fd</code> non-
-blocking, poll or select the <code>fd</code>, etc.</p>
-</div>
-<div class="paragraph">
-<p><strong>Create RDMA connection id</strong>:</p>
-</div>
-<div class="paragraph">
-<p><a href="https://linux.die.net/man/3/rdma_create_id" class="bare">https://linux.die.net/man/3/rdma_create_id</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">int rdma_create_id(struct rdma_event_channel *channel,
-		   struct rdma_cm_id **id,
-		   void *context,
-		   enum rdma_port_space ps);</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>rdma_cm_id</code> is conceptually equivalent to a socket for RDMA communication.
-The difference is that RDMA communication requires explicitly binding to a
-specified RDMA device before communication can occur, and most operations are
-asynchronous in nature. Asynchronous communication events on an <code>rdma_cm_id</code> are
-reported through the associated event channel. If the channel parameter is <code>NULL</code>,
-the <code>rdma_cm_id</code> will be placed into synchronous operation. While operating
-synchronously, calls that result in an event will block until the operation
-completes. The event will be returned to the user through the <code>rdma_cm_id</code>
-structure, and be available for access until another <code>rdma_cm</code> call is made.
-Users must release the <code>rdma_cm_id</code> by calling <code>rdma_destroy_id</code>.</p>
-</div>
 <div class="paragraph">
 <p><strong>Bind to an address</strong>:</p>
 </div>
@@ -899,10 +983,6 @@ addresses to an RDMA address.  If successful, the specified
 		       struct sockaddr *dst_addr, int timeout_ms);</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_client_teardown"><a class="anchor" href="#_client_teardown"></a>Client Teardown</h3>
-
 </div>
 </div>
 </div>

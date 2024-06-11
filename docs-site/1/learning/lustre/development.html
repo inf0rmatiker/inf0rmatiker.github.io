@@ -412,23 +412,16 @@
         fetch = +refs/dev/*:refs/remotes/origin/dev/*
 [remote "gh"]
         url = git@github.hpe.com:hpe/hpc-lus-filesystem.git
-        fetch = git@github.hpe.com:hpe/hpc-lus-filesystem.git
-        push = git@github.hpe.com:hpe/hpc-lus-filesystem.git
+        fetch = +refs/heads/*:refs/remotes/gh/*
+[remote "wc"]
+        url = ssh://carlsonc@review.whamcloud.com:29418/fs/lustre-release
+        fetch = +refs/heads/*:refs/remotes/wc/*
 [branch "master"]
         remote = origin
         merge = refs/heads/master
 [branch "cray-2.15-int"]
         remote = origin
         merge = refs/heads/cray-2.15-int
-[branch "dev/LUS-12325_openldap2"]
-	remote = origin
-	merge = refs/heads/dev/LUS-12325_openldap2
-[branch "dev/LUS-12325_ldap"]
-	remote = origin
-	merge = refs/heads/dev/LUS-12325_ldap
-[branch "dev/LUS-12195_liblustreapi"]
-	remote = origin
-	merge = refs/heads/dev/LUS-12195_liblustreapi
 [user]
         email = caleb.carlson@hpe.com</code></pre>
 </div>
@@ -436,6 +429,43 @@
 <div class="paragraph">
 <p>Add in any <code>branch</code> entries for tracking remote dev counterparts. This will let
 you <code>git pull</code> from the remote to your local version.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ssh_configuration"><a class="anchor" href="#_ssh_configuration"></a>SSH Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Make sure you have SSH entries configured for the different git remotes.
+Gerrit is a little outdated so you&#8217;ll have to use an older RSA key.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># GitHub
+Host github.com
+  Hostname github.com
+  IdentityFile ~/.ssh/caleb_id_ecdsa
+
+# Es-Gerrit
+Host es-gerrit.hpc.amslabs.hpecorp.net
+  Hostname es-gerrit.hpc.amslabs.hpecorp.net
+  KexAlgorithms +diffie-hellman-group1-sha1
+  HostkeyAlgorithms +ssh-rsa
+  PubkeyAcceptedAlgorithms +ssh-rsa
+  User carlsonc
+  IdentityFile ~/.ssh/id_rsa
+
+# Whamcloud
+Host review.whamcloud.com
+  HostName review.whamcloud.com
+  User carlsonc
+  IdentityFile ~/.ssh/caleb_id_ecdsa
+
+# HPE GitHub
+Host github.hpe.com
+  Hostname github.hpe.com
+  IdentityFile ~/.ssh/caleb_id_ecdsa</code></pre>
+</div>
 </div>
 </div>
 </div>

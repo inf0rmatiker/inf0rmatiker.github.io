@@ -654,14 +654,15 @@ Users must release the <code>rdma_cm_id</code> by calling <code>rdma_destroy_id<
 <h2 id="_ib_verbs_objects"><a class="anchor" href="#_ib_verbs_objects"></a>IB Verbs Objects</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_protection_domain"><a class="anchor" href="#_protection_domain"></a>Protection Domain</h3>
+<h3 id="_protection_domain_pd"><a class="anchor" href="#_protection_domain_pd"></a>Protection Domain (PD)</h3>
 <div class="paragraph">
 <p><code>ibv_pd</code>: High-level container for other objects</p>
 </div>
 <div class="paragraph">
-<p>Contains the work queues, memory regions, etc. Ensures that work queues can only access memory regions residing
-in the same protection domain. Applies to both local and remote operations. An incoming request can only access
-memory that it&#8217;s allowed to.</p>
+<p>Contains the work queues, memory regions, etc. Ensures that work queues can only
+access memory regions residing in the same protection domain. Applies to both
+local and remote operations. An incoming request can only access memory that
+it&#8217;s allowed to.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -671,22 +672,28 @@ memory that it&#8217;s allowed to.</p>
 };</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Allocate PD: <a href="https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/</a>
-Deallocate PD: <a href="https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Allocate PD: <a href="https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/</a></p>
+</li>
+<li>
+<p>Deallocate PD: <a href="https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/" class="bare">https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/</a></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p><a href="https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html" class="bare">https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_io_completion_channel"><a class="anchor" href="#_io_completion_channel"></a>I/O Completion Channel</h3>
+<h3 id="_io_completion_channel_cc"><a class="anchor" href="#_io_completion_channel_cc"></a>I/O Completion Channel (CC)</h3>
 <div class="paragraph">
 <p><code>ibv_comp_channel</code>: Completion event channel for I/O events</p>
 </div>
 <div class="paragraph">
-<p>Completion event channel (CC) is an object that helps handling Work Completions in a
-userspace process using event mode rather than polling mode.</p>
+<p>Completion event channel (CC) is an object that helps handling Work Completions
+in a userspace process using event mode rather than polling mode.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -697,22 +704,125 @@ userspace process using event mode rather than polling mode.</p>
 };</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Create CC: <a href="https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/</a>
-Destroy CC: <a href="https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Create CC: <a href="https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/</a></p>
+</li>
+<li>
+<p>Destroy CC: <a href="https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/" class="bare">https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/</a></p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_queue_pair"><a class="anchor" href="#_queue_pair"></a>Queue Pair</h3>
+<h3 id="_completion_queue_cq"><a class="anchor" href="#_completion_queue_cq"></a>Completion Queue (CQ)</h3>
 <div class="paragraph">
-<p><code>ibv_qp_ex</code>: Encapsulates a queue for posting receive work requests and a queue for posting send work requests</p>
+<p><code>ibv_cq</code>: Queue that receives completion notifications for send and receive
+work requests; may be attached to one or more work queues.</p>
+</div>
+<div class="paragraph">
+<p>Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to
+the same CQ if you want.</p>
+</div>
+<div class="paragraph">
+<p>When an outstanding Work Request, within a Send or Receive Queue, is completed,
+a Work Completion is being added to the CQ of that Work Queue. This Work
+Completion indicates that the outstanding Work Request has been completed (and
+no longer considered outstanding) and provides details on it
+(status, direction, opcode, etc.).</p>
+</div>
+<div class="paragraph">
+<p>A single CQ can be shared for sending, receiving, and sharing across multiple
+QPs. The Work Completion holds the information to specify the QP number and
+the Queue (Send or Receive) that it came from.</p>
+</div>
+<div class="paragraph">
+<p>The user can define the minimum size of the CQ. The actual created size can be
+equal or higher than this value.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_cq {
+	struct ibv_context     *context;
+	struct ibv_comp_channel *channel;
+	void		       *cq_context;
+	uint32_t		handle;
+	int			cqe;
+
+	pthread_mutex_t		mutex;
+	pthread_cond_t		cond;
+	uint32_t		comp_events_completed;
+	uint32_t		async_events_completed;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man3/ibv_destroy_cq.3.html" class="bare">https://man7.org/linux/man-pages/man3/ibv_destroy_cq.3.html</a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create CQ: <a href="https://www.rdmamojo.com/2012/11/03/ibv_create_cq/" class="bare">https://www.rdmamojo.com/2012/11/03/ibv_create_cq/</a></p>
+</li>
+<li>
+<p>Destroy CQ: <a href="https://www.rdmamojo.com/2012/11/09/ibv_destroy_cq/" class="bare">https://www.rdmamojo.com/2012/11/09/ibv_destroy_cq/</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_queue_pairs_qp"><a class="anchor" href="#_queue_pairs_qp"></a>Queue Pairs (QP)</h3>
+<div class="paragraph">
+<p>Work Queues for both send and receive work requests.</p>
+</div>
+<div class="paragraph">
+<p><code>ibv_qp_init_attr</code> describes the requested attributes of a newly created QP.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_qp_init_attr {
+	void		       *qp_context;
+	struct ibv_cq	       *send_cq;
+	struct ibv_cq	       *recv_cq;
+	struct ibv_srq	       *srq;
+	struct ibv_qp_cap	cap;
+	enum ibv_qp_type	qp_type;
+	int			sq_sig_all;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a description of <code>ibv_qp_cap</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_qp_cap {
+	uint32_t		max_send_wr;
+	uint32_t		max_recv_wr;
+	uint32_t		max_send_sge;
+	uint32_t		max_recv_sge;
+	uint32_t		max_inline_data;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ibv_qp_ex</code>: Encapsulates a queue for posting receive work requests and a queue
+for posting send work requests</p>
 </div>
 <div class="paragraph">
 <p>NOTE:
-Due to evolution of this stack, <code>_ex</code> version is the extended, more modern variant of old <code>ibv_qp</code> API.</p>
+Due to evolution of this stack, <code>_ex</code> version is the extended, more modern
+variant of old <code>ibv_qp</code> API.</p>
 </div>
 <div class="paragraph">
-<p>Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.</p>
+<p>Really is a receive queue and a send queue. QP is RDMA jargon for the two
+directions of a connection.</p>
+</div>
+<div class="paragraph">
+<p>The user can define the minimum attributes to the QP: number of Work Requests
+and number of scatter/gather entries per Work Request to Send and Receive
+queues. The actual attributes can be equal or higher than those values.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -735,36 +845,88 @@ Due to evolution of this stack, <code>_ex</code> version is the extended, more m
 </div>
 </div>
 <div class="paragraph">
-<p>Create QP: <a href="https://www.rdmamojo.com/2012/12/21/ibv_create_qp/" class="bare">https://www.rdmamojo.com/2012/12/21/ibv_create_qp/</a>
-Modify QP: <a href="https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/" class="bare">https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/</a>
-Query QP: <a href="https://www.rdmamojo.com/2013/01/19/ibv_query_qp/" class="bare">https://www.rdmamojo.com/2013/01/19/ibv_query_qp/</a>
-Destroy QP: <a href="https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/" class="bare">https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/</a></p>
+<p><a href="https://man7.org/linux/man-pages/man3/ibv_create_qp.3.html" class="bare">https://man7.org/linux/man-pages/man3/ibv_create_qp.3.html</a></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create QP: <a href="https://www.rdmamojo.com/2012/12/21/ibv_create_qp/" class="bare">https://www.rdmamojo.com/2012/12/21/ibv_create_qp/</a></p>
+</li>
+<li>
+<p>Modify QP: <a href="https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/" class="bare">https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/</a></p>
+</li>
+<li>
+<p>Query QP: <a href="https://www.rdmamojo.com/2013/01/19/ibv_query_qp/" class="bare">https://www.rdmamojo.com/2013/01/19/ibv_query_qp/</a></p>
+</li>
+<li>
+<p>Destroy QP: <a href="https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/" class="bare">https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/</a></p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_completion_queue"><a class="anchor" href="#_completion_queue"></a>Completion Queue</h3>
+<h3 id="_memory_regions_mr"><a class="anchor" href="#_memory_regions_mr"></a>Memory Regions (MR)</h3>
 <div class="paragraph">
-<p><code>ibv_cq_ex</code>: Queue that receives completion notifications for send and receive work requests; may be attached to
-one or more work queues</p>
+<p><code>ibv_mr</code>: Represents a memory buffer that can be targeted by work requests; has
+a local key (<code>L_Key</code>) for use in local work requests and a remote key (<code>R_Key</code>)
+that can be shared with a peer for use in remote one-sided operations.</p>
 </div>
 <div class="paragraph">
-<p>Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to the same CQ if you want.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_memory_region"><a class="anchor" href="#_memory_region"></a>Memory Region</h3>
-<div class="paragraph">
-<p><code>ibv_mr</code>: Represents a memory buffer that can be targeted by work requests; has a local key (<code>L_Key</code>) for use
-in local work requests and a remote key (<code>R_Key</code>) that can be shared with a peer for use in remote one-sided
-operations</p>
+<p>Simplest form of memory registration. When registered, you can decide whether
+to allow remote access, like reads and writes.</p>
 </div>
 <div class="paragraph">
-<p>Simplest form of memory registration. When registered, you can decide whether to allow remote access, like reads
-and writes.</p>
+<p>When you do a registration, you get some keys back, one for local work, and
+another for remote work. If remote key, you&#8217;ll have to get this <code>R_Key</code> to the
+remote side so it can refer to this memory.</p>
 </div>
 <div class="paragraph">
-<p>When you do a registration, you get some keys back, one for local work, and another for remote work.
-If remote key, you&#8217;ll have to get this <code>R_Key</code> to the remote side so it can refer to this memory.</p>
+<p>The MR&#8217;s starting address is <code>addr</code> and its size is <code>length</code>. The maximum size
+of the block that can be registered is limited to <code>device_attr.max_mr_size</code>.
+Every memory address in the virtual space of the calling process can be
+registered, including, but not limited to:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Local memory (either variable or array)</p>
+</li>
+<li>
+<p>Global memory (either variable or array)</p>
+</li>
+<li>
+<p>Dynamically allocated memory (using malloc() or mmap())</p>
+</li>
+<li>
+<p>Shared memory</p>
+</li>
+<li>
+<p>Addresses from the text segment</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The registered memory buffer doesn&#8217;t have to be page-aligned.</p>
+</div>
+<div class="paragraph">
+<p>There isn&#8217;t any way to know what is the total size of memory that can be
+registered for a specific device.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ibv_mr {
+	struct ibv_context     *context;
+	struct ibv_pd	       *pd;
+	void		       *addr;
+	size_t			length;
+	uint32_t		handle;
+	uint32_t		lkey;
+	uint32_t		rkey;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Register MR: <a href="https://www.rdmamojo.com/2012/09/07/ibv_reg_mr/" class="bare">https://www.rdmamojo.com/2012/09/07/ibv_reg_mr/</a></p>
 </div>
 </div>
 </div>

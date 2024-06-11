@@ -171,13 +171,14 @@ struct rdma_cm_event {
 
 == IB Verbs Objects
 
-=== Protection Domain
+=== Protection Domain (PD)
 
 `ibv_pd`: High-level container for other objects
 
-Contains the work queues, memory regions, etc. Ensures that work queues can only access memory regions residing
-in the same protection domain. Applies to both local and remote operations. An incoming request can only access
-memory that it's allowed to.
+Contains the work queues, memory regions, etc. Ensures that work queues can only
+access memory regions residing in the same protection domain. Applies to both
+local and remote operations. An incoming request can only access memory that
+it's allowed to.
 
 [,c]
 ----
@@ -187,17 +188,17 @@ struct ibv_pd {
 };
 ----
 
-Allocate PD: https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/
-Deallocate PD: https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/
+* Allocate PD: https://www.rdmamojo.com/2012/08/24/ibv_alloc_pd/
+* Deallocate PD: https://www.rdmamojo.com/2012/08/31/ibv_dealloc_pd/
 
 https://man7.org/linux/man-pages/man3/ibv_alloc_pd.3.html
 
-=== I/O Completion Channel
+=== I/O Completion Channel (CC)
 
 `ibv_comp_channel`: Completion event channel for I/O events
 
-Completion event channel (CC) is an object that helps handling Work Completions in a
-userspace process using event mode rather than polling mode.
+Completion event channel (CC) is an object that helps handling Work Completions
+in a userspace process using event mode rather than polling mode.
 
 [,c]
 ----
@@ -208,17 +209,97 @@ struct ibv_comp_channel {
 };
 ----
 
-Create CC: https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/
-Destroy CC: https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/
+* Create CC: https://www.rdmamojo.com/2012/10/19/ibv_create_comp_channel/
+* Destroy CC: https://www.rdmamojo.com/2012/10/26/ibv_destroy_comp_channel/
 
-=== Queue Pair
+=== Completion Queue (CQ)
 
-`ibv_qp_ex`: Encapsulates a queue for posting receive work requests and a queue for posting send work requests
+`ibv_cq`: Queue that receives completion notifications for send and receive
+work requests; may be attached to one or more work queues.
+
+Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to
+the same CQ if you want.
+
+When an outstanding Work Request, within a Send or Receive Queue, is completed,
+a Work Completion is being added to the CQ of that Work Queue. This Work
+Completion indicates that the outstanding Work Request has been completed (and
+no longer considered outstanding) and provides details on it
+(status, direction, opcode, etc.).
+
+A single CQ can be shared for sending, receiving, and sharing across multiple
+QPs. The Work Completion holds the information to specify the QP number and
+the Queue (Send or Receive) that it came from.
+
+The user can define the minimum size of the CQ. The actual created size can be
+equal or higher than this value.
+
+[,c]
+----
+struct ibv_cq {
+	struct ibv_context     *context;
+	struct ibv_comp_channel *channel;
+	void		       *cq_context;
+	uint32_t		handle;
+	int			cqe;
+
+	pthread_mutex_t		mutex;
+	pthread_cond_t		cond;
+	uint32_t		comp_events_completed;
+	uint32_t		async_events_completed;
+};
+----
+
+https://man7.org/linux/man-pages/man3/ibv_destroy_cq.3.html
+
+* Create CQ: https://www.rdmamojo.com/2012/11/03/ibv_create_cq/
+* Destroy CQ: https://www.rdmamojo.com/2012/11/09/ibv_destroy_cq/
+
+=== Queue Pairs (QP)
+
+Work Queues for both send and receive work requests.
+
+`ibv_qp_init_attr` describes the requested attributes of a newly created QP.
+
+[,c]
+----
+struct ibv_qp_init_attr {
+	void		       *qp_context;
+	struct ibv_cq	       *send_cq;
+	struct ibv_cq	       *recv_cq;
+	struct ibv_srq	       *srq;
+	struct ibv_qp_cap	cap;
+	enum ibv_qp_type	qp_type;
+	int			sq_sig_all;
+};
+----
+
+Here's a description of `ibv_qp_cap`:
+
+[,c]
+----
+struct ibv_qp_cap {
+	uint32_t		max_send_wr;
+	uint32_t		max_recv_wr;
+	uint32_t		max_send_sge;
+	uint32_t		max_recv_sge;
+	uint32_t		max_inline_data;
+};
+
+----
+
+`ibv_qp_ex`: Encapsulates a queue for posting receive work requests and a queue
+for posting send work requests
 
 NOTE:
-Due to evolution of this stack, `_ex` version is the extended, more modern variant of old `ibv_qp` API.
+Due to evolution of this stack, `_ex` version is the extended, more modern
+variant of old `ibv_qp` API.
 
-Really is a receive queue and a send queue. QP is RDMA jargon for the two directions of a connection.
+Really is a receive queue and a send queue. QP is RDMA jargon for the two
+directions of a connection.
+
+The user can define the minimum attributes to the QP: number of Work Requests
+and number of scatter/gather entries per Work Request to Send and Receive
+queues. The actual attributes can be equal or higher than those values.
 
 [,c]
 ----
@@ -240,29 +321,56 @@ struct ibv_qp {
 };
 ----
 
-Create QP: https://www.rdmamojo.com/2012/12/21/ibv_create_qp/
-Modify QP: https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/
-Query QP: https://www.rdmamojo.com/2013/01/19/ibv_query_qp/
-Destroy QP: https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/
+https://man7.org/linux/man-pages/man3/ibv_create_qp.3.html
 
-=== Completion Queue
+* Create QP: https://www.rdmamojo.com/2012/12/21/ibv_create_qp/
+* Modify QP: https://www.rdmamojo.com/2013/01/12/ibv_modify_qp/
+* Query QP: https://www.rdmamojo.com/2013/01/19/ibv_query_qp/
+* Destroy QP: https://www.rdmamojo.com/2012/12/28/ibv_destroy_qp/
 
-`ibv_cq_ex`: Queue that receives completion notifications for send and receive work requests; may be attached to
-one or more work queues
+=== Memory Regions (MR)
 
-Each work queue (WQ) is attached to a CQ. You can have multiple WQs attached to the same CQ if you want.
+`ibv_mr`: Represents a memory buffer that can be targeted by work requests; has
+a local key (`L_Key`) for use in local work requests and a remote key (`R_Key`)
+that can be shared with a peer for use in remote one-sided operations.
 
-=== Memory Region
+Simplest form of memory registration. When registered, you can decide whether
+to allow remote access, like reads and writes.
 
-`ibv_mr`: Represents a memory buffer that can be targeted by work requests; has a local key (`L_Key`) for use
-in local work requests and a remote key (`R_Key`) that can be shared with a peer for use in remote one-sided
-operations
+When you do a registration, you get some keys back, one for local work, and
+another for remote work. If remote key, you'll have to get this `R_Key` to the
+remote side so it can refer to this memory.
 
-Simplest form of memory registration. When registered, you can decide whether to allow remote access, like reads
-and writes.
+The MR's starting address is `addr` and its size is `length`. The maximum size
+of the block that can be registered is limited to `device_attr.max_mr_size`.
+Every memory address in the virtual space of the calling process can be
+registered, including, but not limited to:
 
-When you do a registration, you get some keys back, one for local work, and another for remote work.
-If remote key, you'll have to get this `R_Key` to the remote side so it can refer to this memory.
+* Local memory (either variable or array)
+* Global memory (either variable or array)
+* Dynamically allocated memory (using malloc() or mmap())
+* Shared memory
+* Addresses from the text segment
+
+The registered memory buffer doesn't have to be page-aligned.
+
+There isn't any way to know what is the total size of memory that can be
+registered for a specific device.
+
+[,c]
+----
+struct ibv_mr {
+	struct ibv_context     *context;
+	struct ibv_pd	       *pd;
+	void		       *addr;
+	size_t			length;
+	uint32_t		handle;
+	uint32_t		lkey;
+	uint32_t		rkey;
+};
+----
+
+Register MR: https://www.rdmamojo.com/2012/09/07/ibv_reg_mr/
 
 == Exchanging Data via Reliable Connected (RC) QP
 

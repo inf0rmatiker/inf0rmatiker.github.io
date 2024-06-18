@@ -71,6 +71,52 @@ Host github.hpe.com
   IdentityFile ~/.ssh/caleb_id_ecdsa
 ----
 
+== Push dev branch to HPE GH remote
+
+[,console]
+----
+hornc@cassini-hosta:~/lustre-wc-rel> git branch dev/LUS-12345-test
+hornc@cassini-hosta:~/lustre-wc-rel> git push gh dev/LUS-12345-test
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'dev/LUS-12345-test' on GitHub by visiting:
+remote:      https://github.hpe.com/hpe/hpc-lus-filesystem/pull/new/dev/LUS-12345-test
+remote:
+To github.hpe.com:hpe/hpc-lus-filesystem.git
+ * [new branch]            dev/LUS-12345-test -> dev/LUS-12345-test
+hornc@cassini-hosta:~/lustre-wc-rel>
+----
+
+== Check out branch from another remote
+
+Make sure you've fetched the latest versions of the remote branches first.
+
+[,console]
+----
+➜  lustre-wc-rel git:(cray-2.15-int) git checkout gh/release/uss-1.1
+Note: switching to 'gh/release/uss-1.1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 4846b50d77 LUS-12377 dkms: mofed fallback to kABI
+➜  lustre-wc-rel git:(4846b50d77) git checkout wc/master
+Previous HEAD position was 4846b50d77 LUS-12377 dkms: mofed fallback to kABI
+HEAD is now at 8b6719f1b3 LU-17887 obd: do not update obd_memory from RCU
+----
+
 == Gathering Build Logs for Trivial Changes
 
 Clone `lustre-wc-rel` on a test system.
@@ -182,4 +228,142 @@ rpmbuild \
   -ba lustre.spec 2>&1 | tee /tmp/work/rpmbuild.log \
   || error "Failed to build lustre.spec"
 
+----
+
+== Debugging
+
+=== Using the Ring Buffer
+
+Lustre stores debug statements in a ring buffer on the system. What goes into
+this ring buffer is determined by the module parameter `debug`.
+
+Here's an example default `debug` parameter value:
+
+[,console]
+----
+mawenzi-06:~ # lctl get_param debug
+debug=ioctl neterror warning error emerg ha config console lfsck
+----
+
+In the code, you'll want to add `CDEBUG` statements to print messages to the
+ring buffer.
+
+Here's an example `CDEBUG` message printed in the LNet code path:
+
+[,c]
+----
+CDEBUG(D_NET, "Allocate new FMR pool\n");
+----
+
+These messages won't be present in the ring buffer by default unless you add
+`net` to the debug parameter:
+
+[,console]
+----
+lctl set_param debug=+net
+----
+
+You can then trigger some LNet activity by pinging another network interface
+over LNet.
+
+[,console]
+----
+lctl ping 192.168.0.103@o2ib
+----
+
+Then, dump the contents of the ring buffer to a file:
+
+[,console]
+----
+lctl dk > /tmp/dk.log
+----
+
+And see your message somewhere in the output file `/tmp/dk.log`.
+
+=== Testing LNet Dev Changes
+
+You can't hot swap the kernel modules. The old ones must be unloaded and new
+ones loaded. Most likely, you won't actually need the filesystem mounted; you'll
+just need LNet loaded and configured. You can skip dealing with RPMs by loading
+the `.ko` files out of the source tree after running `make`. You can find the
+paths of these built `.ko` files by running the following:
+
+[,console]
+----
+mawenzi-06:~ # find lustre-wc-rel/ -name "*.ko"
+lustre-wc-rel/libcfs/libcfs/libcfs.ko
+lustre-wc-rel/lnet/klnds/o2iblnd/ko2iblnd.ko
+lustre-wc-rel/lnet/klnds/socklnd/ksocklnd.ko
+lustre-wc-rel/lnet/lnet/lnet.ko
+lustre-wc-rel/lnet/selftest/lnet_selftest.ko
+lustre-wc-rel/lustre/fid/fid.ko
+lustre-wc-rel/lustre/fld/fld.ko
+lustre-wc-rel/lustre/llite/lustre.ko
+lustre-wc-rel/lustre/lmv/lmv.ko
+lustre-wc-rel/lustre/lov/lov.ko
+lustre-wc-rel/lustre/mdc/mdc.ko
+lustre-wc-rel/lustre/mgc/mgc.ko
+lustre-wc-rel/lustre/obdclass/llog_test.ko
+lustre-wc-rel/lustre/obdclass/obdclass.ko
+lustre-wc-rel/lustre/obdecho/obdecho.ko
+lustre-wc-rel/lustre/osc/osc.ko
+lustre-wc-rel/lustre/ptlrpc/ptlrpc.ko
+lustre-wc-rel/lustre/tests/kernel/kinode.ko
+----
+
+Insert the LNet kernel modules from the local paths. This is for an o2ib net.
+
+[,bash]
+----
+lustre="/root/lustre-wc-rel"
+insmod $lustre/libcfs/libcfs/libcfs.ko
+insmod $lustre/lnet/lnet/lnet.ko
+insmod $lustre/lnet/klnds/o2iblnd/ko2iblnd.ko
+----
+
+If you're changing userspace tools then you want to manipulate `PATH` so that it
+finds your built binaries/scripts first instead of the ones installed by
+previous RPMs (unless you remove the rpms beforehand):
+
+[,bash]
+----
+lustre="/root/lustre-wc-rel"
+export PATH="$lustre/lustre/utils:$lustre/lnet/utils:$lustre/lustre/scripts:$PATH"
+----
+
+Here's a script I set up to do all the above in one go:
+
+[,bash]
+----
+#!/bin/bash
+
+echo -e "Make sure you've checked out your latest changes with git and have run ./configure"
+
+set -ex
+
+# Uninstall the old stuff if it exists
+for entry in $(mount -t lustre | awk '{print $3}'); do
+	echo "Unmounting $entry"
+	umount -t lustre $entry
+done
+which lustre_rmmod && lustre_rmmod
+zypper remove --no-confirm lustre-client lustre-client-dkms lustre-client-kmp-default
+
+# Build the client utils/binaries and kernel objects (.ko)
+lustre="/root/lustre-wc-rel"
+cd $lustre
+make -j 16
+
+# Insert kernel modules, and configure LNet
+export PATH="$lustre/lustre/utils:$lustre/lnet/utils:$lustre/lustre/scripts:$PATH"
+insmod $lustre/libcfs/libcfs/libcfs.ko
+insmod $lustre/lnet/lnet/lnet.ko
+insmod $lustre/lnet/klnds/o2iblnd/ko2iblnd.ko
+lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0
+lctl network up
+lctl set_param debug=+net
+
+# Run whatever commands, like lctl ping <ip>@o2ib
+# lctl dk > /tmp/dk.log
 ----

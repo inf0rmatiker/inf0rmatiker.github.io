@@ -347,23 +347,42 @@ for entry in $(mount -t lustre | awk '{print $3}'); do
 	umount -t lustre $entry
 done
 which lustre_rmmod && lustre_rmmod
-zypper remove --no-confirm lustre-client lustre-client-dkms lustre-client-kmp-default
+#zypper remove --no-confirm lustre-client lustre-client-dkms lustre-client-kmp-default
 
 # Build the client utils/binaries and kernel objects (.ko)
 lustre="/root/lustre-wc-rel"
 cd $lustre
 make -j 16
 
-# Insert kernel modules, and configure LNet
+# Insert kernel modules, and configure bin/sbin tools
 export PATH="$lustre/lustre/utils:$lustre/lnet/utils:$lustre/lustre/scripts:$PATH"
 insmod $lustre/libcfs/libcfs/libcfs.ko
 insmod $lustre/lnet/lnet/lnet.ko
 insmod $lustre/lnet/klnds/o2iblnd/ko2iblnd.ko
+insmod $lustre/lnet/klnds/socklnd/ksocklnd.ko
+cp lustre-wc-rel/lustre/scripts/ksocklnd-config /usr/sbin
+
+# Configure LNet
 lnetctl lnet configure
 lnetctl net add --net o2ib --if ib0
+lnetctl net add --net tcp --if eth0
 lctl network up
-lctl set_param debug=+net
+lnetctl net show
 
-# Run whatever commands, like lctl ping <ip>@o2ib
-# lctl dk > /tmp/dk.log
+# Run debugging steps
+lctl set_param debug=+net
+lctl ping 192.168.0.103@o2ib
+lctl ping 10.214.130.4@tcp
+lctl dk > /tmp/dk.log
 ----
+
+> Note: `ksocklnd-config` script manipulates ip routes/rules. This can potentially break
+> things in ClusterStor or Shasta because the IP network config is already defined
+> a certain way. You can avoid calling it on net add by passing an option:
+>
+> `lnetctl net add --skip-mr-route-setup ...`
+>
+> There's also a kernel module parameter:
+>
+> `options ksocklnd  skip_mr_route_setup=1`
+

@@ -470,6 +470,59 @@ Host github.hpe.com
 </div>
 </div>
 <div class="sect1">
+<h2 id="_push_dev_branch_to_hpe_gh_remote"><a class="anchor" href="#_push_dev_branch_to_hpe_gh_remote"></a>Push dev branch to HPE GH remote</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">hornc@cassini-hosta:~/lustre-wc-rel&gt; git branch dev/LUS-12345-test
+hornc@cassini-hosta:~/lustre-wc-rel&gt; git push gh dev/LUS-12345-test
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'dev/LUS-12345-test' on GitHub by visiting:
+remote:      https://github.hpe.com/hpe/hpc-lus-filesystem/pull/new/dev/LUS-12345-test
+remote:
+To github.hpe.com:hpe/hpc-lus-filesystem.git
+ * [new branch]            dev/LUS-12345-test -&gt; dev/LUS-12345-test
+hornc@cassini-hosta:~/lustre-wc-rel&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_check_out_branch_from_another_remote"><a class="anchor" href="#_check_out_branch_from_another_remote"></a>Check out branch from another remote</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Make sure you&#8217;ve fetched the latest versions of the remote branches first.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  lustre-wc-rel git:(cray-2.15-int) git checkout gh/release/uss-1.1
+Note: switching to 'gh/release/uss-1.1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c &lt;new-branch-name&gt;
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 4846b50d77 LUS-12377 dkms: mofed fallback to kABI
+➜  lustre-wc-rel git:(4846b50d77) git checkout wc/master
+Previous HEAD position was 4846b50d77 LUS-12377 dkms: mofed fallback to kABI
+HEAD is now at 8b6719f1b3 LU-17887 obd: do not update obd_memory from RCU</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_gathering_build_logs_for_trivial_changes"><a class="anchor" href="#_gathering_build_logs_for_trivial_changes"></a>Gathering Build Logs for Trivial Changes</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -585,6 +638,161 @@ rpmbuild \
   --define "configure_args $CONFIGURE_ARGS" \
   -ba lustre.spec 2&gt;&amp;1 | tee /tmp/work/rpmbuild.log \
   || error "Failed to build lustre.spec"</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_debugging"><a class="anchor" href="#_debugging"></a>Debugging</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_using_the_ring_buffer"><a class="anchor" href="#_using_the_ring_buffer"></a>Using the Ring Buffer</h3>
+<div class="paragraph">
+<p>Lustre stores debug statements in a ring buffer on the system. What goes into
+this ring buffer is determined by the module parameter <code>debug</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example default <code>debug</code> parameter value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # lctl get_param debug
+debug=ioctl neterror warning error emerg ha config console lfsck</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the code, you&#8217;ll want to add <code>CDEBUG</code> statements to print messages to the
+ring buffer.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s an example <code>CDEBUG</code> message printed in the LNet code path:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">CDEBUG(D_NET, "Allocate new FMR pool\n");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These messages won&#8217;t be present in the ring buffer by default unless you add
+<code>net</code> to the debug parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">lctl set_param debug=+net</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then trigger some LNet activity by pinging another network interface
+over LNet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">lctl ping 192.168.0.103@o2ib</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, dump the contents of the ring buffer to a file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">lctl dk &gt; /tmp/dk.log</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And see your message somewhere in the output file <code>/tmp/dk.log</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_testing_lnet_dev_changes"><a class="anchor" href="#_testing_lnet_dev_changes"></a>Testing LNet Dev Changes</h3>
+<div class="paragraph">
+<p>You can&#8217;t hot swap the kernel modules. The old ones must be unloaded and new
+ones loaded. Most likely, you won&#8217;t actually need the filesystem mounted; you&#8217;ll
+just need LNet loaded and configured. You can skip dealing with RPMs by loading
+the <code>.ko</code> files out of the source tree after running <code>make</code>. You can find the
+paths of these built <code>.ko</code> files by running the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # find lustre-wc-rel/ -name "*.ko"
+lustre-wc-rel/libcfs/libcfs/libcfs.ko
+lustre-wc-rel/lnet/klnds/o2iblnd/ko2iblnd.ko
+lustre-wc-rel/lnet/klnds/socklnd/ksocklnd.ko
+lustre-wc-rel/lnet/lnet/lnet.ko
+lustre-wc-rel/lnet/selftest/lnet_selftest.ko
+lustre-wc-rel/lustre/fid/fid.ko
+lustre-wc-rel/lustre/fld/fld.ko
+lustre-wc-rel/lustre/llite/lustre.ko
+lustre-wc-rel/lustre/lmv/lmv.ko
+lustre-wc-rel/lustre/lov/lov.ko
+lustre-wc-rel/lustre/mdc/mdc.ko
+lustre-wc-rel/lustre/mgc/mgc.ko
+lustre-wc-rel/lustre/obdclass/llog_test.ko
+lustre-wc-rel/lustre/obdclass/obdclass.ko
+lustre-wc-rel/lustre/obdecho/obdecho.ko
+lustre-wc-rel/lustre/osc/osc.ko
+lustre-wc-rel/lustre/ptlrpc/ptlrpc.ko
+lustre-wc-rel/lustre/tests/kernel/kinode.ko</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Insert the LNet kernel modules from the local paths. This is for an o2ib net.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lustre="/root/lustre-wc-rel"
+insmod $lustre/libcfs/libcfs/libcfs.ko
+insmod $lustre/lnet/lnet/lnet.ko
+insmod $lustre/lnet/klnds/o2iblnd/ko2iblnd.ko</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re changing userspace tools then you want to manipulate <code>PATH</code> so that it
+finds your built binaries/scripts first instead of the ones installed by
+previous RPMs (unless you remove the rpms beforehand):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">lustre="/root/lustre-wc-rel"
+export PATH="$lustre/lustre/utils:$lustre/lnet/utils:$lustre/lustre/scripts:$PATH"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a script I set up to do all the above in one go:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+echo -e "Make sure you've checked out your latest changes with git and have run ./configure"
+
+set -ex
+
+# Uninstall the old stuff if it exists
+for entry in $(mount -t lustre | awk '{print $3}'); do
+	echo "Unmounting $entry"
+	umount -t lustre $entry
+done
+which lustre_rmmod &amp;&amp; lustre_rmmod
+zypper remove --no-confirm lustre-client lustre-client-dkms lustre-client-kmp-default
+
+# Build the client utils/binaries and kernel objects (.ko)
+lustre="/root/lustre-wc-rel"
+cd $lustre
+make -j 16
+
+# Insert kernel modules, and configure LNet
+export PATH="$lustre/lustre/utils:$lustre/lnet/utils:$lustre/lustre/scripts:$PATH"
+insmod $lustre/libcfs/libcfs/libcfs.ko
+insmod $lustre/lnet/lnet/lnet.ko
+insmod $lustre/lnet/klnds/o2iblnd/ko2iblnd.ko
+lnetctl lnet configure
+lnetctl net add --net o2ib --if ib0
+lctl network up
+lctl set_param debug=+net
+
+# Run whatever commands, like lctl ping &lt;ip&gt;@o2ib
+# lctl dk &gt; /tmp/dk.log</code></pre>
+</div>
 </div>
 </div>
 </div>

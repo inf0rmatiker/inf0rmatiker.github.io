@@ -376,9 +376,10 @@ lctl ping 10.214.130.4@tcp
 lctl dk > /tmp/dk.log
 ----
 
-> Note: `ksocklnd-config` script manipulates ip routes/rules. This can potentially break
-> things in ClusterStor or Shasta because the IP network config is already defined
-> a certain way. You can avoid calling it on net add by passing an option:
+> Note: `ksocklnd-config` script manipulates ip routes/rules. This can
+> potentially break things in ClusterStor or Shasta because the IP network
+> config is already defined a certain way. You can avoid calling it on net add
+> by passing an option:
 >
 > `lnetctl net add --skip-mr-route-setup ...`
 >
@@ -386,3 +387,37 @@ lctl dk > /tmp/dk.log
 >
 > `options ksocklnd  skip_mr_route_setup=1`
 
+=== Configuring Kernel Module Parameters
+
+You can pass the args to `insmod` when inserting the module to establish module
+parameter values:
+
+[,console]
+----
+cassini-hosta:/home/hornc/lustre-wc-rel # insmod libcfs/libcfs/libcfs.ko libcfs_debug=-1
+cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/libcfs/parameters/libcfs_debug
+-1
+----
+
+`modprobe`, which uses `insmod` under the hood, lets you set up `.conf` files
+for modules:
+
+[,console]
+----
+cassini-hosta:/home/hornc/lustre-wc-rel # cat /etc/modprobe.d/lustre.conf
+options ksocklnd  skip_mr_route_setup=1
+options libcfs cpu_npartitions=8 cpu_pattern=""
+options kkfilnd traffic_class=bulk_data
+options lnet ip2nets="tcp(heth0) 172.18.2.[5-6]; tcp(enp137s0f0np0) 172.18.2.[7-8]"
+options lnet lock_prim_nid=1
+----
+
+Otherwise, the source of these parameters all live under `/sys/module/<module>`:
+
+[,console]
+----
+cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/lnet/parameters/lnet_transaction_timeout
+50
+cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/lnet/parameters/sock_timeout
+0
+----

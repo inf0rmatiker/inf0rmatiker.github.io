@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Slurm Workload Manager :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/slurm/slurm.html">
+    <title>Nginx Webserver with Docker :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/docker/nginx-webserver.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -180,13 +180,13 @@
     <span class="nav-text">Docker</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../docker/multiarch-building.html">Multi-Architecture Builds</a>
+    <a class="nav-link" href="multiarch-building.html">Multi-Architecture Builds</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="nginx-webserver.html">Nginx Webserver</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../docker/nginx-webserver.html">Nginx Webserver</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
+    <a class="nav-link" href="registry-proxy.html">Registry Proxy</a>
   </li>
 </ul>
   </li>
@@ -332,8 +332,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Slurm</span>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="slurm.html">Slurm</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../slurm/slurm.html">Slurm</a>
   </li>
 </ul>
   </li>
@@ -383,8 +383,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Slurm</li>
-    <li><a href="slurm.html">Slurm</a></li>
+    <li>Docker</li>
+    <li><a href="nginx-webserver.html">Nginx Webserver</a></li>
   </ul>
 </nav>
 </div>
@@ -393,84 +393,111 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Slurm Workload Manager</h1>
+<h1 class="page">Nginx Webserver with Docker</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://slurm.schedmd.com/documentation.html">Slurm Documentation</a></p>
+<p>This guide documents how to run an nginx server in Docker to statically serve
+files out of a directory on the host.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_usage"><a class="anchor" href="#_usage"></a>Usage</h2>
+<h2 id="_firewalls"><a class="anchor" href="#_firewalls"></a>Firewalls</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_check_cluster_state"><a class="anchor" href="#_check_cluster_state"></a>Check Cluster State</h3>
 <div class="paragraph">
-<p><code>sinfo</code></p>
+<p>Important: make sure you&#8217;ve disabled networking firewalls on your host machine,
+using <code>setenforce 0</code> and <code>systemctl stop firewalld</code>. This isn&#8217;t the most secure
+but neither is running an HTTP webserver. I guess you could configure specific
+rules/policies to make things more secure but for this example we&#8217;ll just be
+letting everything through.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_host_directory"><a class="anchor" href="#_host_directory"></a>Host Directory</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this case, we&#8217;ve got all the files in <code>/mnt/images</code>. This can be any
+directory on the host machine, but make sure you&#8217;ve got the files with read
+permissions set:</p>
 </div>
 <div class="listingblock">
-<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[carlsonc@aihst-login ~]$ sinfo
-PARTITION     AVAIL  TIMELIMIT  NODES  STATE NODELIST
-NICT             up 30-00:00:0      1  down* aixl675dn01
-NICT             up 30-00:00:0      3   idle aixl675dn[02,08-09]
-short_all*       up    4:00:00      6   idle aixl645dn[02-04],aixl675dn[03-05]
-short_tusken     up    4:00:00      3   idle aixl675dn[03-05]
-normal_tusken    up 1-00:00:00      3   idle aixl675dn[03-05]
-long_tusken      up 7-00:00:00      3   idle aixl675dn[03-05]
-short_bantha     up    4:00:00      3   idle aixl645dn[02-04]
-normal_bantha    up 1-00:00:00      3   idle aixl645dn[02-04]
-long_bantha      up 7-00:00:00      3   idle aixl645dn[02-04]</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">chmod 0755 -R /mnt/images/*</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_allocate_a_node_to_partition"><a class="anchor" href="#_allocate_a_node_to_partition"></a>Allocate a Node to Partition</h3>
+</div>
+<div class="sect1">
+<h2 id="_nginx_configuration"><a class="anchor" href="#_nginx_configuration"></a>Nginx Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><code>salloc</code></p>
+<p>Create a directory to store the custom nginx config file and Dockerfile. I
+called mine <code>/root/nginx</code>.</p>
+</div>
+<div class="paragraph">
+<p>Create a new <code>default.conf</code> nginx config file:</p>
 </div>
 <div class="listingblock">
-<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[carlsonc@aihst-login ~]$ salloc -p short_tusken --nodelist=aixl675dn04
-salloc: Granted job allocation 2942</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">server {
+        listen       80;
+        server_name  localhost sp06.hpc.amslabs.hpecorp.net;
+        root   /usr/share/nginx/html;
+
+        location / {
+                autoindex on;
+        }
+}</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_view_allocations"><a class="anchor" href="#_view_allocations"></a>View Allocations</h3>
 <div class="paragraph">
-<p><code>squeue</code></p>
+<p>We&#8217;ll be replacing the existing <code>default.conf</code> in the nginx image.</p>
+</div>
+<div class="paragraph">
+<p>Create a <code>Dockerfile</code>:</p>
 </div>
 <div class="listingblock">
-<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[carlsonc@aihst-login ~]$ squeue
-             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-              2942 short_tus interact carlsonc  R       0:17      1 aixl675dn04</code></pre>
+<pre class="highlightjs highlight"><code class="language-Dockerfile hljs" data-lang="Dockerfile">FROM nginx:latest AS base
+
+RUN mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
+COPY ./default.conf /etc/nginx/conf.d/default.conf
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]</code></pre>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_free_a_node_from_allocation"><a class="anchor" href="#_free_a_node_from_allocation"></a>Free a Node from Allocation</h3>
+</div>
+<div class="sect1">
+<h2 id="_running"><a class="anchor" href="#_running"></a>Running</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><code>scancel &lt;job_id&gt;</code></p>
-</div>
-<div class="paragraph">
-<p>Use <code>squeue</code> to get the job ID for your node.</p>
+<p>Go ahead and build and deploy your webserver, volume-mounting <code>/mnt/images</code> to
+nginx&#8217;s default host location of <code>/usr/share/nginx/html</code>. Also map port 8080 on
+the host to port 80 in the container, where your HTTP server will be running.</p>
 </div>
 <div class="listingblock">
-<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[carlsonc@aixl675dn04 gdsio]$ squeue
-             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
-              2942 short_tus interact carlsonc  R    1:22:29      1 aixl675dn04
-[carlsonc@aixl675dn04 gdsio]$ scancel 2942
-salloc: Job allocation 2942 has been revoked.</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker build -t nginx_webserver .
+docker run --rm -d --name webserver -v /mnt/images/:/usr/share/nginx/html -p 8080:80 nginx_webserver</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>You should now have a running nginx container:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sp06 ~/nginx » docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED         STATUS        PORTS                                   NAMES
+31a1862da3bc   nginx_webserver   "nginx -g 'daemon of…"   2 seconds ago   Up 1 second   0.0.0.0:8080-&gt;80/tcp, :::8080-&gt;80/tcp   webserver</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, navigate to your machine&#8217;s hostname, in this case it&#8217;s
+<a href="http://sp06.hpc.amslabs.hpecorp.net:8080/" class="bare">http://sp06.hpc.amslabs.hpecorp.net:8080/</a>,
+and you should see your files listed and available for download.</p>
 </div>
 </div>
 </div>

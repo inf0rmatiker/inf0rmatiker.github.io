@@ -5,6 +5,7 @@ Installation, configuration, and management of a Lustre server cluster.
 * https://lustre.ornl.gov/lustre101-courses/[ORNL Lustre 101 Courses]
 ** https://lustre.ornl.gov/lustre101-courses/C1/AdminEssentials.html[Lustre Administration Essentials]
 * https://wiki.lustre.org/Installing_the_Lustre_Software[Installing Lustre]
+* https://www.admin-magazine.com/HPC/Articles/Working-with-the-Lustre-Filesystem[HPC Admin - Configuring Lustre Filesystem]
 
 == Terminology
 
@@ -254,3 +255,727 @@ mkfs.lustre --fsname=lustre --ost --mgsnode=192.168.0.103@o2ib --index=0 /dev/sd
 mkdir /mnt/ost0
 mount -t lustre /dev/sdd /mnt/ost0
 ----
+
+== Example: Setting Up Vanilla Rocky 9.2 Node as Lustre Server
+
+In this example we'll be setting up a node installed with Rocky Linux 9.2 (minimal) as a Lustre Server,
+everything built from scratch.
+
+This example begins just after I've installed Rocky 9.2 (minimal) on the node, but before installing
+any dependencies or building anything.
+
+Important: pay attention to the kernel that was installed, by default, using `uname -r`.
+In my case it was `5.14.0-284.11.1.el9_2.x86_64`.
+
+=== dnf Proxy Configurations
+
+First thing to do is set up any `dnf` proxy information so our node can reach the internet from the lab.
+Replace `/etc/dnf/dnf.conf` with this file:
+
+----
+[main]
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+----
+
+=== dnf/yum Repos
+
+By default, Rocky 9.X repo URLs will point to the latest-and-greatest packages being hosted by Rocky.
+This presents a problem for trying to install kernel-related packages that match the "kickstart" kernel
+version we got out of the box from our 9.2 install. Let dnf find the right packages for our default
+install by adding a repofile `/etc/yum.repos.d/Rocky-92-Development.repo`:
+
+----
+[devel92]
+name=Rocky Linux 9.2 - Devel (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/devel/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[extras92]
+name=Rocky Linux 9.2 - Extras (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/extras/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[plus92]
+name=Rocky Linux 9.2 - Plus (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/plus/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[baseos92]
+name=Rocky Linux 9.2 - BaseOS (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/BaseOS/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[appstream92]
+name=Rocky Linux 9.2 - AppStream (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/AppStream/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[baseos-debug92]
+name=Rocky Linux 9.2 - BaseOS Debug (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/BaseOS/x86_64/debug/tree/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[crb92]
+name=Rocky Linux 9.2 - CRB (kickstart)
+baseurl=https://dl.rockylinux.org/vault/rocky/9.2/CRB/x86_64/kickstart/
+gpgcheck=1
+enabled=1
+countme=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9
+
+[epel92]
+name=Rocky Linux 9.2 - Fedora EPEL
+baseurl=https://dl.fedoraproject.org/pub/archive/epel/9.2/Everything/x86_64/
+gpgcheck=0
+enabled=1
+countme=1
+----
+
+These point at the archived "kickstart" and "debug" repos that have packages for our
+default-installed kernel.
+
+*e2fsprogs*
+
+We'll also need to install Whamcloud's built version of e2fsprogs, this replaces the default
+e2fsprogs on the system with a version that adds more functionality for ldiskfs/ldiskfsprogs
+to work.
+
+Important: You MUST install these packages if you want to build/install Lustre server packages
+with ldiskfs as a backend.
+
+Create `/etc/yum.repos.d/e2fsprogs.repo`
+
+----
+[e2fsprogs]
+name=Whamcloud e2fsprogs
+baseurl="https://downloads.whamcloud.com/public/e2fsprogs/latest/el9/"
+gpgcheck=0
+enabled=1
+countme=1
+----
+
+=== Install Dependencies
+
+Hint: always search for multiple versions of a package before installing. Dnf likes
+to choose what it thinks is the best choice for you (usually the latest version),
+then hide the other choices. This might pose a problem if you want a specific version
+of a package, from a specific repo, like `e2fsprogs-devel-1.47.1-wc1.el9.x86_64`, from
+the `@e2fsprogs` repo we created before, but DNF picks the generic `e2fsprogs-devel` hosted by
+the `@appstream` repo when you do a `dnf install e2fsprogs-devel`.
+
+You can show all versions of a package, along with the repos they come from, by using
+
+[,bash]
+----
+dnf search --showduplicates --verbose e2fsprogs-devel
+----
+
+Example:
+
+[,console]
+----
+[root@mawenzi-01 ~]# dnf search e2fsprogs-devel --showduplicates  --verbose
+Loaded plugins: builddep, changelog, config-manager, copr, debug, debuginfo-install, download, generate_completion_cache, groups-manager, needs-restarting, playground, repoclosure, repodiff, repograph, repomanage, reposync, system-upgrade
+DNF version: 4.14.0
+cachedir: /var/cache/dnf
+Last metadata expiration check: 0:49:37 ago on Wed 28 Aug 2024 07:48:08 AM MDT.
+================================================================== Name Exactly Matched: e2fsprogs-devel ==================================================================
+e2fsprogs-devel-1.47.1-wc1.el9.x86_64 : Ext2/3/4 file system specific libraries and headers
+Repo        : @System
+Matched from:
+Provide    : e2fsprogs-devel = 1.47.1-wc1.el9
+
+e2fsprogs-devel-1.46.5-3.el9.x86_64 : Ext2/3/4 file system specific libraries and headers
+Repo        : devel92
+Matched from:
+Provide    : e2fsprogs-devel = 1.46.5-3.el9
+
+e2fsprogs-devel-1.46.5-3.el9.i686 : Ext2/3/4 file system specific libraries and headers
+Repo        : appstream92
+Matched from:
+Provide    : e2fsprogs-devel = 1.46.5-3.el9
+
+e2fsprogs-devel-1.46.5-3.el9.x86_64 : Ext2/3/4 file system specific libraries and headers
+Repo        : appstream92
+Matched from:
+Provide    : e2fsprogs-devel = 1.46.5-3.el9
+
+e2fsprogs-devel-1.47.1-wc1.el9.x86_64 : Ext2/3/4 file system specific libraries and headers
+Repo        : e2fsprogs
+Matched from:
+Provide    : e2fsprogs-devel = 1.47.1-wc1.el9
+
+e2fsprogs-devel-1.46.5-5.el9.i686 : Ext2/3/4 file system specific libraries and headers
+Repo        : appstream
+Matched from:
+Provide    : e2fsprogs-devel = 1.46.5-5.el9
+
+e2fsprogs-devel-1.46.5-5.el9.x86_64 : Ext2/3/4 file system specific libraries and headers
+Repo        : appstream
+Matched from:
+Provide    : e2fsprogs-devel = 1.46.5-5.el9
+----
+
+With the proper repos in place, install the following dependencies, using:
+
+* `KERNEL_VERSION="5.14.0-284.11.1.el9_2"`, and
+* `E2FSPROGS_VERSION="1.47.1-wc1.el9.x86_64"`
+
+[,bash]
+----
+#!/bin/bash
+
+E2FSPROGS_VERSION="1.47.1-wc1.el9.x86_64"
+KERNEL_VERSION="5.14.0-284.11.1.el9_2"
+
+dnf install -y \
+    audit-libs-devel   \
+    automake           \
+    bc                 \
+    binutils-devel     \
+    createrepo         \
+    dkms               \
+    e2fsprogs-${E2FSPROGS_VERSION}	       \
+    e2fsprogs-devel-${E2FSPROGS_VERSION}       \
+    e2fsprogs-libs-${E2FSPROGS_VERSION}        \
+    git                \
+    gcc                \
+    gcc-fortran        \
+    kernel-abi-stablelists-${KERNEL_VERSION}.noarch     \
+    kernel-core-${KERNEL_VERSION}.x86_64	        \
+    kernel-devel-${KERNEL_VERSION}.x86_64	        \
+    kernel-debug-devel-${KERNEL_VERSION}.x86_64	        \
+    kernel-headers-${KERNEL_VERSION}.x86_64	        \
+    kernel-modules-${KERNEL_VERSION}.x86_64		\
+    kernel-modules-core-${KERNEL_VERSION}.x86_64	\
+    kernel-modules-extra-${KERNEL_VERSION}.x86_64	\
+    kernel-debuginfo-common-x86_64-${KERNEL_VERSION}.x86_64  \
+    kernel-srpm-macros \
+    kernel-rpm-macros  \
+    lftp               \
+    libaio-devel       \
+    libattr-devel      \
+    libblkid-devel     \
+    libmount           \
+    libmount-devel     \
+    libnl3-devel       \
+    libselinux-devel   \
+    libssh-devel       \
+    libtirpc-devel     \
+    libtool            \
+    libuuid-devel      \
+    libyaml            \
+    libyaml-devel      \
+    llvm-toolset       \
+    lsof	       \
+    m4                 \
+    ncurses-devel      \
+    openldap-devel     \
+    openssl-devel      \
+    pciutils-devel     \
+    perl               \
+    perl-devel         \
+    python39           \
+    python3-devel      \
+    python3-docutils   \
+    redhat-lsb         \
+    rpm-build          \
+    texinfo            \
+    texinfo-tex        \
+    tk		       \
+    tcsh	       \
+    wget               \
+    vim
+----
+
+=== Disable System Firewall
+
+To make things easier for us laterwhen we're trying to send IPoIB traffic between
+nodes, go ahead and disable the system firewall:
+
+[,bash]
+----
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+----
+
+=== Install MOFED
+
+Once all these dependencies have installed, we'll need to acquire and install
+MOFED on the system. In our example, we're using `MOFED-5.8-3.0.7.0`, but this
+might be an old version by the time you're reading this, so just install the latest
+version that's been built for your OS.
+
+Get the MOFED sources from here:
+
+https://network.nvidia.com/products/infiniband-drivers/linux/mlnx_ofed/
+
+Choose your MOFED version, OS version, and download the `.tgz` file, i.e:
+
+https://www.mellanox.com/page/mlnx_ofed_eula?mtag=linux_sw_drivers&mrequest=downloads&mtype=ofed&mver=MLNX_OFED-24.07-0.6.1.0&mname=MLNX_OFED_LINUX-24.07-0.6.1.0-rhel9.2-x86_64.tgz
+
+You'll have to accept an EULA message but then SCP the `.tgz` from your laptop downloads
+to the target machine, and unpack it using `tar -xzvf MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64.tgz`
+
+This will leave you with the `MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64` directory.
+
+Follow NVidia's documentation for installing the MOFED packages, adding kernel support, etc here:
+
+https://docs.nvidia.com/networking/display/mlnxofedv451010/installing+mellanox+ofed#src-12004883_InstallingMellanoxOFED-InstallationScript
+
+I was lucky in that the MOFED suite I downloaded was already built for the default kernel,
+but if it's not, you'll have to rebuild RPMs for the kernel you're running. Here's the options to use for that.
+
+[,bash]
+----
+./mlnx_add_kernel_support.sh \
+        --make-tgz \
+        --tmpdir /tmp \
+        --kernel "5.14.0-284.11.1.el9_2.x86_64" \
+        --kernel-sources /usr/src/kernels/5.14.0-284.11.1.el9_2.x86_64/ \
+        --mlnx_ofed /root/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64
+----
+
+.Example:
+[,console]
+----
+# ./mlnx_add_kernel_support.sh --make-tgz --tmpdir /tmp --kernel "5.14.0-284.11.1.el9_2.x86_64" --kernel-sources /usr/src/kernels/5.14.0-284.11.1.el9_2.x86_64/ --mlnx_ofed /root/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64
+Note: This program will create MLNX_OFED_LINUX TGZ for rhel9.2 under /tmp directory.
+Do you want to continue?[y/N]:y
+See log file /tmp/mlnx_iso.263699_logs/mlnx_ofed_iso.263699.log
+
+Checking if all needed packages are installed...
+Building MLNX_OFED_LINUX RPMS . Please wait...
+Creating metadata-rpms for 5.14.0-284.11.1.el9_2.x86_64 ...
+WARNING: If you are going to configure this package as a repository, then please note
+WARNING: that it contains unsigned rpms, therefore, you need to disable the gpgcheck
+WARNING: by setting 'gpgcheck=0' in the repository conf file.
+Created /tmp/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64-ext.tgz
+----
+
+Then, take the `.tgz` that was just created above and unpack it in your home directory.
+Check the `.supported_kernels` file in the unpacked directory.
+
+[,console]
+----
+# cat .supported_kernels
+5.14.0-284.11.1.el9_2.x86_64
+----
+
+Now, add the path to the RPMS directory to a yum repofile `/etc/yum.repos.d/mlnx_ofed.repo`:
+
+----
+[mlnx_ofed]
+name=MLNX_OFED Repository
+baseurl=file:///root/test/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64-ext/RPMS
+enabled=1
+gpgcheck=0
+----
+
+Then, install MOFED using `dnf`:
+
+[,bash]
+----
+dnf install --nogpgcheck mlnx-ofed-all opensm mlnx-ofa_kernel-devel
+----
+
+You should now have `/usr/src/ofa_kernel` installed on the machine.
+
+Load the `ib_umad` module:
+
+[,bash]
+----
+modprobe ib_umad
+modprobe mlx5_ib
+----
+
+If this machine will be running the Subnet Manager for the fabric, go ahead and `systemctl start opensm` if it's a systemctl service,
+otherwise launch it as a daemon:
+
+[,bash]
+----
+/etc/init.d/opensmd start
+----
+
+Now that OpenSM is started, go ahead and load the ipoib module:
+
+[,bash]
+----
+modprobe ib_ipoib
+----
+
+Use NetworkManager CLI to set a static IP address on your `ibs1` interface:
+
+[,bash]
+----
+nmcli connection modify ibs1 ipv4.method manual ipv4.addresses 192.168.0.101/24
+nmcli connection up ibs1
+nmcli connection modify ibs1 connection.autoconnect yes
+----
+
+At this point, the ConnectX-6 cards on the system show the following for `ip a`:
+
+[,console]
+----
+7: ibs1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 2044 qdisc mq state UP group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:94:40:c9:ff:ff:b3:4b:d0 brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    altname ibp133s0
+    inet 192.168.0.101/24 brd 192.168.0.255 scope global noprefixroute ibs1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::9640:c9ff:ffb3:4bd0/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+8: ibs2: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 4092 qdisc mq state DOWN group default qlen 256
+    link/infiniband 00:00:10:29:fe:80:00:00:00:00:00:00:94:40:c9:ff:ff:b3:5b:4c brd 00:ff:ff:ff:ff:12:40:1b:ff:ff:00:00:00:00:00:00:ff:ff:ff:ff
+    altname ibp3s0
+----
+
+and `ibstat` shows:
+
+[,console]
+----
+CA 'mlx5_0'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.37.1700
+	Hardware version: 0
+	Node GUID: 0x9440c9ffffb34bd0
+	System image GUID: 0x9440c9ffffb34bd0
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 100
+		Base lid: 1
+		LMC: 0
+		SM lid: 1
+		Capability mask: 0xa659e84a
+		Port GUID: 0x9440c9ffffb34bd0
+		Link layer: InfiniBand
+CA 'mlx5_1'
+	CA type: MT4123
+	Number of ports: 1
+	Firmware version: 20.37.1700
+	Hardware version: 0
+	Node GUID: 0x9440c9ffffb35b4c
+	System image GUID: 0x9440c9ffffb35b4c
+	Port 1:
+		State: Down
+		Physical state: Disabled
+		Rate: 10
+		Base lid: 65535
+		LMC: 0
+		SM lid: 0
+		Capability mask: 0xa659e848
+		Port GUID: 0x9440c9ffffb35b4c
+		Link layer: InfiniBand
+----
+
+This concludes the MOFED/network layer configuration for the Lustre server.
+
+=== Get ext4 Source from Kernel Sources
+
+In order to build the Lustre server RPMs with ldiskfs, we'll need the ext4 source
+in place. Currently, the `kernel-devel` packages put an incomplete `fs/ext4/` directory
+in place without any sources, so we'll need to get the full source from the kernel source RPM
+and extract it to the right spot.
+
+Download the kernel source RPM for your target kernel. I had to get mine from a third-party
+website as Rocky was no longer hosting the .src.rpm in their archives. Install the .src.rpm,
+then replace the contents of `/usr/src/kernels/5.14.0-284.11.1.el9_2.x86_64/fs/ext4` with
+the installed `/root/rpmbuild/SOURCES/linux-5.14.0-284.11.1.el9_2/fs/ext4`.
+
+[,bash]
+----
+https_proxy=http://proxy.houston.hpecorp.net:8080 wget https://mirror.math.princeton.edu/pub/centos-stream/SIGs/9/kmods/source/kernels/kernel-5.14.0-284.11.1.el9_2.src.rpm
+rpm -ivh kernel-5.14.0-284.11.1.el9_2.src.rpm
+cd ~/rpmbuild/SOURCES
+tar xJf linux-5.14.0-284.11.1.el9_2.tar.xz
+cd /usr/src/kernels/5.14.0-284.11.1.el9_2.x86_64/fs
+mv ext4/ ext4.orig
+cp -r /root/rpmbuild/SOURCES/linux-5.14.0-284.11.1.el9_2/fs/ext4 .
+----
+
+=== Clone Lustre Repo
+
+Here we'll clone the `lustre-wc-rel` repo and check out the git refspec we want to build off of.
+Unless you want to set up SSH keys or other auth, just use HTTP to anonymously clone the git repo:
+
+[,bash]
+----
+git clone http://es-gerrit.hpc.amslabs.hpecorp.net/lustre-wc-rel
+----
+
+Fetch/checkout the PR head you want to build:
+
+[,bash]
+----
+cd lustre-wc-rel/
+git fetch http://es-gerrit.hpc.amslabs.hpecorp.net/lustre-wc-rel refs/changes/31/162631/1 && git checkout FETCH_HEAD
+----
+
+=== Build Lustre Server RPMs
+
+Run the following script, `build_server_rpms.sh` to build the server RPMs:
+
+[,bash]
+----
+#!/bin/bash
+
+# git clone lustre-wc-rel, check out whatever branch
+cd lustre-wc-rel
+
+# install build dependencies
+
+# set build vars
+KERNEL_VERSION=$(uname -r)
+LINUX_OBJ_DIR=$(ls -d /usr/src/kernels/$KERNEL_VERSION)
+LINUX_DIR=$(ls -d /usr/src/kernels/$KERNEL_VERSION)
+
+# Configure autotools
+sh autogen.sh
+
+# configure
+./configure \
+  --enable-server \
+  --disable-gss-keyring \
+  --enable-gss="no" \
+  --enable-mpitests="no" \
+  --enable-ldiskfs \
+  --with-o2ib="/usr/src/ofa_kernel/default/" \
+  --with-linux="$LINUX_DIR" \
+  --with-linux-obj="$LINUX_OBJ_DIR"
+
+# make server rpms
+make rpms
+----
+
+If everything completes successfully you'll have the following RPMs built:
+
+[,console]
+----
+[root@mawenzi-01 ~]# ls lustre-wc-rel/*.rpm
+lustre-wc-rel/kmod-lustre-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/kmod-lustre-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/kmod-lustre-osd-ldiskfs-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/kmod-lustre-osd-ldiskfs-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/kmod-lustre-tests-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/kmod-lustre-tests-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-2.15.1.2_cray_416_g3ab60c6-1.src.rpm
+lustre-wc-rel/lustre-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-debugsource-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-devel-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-iokit-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-osd-ldiskfs-mount-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-osd-ldiskfs-mount-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-resource-agents-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-tests-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+lustre-wc-rel/lustre-tests-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+----
+
+=== Install Server RPMs
+
+Finally, install the server RPMs:
+
+[,bash]
+----
+#!/bin/bash
+
+cd lustre-wc-rel/
+dnf install \
+	kmod-lustre-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	kmod-lustre-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	kmod-lustre-osd-ldiskfs-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	kmod-lustre-osd-ldiskfs-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	kmod-lustre-tests-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	kmod-lustre-tests-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-debugsource-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-devel-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-iokit-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-osd-ldiskfs-mount-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-osd-ldiskfs-mount-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-resource-agents-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-tests-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm \
+	lustre-tests-debuginfo-2.15.1.2_cray_416_g3ab60c6-1.el9.x86_64.rpm
+----
+
+=== Configure LNet
+
+First, make sure the right modules reload if the server is rebooted.
+
+[,bash]
+----
+echo ib_ipoib > /etc/modules-load.d/ib_ipoib.conf
+echo lnet > /etc/modules-load.d/lnet.conf
+echo lustre > /etc/modules-load.d/lustre.conf
+----
+
+Then load them manually now.
+
+[,bash]
+----
+modprobe ib_ipoib
+modprobe lustre
+modprobe lnet
+----
+
+Configure LNet using the static IP address of the `ibs1` device you assigned earlier,
+`192.168.0.101/24`:
+
+[,console]
+----
+[root@mawenzi-01 ~]# lnetctl lnet configure
+[root@mawenzi-01 ~]# lnetctl net add --net o2ib --if ibs1
+[root@mawenzi-01 ~]# lctl network up
+LNET configured
+[root@mawenzi-01 ~]# lnetctl net show
+net:
+    - net type: lo
+      local NI(s):
+        - nid: 0@lo
+          status: up
+    - net type: o2ib
+      local NI(s):
+        - nid: 192.168.0.101@o2ib
+          status: up
+          interfaces:
+              0: ibs1
+----
+
+=== Make the Lustre Filesystem
+
+Context matters for this; in our case, this is our disk layout:
+
+[,console]
+----
+[root@mawenzi-01 ~]# lsblk
+NAME                    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda                       8:0    0   1.6T  0 disk
+├─sda1                    8:1    0   600M  0 part /boot/efi
+├─sda2                    8:2    0     1G  0 part /boot
+└─sda3                    8:3    0   1.6T  0 part
+  ├─rl_mawenzi--01-root 253:0    0    70G  0 lvm  /
+  ├─rl_mawenzi--01-swap 253:1    0     4G  0 lvm  [SWAP]
+  └─rl_mawenzi--01-home 253:2    0   1.6T  0 lvm  /home
+sdb                       8:16   0 372.6G  0 disk
+sdc                       8:32   0   1.5T  0 disk
+sdd                       8:48   0   1.5T  0 disk
+----
+
+`/dev/sda` being the OS disk, and we want `/dev/sdb` to be our combined MGT/MDT,
+while `/sdc/sdd` can be OSTs. These look like spinning disks but are actually SAS SSDs.
+
+Create the combined MDT/MGT on `/dev/sdb`:
+
+[,bash]
+----
+mkfs.lustre --fsname=<fs_name> --index=0 --mgs --mdt /dev/sdb
+----
+
+[,console]
+----
+[root@mawenzi-01 ~]# mkfs.lustre --fsname=testfs --index=0 --mgs --mdt /dev/sdb
+
+   Permanent disk data:
+Target:     testfs:MDT0000
+Index:      0
+Lustre FS:  testfs
+Mount type: ldiskfs
+Flags:      0x65
+              (MDT MGS first_time update )
+Persistent mount opts: user_xattr,errors=remount-ro
+Parameters:
+
+checking for existing Lustre data: not found
+device size = 381554MB
+formatting backing filesystem ldiskfs on /dev/sdb
+	target name   testfs:MDT0000
+	kilobytes     390711384
+	options        -J size=4096 -I 1024 -i 2560 -q -O dirdata,uninit_bg,^extents,dir_nlink,quota,project,huge_file,ea_inode,large_dir,^fast_commit,flex_bg -E lazy_journal_init="0",lazy_itable_init="0" -F
+mkfs_cmd = mke2fs -j -b 4096 -L testfs:MDT0000  -J size=4096 -I 1024 -i 2560 -q -O dirdata,uninit_bg,^extents,dir_nlink,quota,project,huge_file,ea_inode,large_dir,^fast_commit,flex_bg -E lazy_journal_init="0",lazy_itable_init="0" -F /dev/sdb 390711384k
+Writing CONFIGS/mountdata
+----
+
+NOTE: This may take up to around 10 minutes to complete. OST formatting is faster.
+
+Make a directory and mount the MDT. Also, set identity provider to `NONE`.
+
+[,bash]
+----
+mkdir /mnt/mdt
+mount -t lustre /dev/sdb /mnt/mdt/
+lctl set_param mdt.*.identity_upcall=NONE
+----
+
+Reformat/create an OST on `/dev/sdc`, using the MGS NID of our server:
+
+[,console]
+----
+[root@mawenzi-01 ~]# mkfs.lustre --reformat --index=0 --fsname=testfs --ost --mgsnode=192.168.0.101@o2ib /dev/sdc
+
+   Permanent disk data:
+Target:     testfs:OST0000
+Index:      0
+Lustre FS:  testfs
+Mount type: ldiskfs
+Flags:      0x62
+              (OST first_time update )
+Persistent mount opts: ,errors=remount-ro
+Parameters: mgsnode=192.168.0.101@o2ib
+
+device size = 1526185MB
+formatting backing filesystem ldiskfs on /dev/sdc
+	target name   testfs:OST0000
+	kilobytes     1562813784
+	options        -J size=1024 -I 512 -i 262144 -q -O extents,uninit_bg,dir_nlink,quota,project,huge_file,^fast_commit,flex_bg -G 256 -E resize="4290772992",lazy_journal_init="0",lazy_itable_init="0" -F
+mkfs_cmd = mke2fs -j -b 4096 -L testfs:OST0000  -J size=1024 -I 512 -i 262144 -q -O extents,uninit_bg,dir_nlink,quota,project,huge_file,^fast_commit,flex_bg -G 256 -E resize="4290772992",lazy_journal_init="0",lazy_itable_init="0" -F /dev/sdc 1562813784k
+Writing CONFIGS/mountdata
+----
+
+Mount the OST directory to `/mnt/ost`
+
+[,bash]
+----
+mkdir -p /mnt/ost
+mount -t lustre /dev/sdc /mnt/ost/
+----
+
+Verify the filesystem creation by creating a client mountpoint and mounting the FS there.
+
+[,console]
+----
+[root@mawenzi-01 ~]# mkdir /mnt/testfs
+[root@mawenzi-01 ~]# mount -t lustre 192.168.0.101@o2ib:/testfs /mnt/testfs
+[root@mawenzi-01 ~]# mount -t lustre
+/dev/sdb on /mnt/mdt type lustre (ro,svname=testfs-MDT0000,mgs,osd=osd-ldiskfs,user_xattr,errors=remount-ro)
+/dev/sdc on /mnt/ost type lustre (ro,svname=testfs-OST0000,mgsnode=192.168.0.101@o2ib,osd=osd-ldiskfs,errors=remount-ro)
+192.168.0.101@o2ib:/testfs on /mnt/testfs type lustre (rw,seclabel,checksum,flock,nouser_xattr,lruresize,lazystatfs,nouser_fid2path,verbose,encrypt)
+----
+
+This concludes the Lustre Server installation for Rocky Linux 9.2. To build and install a client on a separate node
+that mounts this filesystem over the network, see my xref:docs-site:learning:lustre/lustre-client.adoc[Lustre Client] doc.

@@ -884,6 +884,155 @@ Made changes to PCI device ordering. Reboot the system for them to take effect.<
 </div>
 </div>
 <div class="sect1">
+<h2 id="_tracing_lctl_ping_code_path_for_o2iblnd"><a class="anchor" href="#_tracing_lctl_ping_code_path_for_o2iblnd"></a>Tracing lctl ping Code Path for o2iblnd</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>lctl ping</code> begins in <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/lctl.c">lctl.c</a>,
+and defines that command to call the <code>jt_ptl_ping</code> function. That function is declared in
+<a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/obdctl.h#L53">obdctl.h</a> and defined in
+<a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L899">portals.c</a>.</p>
+</div>
+<div class="paragraph">
+<p>In <code>jt_ptl_ping</code>, a <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/include/uapi/linux/lnet/libcfs_ioctl.h#L60"><code>struct libcfs_ioctl_data</code></a>
+is <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L956">initialized</a>. Here&#8217;s the structure of <code>libcfs_ioctl_data</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct libcfs_ioctl_data {
+	struct libcfs_ioctl_hdr ioc_hdr;
+
+	__u64 ioc_nid;
+	__u64 ioc_u64[1];
+
+	__u32 ioc_flags;
+	__u32 ioc_count;
+	__u32 ioc_net;
+	__u32 ioc_u32[7];
+
+	__u32 ioc_inllen1;
+	char *ioc_inlbuf1;
+	__u32 ioc_inllen2;
+	char *ioc_inlbuf2;
+
+	__u32 ioc_plen1; /* buffers in userspace */
+	void __user *ioc_pbuf1;
+	__u32 ioc_plen2; /* buffers in userspace */
+	void __user *ioc_pbuf2;
+
+	char ioc_bulk[0];
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lastly, <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L963"><code>l_ioctl</code> is called</a> (defined <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/util/l_ioctl.c#L83">here</a>).</p>
+</div>
+<div class="paragraph">
+<p><code>l_ioctl</code> first opens a file descriptor using <code>open_ioc_dev(LNET_DEV_ID)</code>.
+Then, calls <code>ioctl(fd, opc, buf)</code> where <code>fd</code> is our file descriptor
+of the LNET device, <code>opc</code> is <code>IOC_LIBCFS_PING</code>, and <code>buf</code> is our
+<code>libcfs_ioctl_data</code> struct.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://man7.org/linux/man-pages/man2/ioctl.2.html" class="bare">https://man7.org/linux/man-pages/man2/ioctl.2.html</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Notes on ioctl registration</strong></p>
+</div>
+<div class="paragraph">
+<p>Before this <code>ioctl</code> call is made, <code>libcfs</code> should have already been registered as devices/files capable of receiving <code>ioctl</code> calls when the modules were loaded.</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s a <code>struct ioc_dev</code> internally in libcfs</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">struct ioc_dev {
+	const char *dev_name;
+	int dev_fd;
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is filled out added to a <code>static struct ioc_dev ioc_dev_list[10];</code>
+when <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/util/l_ioctl.c#L98"><code>register_ioc_dev()</code></a> is called.</p>
+</div>
+<div class="paragraph">
+<p>When libcfs starts up as a kernel module, it creates a <code>struct miscdevice</code>, with a pointer to <code>struct file_operations libcfs_fops</code>, which in turn has a pointer to the <code>libcfs_psdev_ioctl</code> function:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">static const struct file_operations libcfs_fops = {
+	.owner			    = THIS_MODULE,
+	.unlocked_ioctl	= libcfs_psdev_ioctl,
+};
+
+static struct miscdevice libcfs_dev = {
+	.minor		= MISC_DYNAMIC_MINOR,
+	.name			= "lnet",
+	.fops			= &amp;libcfs_fops,
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <code>miscdevice</code> struct is registered via <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L874"><code>misc_register</code></a> in the <code>__init libcfs_init</code> function that runs when the module is being initialized.</p>
+</div>
+<div class="paragraph">
+<p>Some information on <a href="https://www.kernel.org/doc/html/v5.3/driver-api/misc_devices.html">Misc Devices</a>, but essentially this is just registering a misc device with the Linux Kernel.</p>
+</div>
+<div class="paragraph">
+<p><strong>Back to the actual call-chain&#8230;&#8203;</strong></p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L243"><code>libcfs_psdev_ioctl</code></a> is registered as the unlocked <code>ioctl</code> handler.
+This calls <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L185"><code>libcfs_ioctl</code></a>, again with <code>cmd</code> being the <code>IOC_LIBCFS_PING</code> opcode, and <code>*uparam</code> being a void pointer to the <code>libcfs_ioctl_data</code> struct from earlier.</p>
+</div>
+<div class="paragraph">
+<p><code>libcfs_ioctl</code> turns that <code>libcfs_ioctl_data</code> struct into a new <code>struct libcfs_ioctl_hdr *hdr</code> usable going forward. It then looks at the <code>cmd</code> opcode, and if it&#8217;s a DEBUG-related opcode, does some stuff, but normally just ends up calling <code>blocking_notifier_call_chain</code>, another Linux kernel function that ends up walking the list of ioctl handlers (<code>notifier_block</code>) on <code>libcfs_ioctl_list</code> and calls them with <code>cmd</code>, and <code>hdr</code>. Previous to this, our notifier <code>lnet_ioctl_handler</code>, containing a reference to the <code>lnet_ioctl</code> function should have been registered on this list.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s a link to the <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/module.c#L174"><code>lnet_ioctl</code></a> function (Note how this is now over in <code>lnet</code> territory).</p>
+</div>
+<div class="paragraph">
+<p><code>lnet_ioctl</code> is a wrapper that handles some opcode types, like <code>IOC_LIBCFS_CONFIGURE</code>, <code>IOC_LIBCFS_UNCONFIGURE</code>, <code>IOC_LIBCFS_ADD_NET</code>, etc. But our <code>IOC_LIBCFS_PING</code> is not among these, so the <code>default</code> case is used&#8201;&#8212;&#8201;this calls <code>LNetCtl(cmd, hdr)</code>. Here&#8217;s a link to that function, in api-ni.c: <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L4080" class="bare">https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L4080</a></p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s got cases for many more opcode types, and we finally see our opcode being handled <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L4500">here</a>. This fills out an <code>struct lnet_process_id	id4 = {};</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">id4.nid = data-&gt;ioc_nid;
+id4.pid = data-&gt;ioc_u32[0];</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, calls <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L5061"><code>lnet_ping()</code></a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">rc = lnet_ping(id4, &amp;LNET_ANY_NID, timeout, data-&gt;ioc_pbuf1,
+			       data-&gt;ioc_plen1 / sizeof(struct lnet_process_id));</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That initializes and registers a "free-floating" Memory Descriptor (MD) struct (<code>struct lnet_md md</code>), a ping buffer (<code>struct lnet_ping_buffer *pbuf</code>). Part of the MD initialization sets the <code>md.handler</code> to the <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L5037"><code>lnet_ping_event_handler</code></a> function. <code>lnet_ping</code> calls <a href="https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/lib-md.c#L423"><code>LNetMDBind()</code></a> to register this MD.</p>
+</div>
+<div class="paragraph">
+<p>To read more about Memory Descriptors (MD) and Matching Entries (ME), see the Lustre Internals PDF on page 53:
+<a href="https://wiki.old.lustre.org/images/d/da/Understanding_Lustre_Filesystem_Internals.pdf" class="bare">https://wiki.old.lustre.org/images/d/da/Understanding_Lustre_Filesystem_Internals.pdf</a></p>
+</div>
+<div class="paragraph">
+<p>Finally, a call to <code>LNetGet()</code> is made:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-c hljs" data-lang="c">rc = LNetGet(lnet_nid_to_nid4(src_nid), pd.mdh, id,
+		     LNET_RESERVED_PORTAL,
+		     LNET_PROTO_PING_MATCHBITS, 0, false);</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
 <div class="sectionbody">
 <div id="references" class="paragraph">

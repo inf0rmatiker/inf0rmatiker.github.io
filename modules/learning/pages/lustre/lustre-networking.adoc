@@ -404,6 +404,131 @@ Applying... Done!
 Made changes to PCI device ordering. Reboot the system for them to take effect.
 ----
 
+== Tracing lctl ping Code Path for o2iblnd
+
+`lctl ping` begins in https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/lctl.c[lctl.c],
+and defines that command to call the `jt_ptl_ping` function. That function is declared in
+https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/obdctl.h#L53[obdctl.h] and defined in
+https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L899[portals.c].
+
+In `jt_ptl_ping`, a https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/include/uapi/linux/lnet/libcfs_ioctl.h#L60[`struct libcfs_ioctl_data`]
+is https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L956[initialized]. Here's the structure of `libcfs_ioctl_data`
+
+[,c]
+----
+struct libcfs_ioctl_data {
+	struct libcfs_ioctl_hdr ioc_hdr;
+
+	__u64 ioc_nid;
+	__u64 ioc_u64[1];
+
+	__u32 ioc_flags;
+	__u32 ioc_count;
+	__u32 ioc_net;
+	__u32 ioc_u32[7];
+
+	__u32 ioc_inllen1;
+	char *ioc_inlbuf1;
+	__u32 ioc_inllen2;
+	char *ioc_inlbuf2;
+
+	__u32 ioc_plen1; /* buffers in userspace */
+	void __user *ioc_pbuf1;
+	__u32 ioc_plen2; /* buffers in userspace */
+	void __user *ioc_pbuf2;
+
+	char ioc_bulk[0];
+};
+----
+
+Lastly, https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lustre/utils/portals.c#L963[`l_ioctl` is called] (defined https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/util/l_ioctl.c#L83[here]).
+
+`l_ioctl` first opens a file descriptor using `open_ioc_dev(LNET_DEV_ID)`.
+Then, calls `ioctl(fd, opc, buf)` where `fd` is our file descriptor
+of the LNET device, `opc` is `IOC_LIBCFS_PING`, and `buf` is our
+`libcfs_ioctl_data` struct.
+
+https://man7.org/linux/man-pages/man2/ioctl.2.html
+
+*Notes on ioctl registration*
+
+Before this `ioctl` call is made, `libcfs` should have already been registered as devices/files capable of receiving `ioctl` calls when the modules were loaded.
+
+There's a `struct ioc_dev` internally in libcfs
+
+[,c]
+----
+struct ioc_dev {
+	const char *dev_name;
+	int dev_fd;
+};
+----
+
+This is filled out added to a `static struct ioc_dev ioc_dev_list[10];`
+when https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/util/l_ioctl.c#L98[`register_ioc_dev()`] is called.
+
+
+When libcfs starts up as a kernel module, it creates a `struct miscdevice`, with a pointer to `struct file_operations libcfs_fops`, which in turn has a pointer to the `libcfs_psdev_ioctl` function:
+
+[,c]
+----
+static const struct file_operations libcfs_fops = {
+	.owner			    = THIS_MODULE,
+	.unlocked_ioctl	= libcfs_psdev_ioctl,
+};
+
+static struct miscdevice libcfs_dev = {
+	.minor		= MISC_DYNAMIC_MINOR,
+	.name			= "lnet",
+	.fops			= &libcfs_fops,
+};
+----
+
+This `miscdevice` struct is registered via https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L874[`misc_register`] in the `__init libcfs_init` function that runs when the module is being initialized.
+
+Some information on https://www.kernel.org/doc/html/v5.3/driver-api/misc_devices.html[Misc Devices], but essentially this is just registering a misc device with the Linux Kernel.
+
+*Back to the actual call-chain...*
+
+https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L243[`libcfs_psdev_ioctl`] is registered as the unlocked `ioctl` handler.
+This calls https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/libcfs/libcfs/module.c#L185[`libcfs_ioctl`], again with `cmd` being the `IOC_LIBCFS_PING` opcode, and `*uparam` being a void pointer to the `libcfs_ioctl_data` struct from earlier.
+
+`libcfs_ioctl` turns that `libcfs_ioctl_data` struct into a new `struct libcfs_ioctl_hdr *hdr` usable going forward. It then looks at the `cmd` opcode, and if it's a DEBUG-related opcode, does some stuff, but normally just ends up calling `blocking_notifier_call_chain`, another Linux kernel function that ends up walking the list of ioctl handlers (`notifier_block`) on `libcfs_ioctl_list` and calls them with `cmd`, and `hdr`. Previous to this, our notifier `lnet_ioctl_handler`, containing a reference to the `lnet_ioctl` function should have been registered on this list.
+
+Here's a link to the https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/module.c#L174[`lnet_ioctl`] function (Note how this is now over in `lnet` territory).
+
+`lnet_ioctl` is a wrapper that handles some opcode types, like `IOC_LIBCFS_CONFIGURE`, `IOC_LIBCFS_UNCONFIGURE`, `IOC_LIBCFS_ADD_NET`, etc. But our `IOC_LIBCFS_PING` is not among these, so the `default` case is used -- this calls `LNetCtl(cmd, hdr)`. Here's a link to that function, in api-ni.c: https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L4080
+
+It's got cases for many more opcode types, and we finally see our opcode being handled https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L4500[here]. This fills out an `struct lnet_process_id	id4 = {};`:
+
+[,c]
+----
+id4.nid = data->ioc_nid;
+id4.pid = data->ioc_u32[0];
+----
+
+Then, calls https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L5061[`lnet_ping()`]:
+
+[,c]
+----
+rc = lnet_ping(id4, &LNET_ANY_NID, timeout, data->ioc_pbuf1,
+			       data->ioc_plen1 / sizeof(struct lnet_process_id));
+----
+
+That initializes and registers a "free-floating" Memory Descriptor (MD) struct (`struct lnet_md md`), a ping buffer (`struct lnet_ping_buffer *pbuf`). Part of the MD initialization sets the `md.handler` to the https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/api-ni.c#L5037[`lnet_ping_event_handler`] function. `lnet_ping` calls https://github.hpe.com/hpe/hpc-lus-filesystem/blob/cray-2.15/lnet/lnet/lib-md.c#L423[`LNetMDBind()`] to register this MD.
+
+To read more about Memory Descriptors (MD) and Matching Entries (ME), see the Lustre Internals PDF on page 53:
+https://wiki.old.lustre.org/images/d/da/Understanding_Lustre_Filesystem_Internals.pdf
+
+Finally, a call to `LNetGet()` is made:
+
+[,c]
+----
+rc = LNetGet(lnet_nid_to_nid4(src_nid), pd.mdh, id,
+		     LNET_RESERVED_PORTAL,
+		     LNET_PROTO_PING_MATCHBITS, 0, false);
+----
+
 == References
 
 [[references]]

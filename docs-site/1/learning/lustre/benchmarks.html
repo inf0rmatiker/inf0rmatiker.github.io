@@ -1289,6 +1289,145 @@ o186i222 slots=128</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_lnet_self_test_lst"><a class="anchor" href="#_lnet_self_test_lst"></a>LNet Self-Test (lst)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>On huygens, nid509 to 510 1:1 BW:</p>
+</div>
+<div class="paragraph">
+<p>WRITES:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nid509:~ # lst.sh -f 9027@kfi -t 9026@kfi -d 1:1 -m write -c 32 -n 1 -C simple
+Discover server NIDs
+Discover client NIDs
+Start LST write - Fri 15 Nov 2024 12:42:31 PM CST
+LST_SESSION=225181
+SESSION: lnet_session FEATURES: 1 TIMEOUT: 300 FORCE: No
+Adding clients: 9027@kfi
+9027@kfi are added to session
+Adding servers: 9026@kfi
+9026@kfi are added to session
+Test: --batch brw_write --concurrency 32 --from clients --to servers --distribute 1:1 brw write check=simple size=1m
+Stat: --count 1 --delay 15 --bw --mbs clients servers
+Test was added successfully
+brw_write is running now
+[LNet Bandwidth of clients]
+[R] Avg: 5.83     MB/s  Min: 5.83     MB/s  Max: 5.83     MB/s
+[W] Avg: 38216.58 MB/s  Min: 38216.58 MB/s  Max: 38216.58 MB/s
+[LNet Bandwidth of servers]
+[R] Avg: 38215.57 MB/s  Min: 38215.57 MB/s  Max: 38215.57 MB/s
+[W] Avg: 5.83     MB/s  Min: 5.83     MB/s  Max: 5.83     MB/s
+1 batch in stopping
+Batch is stopped
+Stop LST write - Fri 15 Nov 2024 12:42:47 PM CST
+session is ended</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>READS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nid509:~ # lst.sh -f 9027@kfi -t 9026@kfi -d 1:1 -m read -c 32 -n 1 -C simple
+Discover server NIDs
+Discover client NIDs
+Start LST read - Fri 15 Nov 2024 12:47:58 PM CST
+LST_SESSION=225541
+SESSION: lnet_session FEATURES: 1 TIMEOUT: 300 FORCE: No
+Adding clients: 9027@kfi
+9027@kfi are added to session
+Adding servers: 9026@kfi
+9026@kfi are added to session
+Test: --batch brw_read --concurrency 32 --from clients --to servers --distribute 1:1 brw read check=simple size=1m
+Stat: --count 1 --delay 15 --bw --mbs clients servers
+Test was added successfully
+brw_read is running now
+[LNet Bandwidth of clients]
+[R] Avg: 18797.21 MB/s  Min: 18797.21 MB/s  Max: 18797.21 MB/s
+[W] Avg: 2.87     MB/s  Min: 2.87     MB/s  Max: 2.87     MB/s
+[LNet Bandwidth of servers]
+[R] Avg: 2.87     MB/s  Min: 2.87     MB/s  Max: 2.87     MB/s
+[W] Avg: 18797.90 MB/s  Min: 18797.90 MB/s  Max: 18797.90 MB/s
+1 batch in stopping
+Batch is stopped
+Stop LST read - Fri 15 Nov 2024 12:48:14 PM CST
+session is ended</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On huygens, nid[509-511] to nid512 3:1 BW:</p>
+</div>
+<div class="paragraph">
+<p>WRITES:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nid509:~ # lst.sh -f "9027@kfi 9026@kfi 9155@kfi" -t 9154@kfi -d 3:1 -m write -c 32 -n 1 -C simple
+Discover server NIDs
+Discover client NIDs
+Start LST write - Fri 15 Nov 2024 12:45:30 PM CST
+LST_SESSION=225511
+SESSION: lnet_session FEATURES: 1 TIMEOUT: 300 FORCE: No
+Adding clients: 9027@kfi 9026@kfi 9155@kfi
+9027@kfi are added to session
+9026@kfi are added to session
+9155@kfi are added to session
+Adding servers: 9154@kfi
+9154@kfi are added to session
+Test: --batch brw_write --concurrency 32 --from clients --to servers --distribute 3:1 brw write check=simple size=1m
+Stat: --count 1 --delay 15 --bw --mbs clients servers
+Test was added successfully
+brw_write is running now
+[LNet Bandwidth of clients]
+[R] Avg: 2.40     MB/s  Min: 2.40     MB/s  Max: 2.40     MB/s
+[W] Avg: 15743.83 MB/s  Min: 15732.86 MB/s  Max: 15756.41 MB/s
+[LNet Bandwidth of servers]
+[R] Avg: 47232.89 MB/s  Min: 47232.89 MB/s  Max: 47232.89 MB/s
+[W] Avg: 7.21     MB/s  Min: 7.21     MB/s  Max: 7.21     MB/s
+3 batch in stopping
+Batch is stopped
+Stop LST write - Fri 15 Nov 2024 12:45:46 PM CST
+session is ended</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>READS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">nid509:~ # lst.sh -f "9027@kfi 9026@kfi 9155@kfi" -t 9154@kfi -d 3:1 -m read -c 32 -n 1 -C simple
+Discover server NIDs
+Discover client NIDs
+Start LST read - Fri 15 Nov 2024 12:48:50 PM CST
+LST_SESSION=225567
+SESSION: lnet_session FEATURES: 1 TIMEOUT: 300 FORCE: No
+Adding clients: 9027@kfi 9026@kfi 9155@kfi
+9027@kfi are added to session
+9026@kfi are added to session
+9155@kfi are added to session
+Adding servers: 9154@kfi
+9154@kfi are added to session
+Test: --batch brw_read --concurrency 32 --from clients --to servers --distribute 3:1 brw read check=simple size=1m
+Stat: --count 1 --delay 15 --bw --mbs clients servers
+Test was added successfully
+brw_read is running now
+[LNet Bandwidth of clients]
+[R] Avg: 6266.42  MB/s  Min: 44.16    MB/s  Max: 18656.51 MB/s
+[W] Avg: 0.96     MB/s  Min: 0.01     MB/s  Max: 2.85     MB/s
+[LNet Bandwidth of servers]
+[R] Avg: 2.87     MB/s  Min: 2.87     MB/s  Max: 2.87     MB/s
+[W] Avg: 18798.31 MB/s  Min: 18798.31 MB/s  Max: 18798.31 MB/s
+1 batch in stopping
+Batch is stopped
+Stop LST read - Fri 15 Nov 2024 12:49:10 PM CST
+session is ended</code></pre>
+</div>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>

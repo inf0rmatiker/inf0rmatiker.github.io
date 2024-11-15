@@ -433,6 +433,38 @@
 <p>Add in any <code>branch</code> entries for tracking remote dev counterparts. This will let
 you <code>git pull</code> from the remote to your local version.</p>
 </div>
+<div class="sect2">
+<h3 id="_rebasing_a_development_branch"><a class="anchor" href="#_rebasing_a_development_branch"></a>Rebasing a Development Branch</h3>
+<div class="paragraph">
+<p>Occasionally the integration branch <code>cray-2.15-int</code> branch gets rebased on the release branch <code>cray-2.15</code>.</p>
+</div>
+<div class="paragraph">
+<p>When things are cherry-picked into the <code>cray-2.15</code> the commits get different commit hashes
+than what&#8217;s in <code>cray-2.15-int</code>. Also the order can change from what&#8217;s in <code>cray-2.15-int</code>.</p>
+</div>
+<div class="paragraph">
+<p>The history of the release branch totally changes from what&#8217;s in the integration branch.</p>
+</div>
+<div class="paragraph">
+<p>When you try to rebase your dev branch, using <code>git rebase -i origin/cray-2.15-int</code>
+(with the old <code>cray-2.15-int</code> history) onto the new <code>cray-2.15-int</code>, git will
+"mostly" find the same commits and skip them, but it won&#8217;t catch all of them.
+The ones it doesn&#8217;t catch will be lumped into a list with your actual new commits
+on <code>cray-2.15-int</code>. All you have to do is to <em>not pick</em> the commits you didn&#8217;t commit,
+because they&#8217;re most likely already there in <code>cray-2.15-int</code>, it&#8217;s just that git
+didn&#8217;t find a match for them.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git checkout LUS-12345-foo
+git fetch origin
+git rebase -i origin/cray-2.15-int</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, only <code>pick</code> your commits, deleting the rest.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -862,6 +894,18 @@ options lnet lock_prim_nid=1</code></pre>
 cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/lnet/parameters/sock_timeout
 0</code></pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_lnet_sanity_tests_locally"><a class="anchor" href="#_running_lnet_sanity_tests_locally"></a>Running LNet Sanity Tests Locally</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># After ./configure &amp;&amp; make -j 16 ...
+cd lustre-wc-rel/lustre/tests/
+./auster -Nv sanity-lnet --only 232</code></pre>
 </div>
 </div>
 </div>

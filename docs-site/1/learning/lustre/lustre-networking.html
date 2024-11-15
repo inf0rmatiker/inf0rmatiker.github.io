@@ -1030,6 +1030,16 @@ id4.pid = data-&gt;ioc_u32[0];</code></pre>
 		     LNET_PROTO_PING_MATCHBITS, 0, false);</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>On the receiving side:</p>
+</div>
+<div class="paragraph">
+<p>Look into <code>lnet_ping_target_setup()</code></p>
+</div>
+<div class="paragraph">
+<p>The GET comes in on the LNet reserved portal, with the match bits, which then gets matched to the MD. The reply is just the
+contents of that memory.</p>
+</div>
 </div>
 </div>
 <div class="sect1">

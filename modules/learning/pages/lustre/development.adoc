@@ -38,6 +38,33 @@ After cloning the Git repo, replace `.git/config` with the following:
 Add in any `branch` entries for tracking remote dev counterparts. This will let
 you `git pull` from the remote to your local version.
 
+=== Rebasing a Development Branch
+
+Occasionally the integration branch `cray-2.15-int` branch gets rebased on the release branch `cray-2.15`.
+
+When things are cherry-picked into the `cray-2.15` the commits get different commit hashes
+than what's in `cray-2.15-int`. Also the order can change from what's in `cray-2.15-int`.
+
+The history of the release branch totally changes from what's in the integration branch.
+
+When you try to rebase your dev branch, using `git rebase -i origin/cray-2.15-int`
+(with the old `cray-2.15-int` history) onto the new `cray-2.15-int`, git will
+"mostly" find the same commits and skip them, but it won't catch all of them.
+The ones it doesn't catch will be lumped into a list with your actual new commits
+on `cray-2.15-int`. All you have to do is to _not pick_ the commits you didn't commit,
+because they're most likely already there in `cray-2.15-int`, it's just that git
+didn't find a match for them.
+
+[,bash]
+----
+git checkout LUS-12345-foo
+git fetch origin
+git rebase -i origin/cray-2.15-int
+----
+
+Then, only `pick` your commits, deleting the rest.
+
+
 == SSH Configuration
 
 Make sure you have SSH entries configured for the different git remotes.
@@ -420,4 +447,13 @@ cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/lnet/parameters/lnet_t
 50
 cassini-hosta:/home/hornc/lustre-wc-rel # cat /sys/module/lnet/parameters/sock_timeout
 0
+----
+
+== Running LNet Sanity Tests Locally
+
+[,bash]
+----
+# After ./configure && make -j 16 ...
+cd lustre-wc-rel/lustre/tests/
+./auster -Nv sanity-lnet --only 232
 ----

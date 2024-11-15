@@ -529,6 +529,14 @@ rc = LNetGet(lnet_nid_to_nid4(src_nid), pd.mdh, id,
 		     LNET_PROTO_PING_MATCHBITS, 0, false);
 ----
 
+
+On the receiving side:
+
+Look into `lnet_ping_target_setup()`
+
+The GET comes in on the LNet reserved portal, with the match bits, which then gets matched to the MD. The reply is just the
+contents of that memory.
+
 == References
 
 [[references]]

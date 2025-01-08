@@ -3,7 +3,7 @@
 :showtitle:
 :toc: auto
 
-== HPE iLo
+== HPE iLO
 
 === Updating License
 
@@ -18,7 +18,7 @@ ssh root@<iLO address> set /map1 license=/<key>
 
 === Virtual Media Mount
 
-You can use iLo's Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an `.iso` file.
+You can use iLO's Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an `.iso` file.
 
 image::docs-site:learning:bmc-management/iLo_insert_virtual_media.png[virtual media]
 
@@ -56,15 +56,218 @@ Cipher Suite Priv Max   : XuuaXXXXXXXXXXX
 Bad Password Threshold  : Not Available
 ----
 
-== Using Serial Over LAN (SOL)
+== iLO Redfish API
 
-Using `ipmitool`:
+https://servermanagementportal.ext.hpe.com/docs/redfishservices/[HPE server management with Redfish]
+https://servermanagementportal.ext.hpe.com/docs/examples/redfishexamples/[Redfish Examples]
 
-* Activate a console:
+CURLing Redfish API for the iLO (iLO 5 in this example) looks like:
+
+[,bash]
+----
+curl --insecure -u user:password --location https://<iLO>/redfish/v1/<rest_of_redfish_url>
+----
+
+.curl example
+[,console]
+----
+mawenzi-06:~ # curl --silent --insecure -u root:<pass> --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/ | jq
+{
+  "@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
+  "@odata.etag": "W/\"14700DD6\"",
+  "@odata.id": "/redfish/v1/Managers/1/VirtualMedia/2/",
+  "@odata.type": "#VirtualMedia.v1_2_0.VirtualMedia",
+  "Id": "2",
+  "Actions": {
+    "#VirtualMedia.EjectMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/"
+    },
+    "#VirtualMedia.InsertMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia/"
+    }
+  },
+  "ConnectedVia": "NotConnected",
+  "Description": "Virtual Removable Media",
+  "Image": "",
+  "Inserted": false,
+  "MediaTypes": [
+    "CD",
+    "DVD"
+  ],
+  "Name": "VirtualMedia",
+  "Oem": {
+    "Hpe": {
+      "@odata.context": "/redfish/v1/$metadata#HpeiLOVirtualMedia.HpeiLOVirtualMedia",
+      "@odata.type": "#HpeiLOVirtualMedia.v2_2_0.HpeiLOVirtualMedia",
+      "Actions": {
+        "#HpeiLOVirtualMedia.EjectVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.EjectVirtualMedia/"
+        },
+        "#HpeiLOVirtualMedia.InsertVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.InsertVirtualMedia/"
+        }
+      },
+      "BootOnNextServerReset": false
+    }
+  },
+  "WriteProtected": true
+}
+----
+
+Insert virtual media in CD/DVD ROM:
+
+[,console]
+----
+mawenzi-06:~ # curl -i -X POST --insecure -u root:<password> --header "Content-Type: application/json" --data-raw '{"Image":"http://sp06.hpc.amslabs.hpecorp.net:8080/cm-admin-install-1.12-rocky94-x86_64.iso"}' --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:36:23 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}
+
+# Show it was inserted:
+mawenzi-06:~ # curl --silent -X GET --insecure -u root:<password> --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/ | jq
+{
+  "@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
+  "@odata.etag": "W/\"79D484A5\"",
+  "@odata.id": "/redfish/v1/Managers/1/VirtualMedia/2/",
+  "@odata.type": "#VirtualMedia.v1_2_0.VirtualMedia",
+  "Id": "2",
+  "Actions": {
+    "#VirtualMedia.EjectMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/"
+    },
+    "#VirtualMedia.InsertMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia/"
+    }
+  },
+  "ConnectedVia": "URI",
+  "Description": "Virtual Removable Media",
+  "Image": "http://sp06.hpc.amslabs.hpecorp.net:8080/cm-admin-install-1.12-rocky94-x86_64.iso",
+  "ImageName": "cm-admin-install-1.12-rocky94-x86_64.iso",
+  "Inserted": true,
+  "MediaTypes": [
+    "CD",
+    "DVD"
+  ],
+  "Name": "VirtualMedia",
+  "Oem": {
+    "Hpe": {
+      "@odata.context": "/redfish/v1/$metadata#HpeiLOVirtualMedia.HpeiLOVirtualMedia",
+      "@odata.type": "#HpeiLOVirtualMedia.v2_2_0.HpeiLOVirtualMedia",
+      "Actions": {
+        "#HpeiLOVirtualMedia.EjectVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.EjectVirtualMedia/"
+        },
+        "#HpeiLOVirtualMedia.InsertVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.InsertVirtualMedia/"
+        }
+      },
+      "BootOnNextServerReset": false
+    }
+  },
+  "WriteProtected": true
+}
+----
+
+Set 'BootOnNextServerReset' to True for VirtualMedia:
+
+[,console]
+----
+curl -i -X PATCH --insecure -u root:<password> --header "Content-Type: application/json" --data-raw '{"Oem":{"Hpe":{"BootOnNextServerReset": true}}}' --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:41:18 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}
+----
+
+Eject virtual media:
+
+[,console]
+----
+mawenzi-06:~ # curl -i -X POST --header "Content-Type: application/json" --data-raw '{}' --insecure -u root:<password> --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:34:53 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}
+----
+
+== ipmitool Guide
+
+=== Prerequisites
+
+Install `ipmitool` on a Linux server somewhere on the same network as the BMC you're trying to control
+
+[,bash]
+----
+zypper install ipmitool
+----
+
+=== Serial over LAN Console
+
+* Activate a Serial Over LAN (SOL) console:
 +
 [,bash]
 ----
 ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> sol activate
+----
+
+=== Chassis Commands
+
+[,console]
+----
+Chassis Commands:
+  status, power, policy, restart_cause
+  poh, identify, selftest,
+  bootdev, bootparam, bootmbox
+----
+
+* Show chassis status
++
+[,console]
+----
+mawenzi-06:~ # ipmitool -H 10.214.130.217 -v -I lanplus -U root -P <password> chassis status
+Loading IANA PEN Registry...
+Using best available cipher suite 3
+
+Running Get VSO Capabilities my_addr 0x20, transit 0, target 0x20
+Invalid completion code received: Invalid command
+Discovered IPMB address 0x0
+System Power         : on
+Power Overload       : false
+Power Interlock      : inactive
+Main Power Fault     : false
+Power Control Fault  : false
+Power Restore Policy : previous
+Last Power Event     :
+Chassis Intrusion    : inactive
+Front-Panel Lockout  : inactive
+Drive Fault          : false
+Cooling/Fan Fault    : false
+Front Panel Control  : none
 ----
 
 * Set boot device to virtual CD:
@@ -72,4 +275,16 @@ ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> sol activate
 [,bash]
 ----
 ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis bootdev cdrom
+----
+
+* Chassis power commands:
++
+[,bash]
+----
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis power off
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis power on
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis power cycle
+
+# Shut down host gracefully
+ipmitool -H <bmc_ip_address> -v -I lanplus -U <user> -P <password> chassis power soft
 ----

@@ -395,7 +395,7 @@
 <article class="doc">
 <h1 class="page">BMC Management</h1>
 <div class="sect1">
-<h2 id="_hpe_ilo"><a class="anchor" href="#_hpe_ilo"></a>HPE iLo</h2>
+<h2 id="_hpe_ilo"><a class="anchor" href="#_hpe_ilo"></a>HPE iLO</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_updating_license"><a class="anchor" href="#_updating_license"></a>Updating License</h3>
@@ -414,7 +414,7 @@
 <div class="sect2">
 <h3 id="_virtual_media_mount"><a class="anchor" href="#_virtual_media_mount"></a>Virtual Media Mount</h3>
 <div class="paragraph">
-<p>You can use iLo&#8217;s Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an <code>.iso</code> file.</p>
+<p>You can use iLO&#8217;s Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an <code>.iso</code> file.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -463,18 +463,236 @@ Bad Password Threshold  : Not Available</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_using_serial_over_lan_sol"><a class="anchor" href="#_using_serial_over_lan_sol"></a>Using Serial Over LAN (SOL)</h2>
+<h2 id="_ilo_redfish_api"><a class="anchor" href="#_ilo_redfish_api"></a>iLO Redfish API</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Using <code>ipmitool</code>:</p>
+<p><a href="https://servermanagementportal.ext.hpe.com/docs/redfishservices/">HPE server management with Redfish</a>
+<a href="https://servermanagementportal.ext.hpe.com/docs/examples/redfishexamples/">Redfish Examples</a></p>
+</div>
+<div class="paragraph">
+<p>CURLing Redfish API for the iLO (iLO 5 in this example) looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">curl --insecure -u user:password --location https://&lt;iLO&gt;/redfish/v1/&lt;rest_of_redfish_url&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">curl example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # curl --silent --insecure -u root:&lt;pass&gt; --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/ | jq
+{
+  "@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
+  "@odata.etag": "W/\"14700DD6\"",
+  "@odata.id": "/redfish/v1/Managers/1/VirtualMedia/2/",
+  "@odata.type": "#VirtualMedia.v1_2_0.VirtualMedia",
+  "Id": "2",
+  "Actions": {
+    "#VirtualMedia.EjectMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/"
+    },
+    "#VirtualMedia.InsertMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia/"
+    }
+  },
+  "ConnectedVia": "NotConnected",
+  "Description": "Virtual Removable Media",
+  "Image": "",
+  "Inserted": false,
+  "MediaTypes": [
+    "CD",
+    "DVD"
+  ],
+  "Name": "VirtualMedia",
+  "Oem": {
+    "Hpe": {
+      "@odata.context": "/redfish/v1/$metadata#HpeiLOVirtualMedia.HpeiLOVirtualMedia",
+      "@odata.type": "#HpeiLOVirtualMedia.v2_2_0.HpeiLOVirtualMedia",
+      "Actions": {
+        "#HpeiLOVirtualMedia.EjectVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.EjectVirtualMedia/"
+        },
+        "#HpeiLOVirtualMedia.InsertVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.InsertVirtualMedia/"
+        }
+      },
+      "BootOnNextServerReset": false
+    }
+  },
+  "WriteProtected": true
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Insert virtual media in CD/DVD ROM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # curl -i -X POST --insecure -u root:&lt;password&gt; --header "Content-Type: application/json" --data-raw '{"Image":"http://sp06.hpc.amslabs.hpecorp.net:8080/cm-admin-install-1.12-rocky94-x86_64.iso"}' --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:36:23 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}
+
+# Show it was inserted:
+mawenzi-06:~ # curl --silent -X GET --insecure -u root:&lt;password&gt; --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/ | jq
+{
+  "@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
+  "@odata.etag": "W/\"79D484A5\"",
+  "@odata.id": "/redfish/v1/Managers/1/VirtualMedia/2/",
+  "@odata.type": "#VirtualMedia.v1_2_0.VirtualMedia",
+  "Id": "2",
+  "Actions": {
+    "#VirtualMedia.EjectMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/"
+    },
+    "#VirtualMedia.InsertMedia": {
+      "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.InsertMedia/"
+    }
+  },
+  "ConnectedVia": "URI",
+  "Description": "Virtual Removable Media",
+  "Image": "http://sp06.hpc.amslabs.hpecorp.net:8080/cm-admin-install-1.12-rocky94-x86_64.iso",
+  "ImageName": "cm-admin-install-1.12-rocky94-x86_64.iso",
+  "Inserted": true,
+  "MediaTypes": [
+    "CD",
+    "DVD"
+  ],
+  "Name": "VirtualMedia",
+  "Oem": {
+    "Hpe": {
+      "@odata.context": "/redfish/v1/$metadata#HpeiLOVirtualMedia.HpeiLOVirtualMedia",
+      "@odata.type": "#HpeiLOVirtualMedia.v2_2_0.HpeiLOVirtualMedia",
+      "Actions": {
+        "#HpeiLOVirtualMedia.EjectVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.EjectVirtualMedia/"
+        },
+        "#HpeiLOVirtualMedia.InsertVirtualMedia": {
+          "target": "/redfish/v1/Managers/1/VirtualMedia/2/Actions/Oem/Hpe/HpeiLOVirtualMedia.InsertVirtualMedia/"
+        }
+      },
+      "BootOnNextServerReset": false
+    }
+  },
+  "WriteProtected": true
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set 'BootOnNextServerReset' to True for VirtualMedia:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">curl -i -X PATCH --insecure -u root:&lt;password&gt; --header "Content-Type: application/json" --data-raw '{"Oem":{"Hpe":{"BootOnNextServerReset": true}}}' --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:41:18 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Eject virtual media:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # curl -i -X POST --header "Content-Type: application/json" --data-raw '{}' --insecure -u root:&lt;password&gt; --location https://mawenzi-05-ipmi.hpc.amslabs.hpecorp.net/redfish/v1/Managers/1/VirtualMedia/2/Actions/VirtualMedia.EjectMedia/
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+Content-type: application/json; charset=utf-8
+Date: Tue, 07 Jan 2025 22:34:53 GMT
+ETag: W/"02C2D1BB"
+OData-Version: 4.0
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+X-Frame-Options: sameorigin
+X-XSS-Protection: 1; mode=block
+
+{"error":{"code":"iLO.0.10.ExtendedInfo","message":"See @Message.ExtendedInfo for more information.","@Message.ExtendedInfo":[{"MessageId":"Base.1.4.Success"}]}}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ipmitool_guide"><a class="anchor" href="#_ipmitool_guide"></a>ipmitool Guide</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p>Install <code>ipmitool</code> on a Linux server somewhere on the same network as the BMC you&#8217;re trying to control</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper install ipmitool</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_serial_over_lan_console"><a class="anchor" href="#_serial_over_lan_console"></a>Serial over LAN Console</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Activate a Serial Over LAN (SOL) console:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; sol activate</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_chassis_commands"><a class="anchor" href="#_chassis_commands"></a>Chassis Commands</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Chassis Commands:
+  status, power, policy, restart_cause
+  poh, identify, selftest,
+  bootdev, bootparam, bootmbox</code></pre>
+</div>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Activate a console:</p>
+<p>Show chassis status</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; sol activate</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # ipmitool -H 10.214.130.217 -v -I lanplus -U root -P &lt;password&gt; chassis status
+Loading IANA PEN Registry...
+Using best available cipher suite 3
+
+Running Get VSO Capabilities my_addr 0x20, transit 0, target 0x20
+Invalid completion code received: Invalid command
+Discovered IPMB address 0x0
+System Power         : on
+Power Overload       : false
+Power Interlock      : inactive
+Main Power Fault     : false
+Power Control Fault  : false
+Power Restore Policy : previous
+Last Power Event     :
+Chassis Intrusion    : inactive
+Front-Panel Lockout  : inactive
+Drive Fault          : false
+Cooling/Fan Fault    : false
+Front Panel Control  : none</code></pre>
 </div>
 </div>
 </li>
@@ -486,7 +704,21 @@ Bad Password Threshold  : Not Available</code></pre>
 </div>
 </div>
 </li>
+<li>
+<p>Chassis power commands:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; chassis power off
+ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; chassis power on
+ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; chassis power cycle
+
+# Shut down host gracefully
+ipmitool -H &lt;bmc_ip_address&gt; -v -I lanplus -U &lt;user&gt; -P &lt;password&gt; chassis power soft</code></pre>
+</div>
+</div>
+</li>
 </ul>
+</div>
 </div>
 </div>
 </div>

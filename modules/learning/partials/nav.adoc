@@ -88,3 +88,6 @@
 * GPUs
 ** xref:docs-site:learning:gpus/gds.adoc[GPUDirect Storage]
 ** xref:docs-site:learning:gpus/numa.adoc[NUMA]
+
+* Switch Management
+** xref:docs-site:learning:switch-management/switch-management.adoc[Switch Management]

@@ -1,0 +1,164 @@
+= Switch Management
+
+:showtitle:
+:toc: auto
+
+== Aruba 8360 Switch Management
+
+* https://support.hpe.com/hpesc/public/docDisplay?docId=sd00001082en_us&page=GUID-799F6D7C-D73A-4D02-A866-28E3FFE9E14E.html&docLocale=en_US[ClusterStor - Configure Aruba 8360 Switches]
+* https://www.arubanetworks.com/techdocs/AOS-CX/10.07/PDF/5200-7837.pdf[Aruba Commandline Interface Guide]
+
+=== Capture Currently Running Config
+
+Capture the currently running config into a file external to the switch, before
+making any changes.
+
+[,bash]
+----
+ssh admin@10.214.128.100 "show running-config" > S63-40-R1-sw5_config_before.txt
+----
+
+This will look like:
+
+=== Showing Interfaces
+
+`show interface`
+
+.Example
+[,console]
+----
+S63-40-R1-sw5# show interface
+
+Interface 1/1/1 is up
+ Admin state is up
+ Link state: up for 10 months (since Tue Feb 27 17:41:27 UTC 2024)
+ Link transitions: 141
+ Description: cdslmo401 LAG
+ Persona:
+ Hardware: Ethernet, MAC Address: ec:02:73:c0:c4:4e
+ MTU 9198
+ Type 10GbT
+ Full-duplex
+ qos trust none
+ Speed 10000 Mb/s
+ Auto-negotiation is on
+ Flow-control: off
+ Error-control: off
+ MDI mode: MDI
+ Rate collection interval: 300 seconds
+
+ Rate                               RX                   TX        Total (RX+TX)
+ ---------------- -------------------- -------------------- --------------------
+ Mbits / sec                      8.29                12.44                20.73
+ KPkts / sec                      2.10                 2.86                 4.96
+   Unicast                        2.10                 2.86                 4.96
+   Multicast                      0.00                 0.00                 0.00
+   Broadcast                      0.00                 0.00                 0.00
+ Utilization %                    0.08                 0.12                 0.20
+
+ Statistic                          RX                   TX                Total
+ ---------------- -------------------- -------------------- --------------------
+ Packets                  181757869392         232780599053         414538468445
+   Unicast                181726702594         232756942576         414483645170
+   Multicast                  22644561             12200279             34844840
+   Broadcast                   8522237             11456198             19978435
+ Bytes                 128074754304435      186683266066470      314758020370905
+ Jumbos                       16790949                40511             16831460
+ Dropped                             0                    0                    0
+ Pause Frames                        0                    0                    0
+ Errors                              0                    0                    0
+   CRC/FCS                           0                  n/a                    0
+   Collision                       n/a                    0                    0
+   Runts                             0                  n/a                    0
+   Giants                            0                  n/a                    0
+
+Interface 1/1/2 is up
+ Admin state is up
+ Link state: up for 4 months (since Wed Sep 04 15:45:02 UTC 2024)
+ Link transitions: 111
+ Description: cdslmo4_dm01 P2
+ Persona:
+ Hardware: Ethernet, MAC Address: ec:02:73:c0:c4:4d
+ MTU 9198
+ Type 10GbT
+ Full-duplex
+ qos trust none
+ Speed 10000 Mb/s
+ Auto-negotiation is on
+ Flow-control: off
+ Error-control: off
+ MDI mode: MDI
+ VLAN Mode: access
+ Access VLAN: 2
+ Rate collection interval: 300 seconds
+
+ Rate                               RX                   TX        Total (RX+TX)
+ ---------------- -------------------- -------------------- --------------------
+ Mbits / sec                      0.00                 0.00                 0.00
+ KPkts / sec                      0.00                 0.00                 0.00
+   Unicast                        0.00                 0.00                 0.00
+   Multicast                      0.00                 0.00                 0.00
+   Broadcast                      0.00                 0.00                 0.00
+ Utilization %                    0.00                 0.00                 0.00
+
+ Statistic                          RX                   TX                Total
+ ---------------- -------------------- -------------------- --------------------
+ Packets                       4064766            105577409            109642175
+   Unicast                           1               170133               170134
+   Multicast                   4064749             96962465            101027214
+   Broadcast                        16              8444811              8444827
+ Bytes                       903833924           7671979663           8575813587
+ Jumbos                              0                    0                    0
+ Dropped                             0                    0                    0
+ ...
+----
+
+For a shorter version, `show interface brief`
+
+.Example
+[,console]
+----
+S63-40-R1-sw5# show interface brief
+--------------------------------------------------------------------------------------------------------------
+Port      Native  Mode   Type           Enabled Status  Reason                 Speed   Description
+          VLAN                                                                 (Mb/s)
+--------------------------------------------------------------------------------------------------------------
+1/1/1     2       trunk  10GbT          yes     up                             10000   cdslmo401 LAG
+1/1/2     2       access 10GbT          yes     up                             10000   cdslmo4_dm01 P2
+1/1/3     2       trunk  10GbT          yes     up                             10000   cdslmo402 LAG
+1/1/4     2       access 10GbT          yes     up                             10000   cdslmo4_dm02 P2
+1/1/5     2       trunk  10GbT          yes     up                             10000   cdslmo403 LAG
+1/1/6     2       access 10GbT          yes     up                             10000   cdslmo4_dm03 P2
+1/1/7     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/8     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/9     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/10    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/11    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/12    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/13    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/14    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/15    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/16    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/17    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/18    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/19    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/20    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/21    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/22    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/23    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/24    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/25    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/26    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/27    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/28    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/29    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/30    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/31    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/32    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/33    1       access 10GbT          yes     up                             1000    cslmo500 port2
+1/1/34    1       access 10GbT          yes     up                             100     cslmo503 port2
+1/1/35    1       access 10GbT          yes     up                             1000    cslmo501 port2
+1/1/36    1       access 10GbT          yes     up                             1000    cslmo504 port2
+1/1/37    1       access 10GbT          yes     up                             1000    cslmo502 port2
+...
+----

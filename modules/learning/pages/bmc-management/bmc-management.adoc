@@ -16,11 +16,28 @@ Apply key under `Administration > Licensing > Activation Key > Install`, or
 ssh root@<iLO address> set /map1 license=/<key>
 ----
 
+=== Reset iLO
+
+iLO 4: Navigate to `Information -> Diagnostics -> Reset`
+
+image::docs-site:learning:bmc-management/ilo4_reset.png[reset iLO 4]
+
+iLO 5: Navigate to `Information -> Diagnostics -> Reset`
+
+image::docs-site:learning:bmc-management/ilo5_reset.png[reset iLO 5]
+
+Or, using `ipmitool` from the host server:
+
+[,bash]
+----
+ipmitool mc reset cold
+----
+
 === Virtual Media Mount
 
 You can use iLO's Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an `.iso` file.
 
-image::docs-site:learning:bmc-management/iLo_insert_virtual_media.png[virtual media]
+image::docs-site:learning:bmc-management/ilo5_insert_virtual_media.png[virtual media]
 
 == Find BMC Information from Host
 

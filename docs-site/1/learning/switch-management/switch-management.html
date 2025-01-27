@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Flexible I/O (fio) :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/gpus/fio.html">
+    <title>Switch Management :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/switch-management/switch-management.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -342,10 +342,10 @@
     <span class="nav-text">GPUs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="gds.html">GPUDirect Storage</a>
+    <a class="nav-link" href="../gpus/gds.html">GPUDirect Storage</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="numa.html">NUMA</a>
+    <a class="nav-link" href="../gpus/numa.html">NUMA</a>
   </li>
 </ul>
   </li>
@@ -353,8 +353,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Switch Management</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../switch-management/switch-management.html">Switch Management</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="switch-management.html">Switch Management</a>
   </li>
 </ul>
   </li>
@@ -391,7 +391,9 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
-    <li><a href="fio.html">Flexible I/O (fio)</a></li>
+    <li>Learning</li>
+    <li>Switch Management</li>
+    <li><a href="switch-management.html">Switch Management</a></li>
   </ul>
 </nav>
 </div>
@@ -400,81 +402,179 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Flexible I/O (fio)</h1>
+<h1 class="page">Switch Management</h1>
 <div class="sect1">
-<h2 id="_building_fio_with_cudalibcufile_support"><a class="anchor" href="#_building_fio_with_cudalibcufile_support"></a>Building <code>fio</code> with CUDA/libcufile Support</h2>
+<h2 id="_aruba_8360_switch_management"><a class="anchor" href="#_aruba_8360_switch_management"></a>Aruba 8360 Switch Management</h2>
 <div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://support.hpe.com/hpesc/public/docDisplay?docId=sd00001082en_us&amp;page=GUID-799F6D7C-D73A-4D02-A866-28E3FFE9E14E.html&amp;docLocale=en_US">ClusterStor - Configure Aruba 8360 Switches</a></p>
+</li>
+<li>
+<p><a href="https://www.arubanetworks.com/techdocs/AOS-CX/10.07/PDF/5200-7837.pdf">Aruba Commandline Interface Guide</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_capture_currently_running_config"><a class="anchor" href="#_capture_currently_running_config"></a>Capture Currently Running Config</h3>
 <div class="paragraph">
-<p>By default, fio does not compile with libcufile support so we won&#8217;t be able to
-use GDS as an IO path: <a href="https://github.com/axboe/fio/blob/master/configure#L183" class="bare">https://github.com/axboe/fio/blob/master/configure#L183</a></p>
+<p>Capture the currently running config into a file external to the switch, before
+making any changes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh admin@10.214.128.100 "show running-config" &gt; S63-40-R1-sw5_config_before.txt</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>You&#8217;ll have to override the <code>CFLAGS</code> and <code>LDFLAGS</code> variables and configure
-the build of <code>fio</code> with <code>--enable-cuda</code> and <code>--enable-libcufile</code>.</p>
+<p>This will look like:</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_showing_interfaces"><a class="anchor" href="#_showing_interfaces"></a>Showing Interfaces</h3>
 <div class="paragraph">
-<p>This is the commit that added GDS support to fio, and includes an explanation
-of how to use it: <a href="https://github.com/axboe/fio/commit/10756b2c95ef275501d4dbda060caac072cf6973" class="bare">https://github.com/axboe/fio/commit/10756b2c95ef275501d4dbda060caac072cf6973</a></p>
+<p><code>show interface</code></p>
 </div>
 <div class="listingblock">
 <div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">CFLAGS="-I/usr/local/cuda/include -I/usr/local/cuda/lib64" \
-LDFLAGS="-L/usr/local/cuda/lib64" \
-./configure --enable-cuda --enable-libcufile</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">S63-40-R1-sw5# show interface
+
+Interface 1/1/1 is up
+ Admin state is up
+ Link state: up for 10 months (since Tue Feb 27 17:41:27 UTC 2024)
+ Link transitions: 141
+ Description: cdslmo401 LAG
+ Persona:
+ Hardware: Ethernet, MAC Address: ec:02:73:c0:c4:4e
+ MTU 9198
+ Type 10GbT
+ Full-duplex
+ qos trust none
+ Speed 10000 Mb/s
+ Auto-negotiation is on
+ Flow-control: off
+ Error-control: off
+ MDI mode: MDI
+ Rate collection interval: 300 seconds
+
+ Rate                               RX                   TX        Total (RX+TX)
+ ---------------- -------------------- -------------------- --------------------
+ Mbits / sec                      8.29                12.44                20.73
+ KPkts / sec                      2.10                 2.86                 4.96
+   Unicast                        2.10                 2.86                 4.96
+   Multicast                      0.00                 0.00                 0.00
+   Broadcast                      0.00                 0.00                 0.00
+ Utilization %                    0.08                 0.12                 0.20
+
+ Statistic                          RX                   TX                Total
+ ---------------- -------------------- -------------------- --------------------
+ Packets                  181757869392         232780599053         414538468445
+   Unicast                181726702594         232756942576         414483645170
+   Multicast                  22644561             12200279             34844840
+   Broadcast                   8522237             11456198             19978435
+ Bytes                 128074754304435      186683266066470      314758020370905
+ Jumbos                       16790949                40511             16831460
+ Dropped                             0                    0                    0
+ Pause Frames                        0                    0                    0
+ Errors                              0                    0                    0
+   CRC/FCS                           0                  n/a                    0
+   Collision                       n/a                    0                    0
+   Runts                             0                  n/a                    0
+   Giants                            0                  n/a                    0
+
+Interface 1/1/2 is up
+ Admin state is up
+ Link state: up for 4 months (since Wed Sep 04 15:45:02 UTC 2024)
+ Link transitions: 111
+ Description: cdslmo4_dm01 P2
+ Persona:
+ Hardware: Ethernet, MAC Address: ec:02:73:c0:c4:4d
+ MTU 9198
+ Type 10GbT
+ Full-duplex
+ qos trust none
+ Speed 10000 Mb/s
+ Auto-negotiation is on
+ Flow-control: off
+ Error-control: off
+ MDI mode: MDI
+ VLAN Mode: access
+ Access VLAN: 2
+ Rate collection interval: 300 seconds
+
+ Rate                               RX                   TX        Total (RX+TX)
+ ---------------- -------------------- -------------------- --------------------
+ Mbits / sec                      0.00                 0.00                 0.00
+ KPkts / sec                      0.00                 0.00                 0.00
+   Unicast                        0.00                 0.00                 0.00
+   Multicast                      0.00                 0.00                 0.00
+   Broadcast                      0.00                 0.00                 0.00
+ Utilization %                    0.00                 0.00                 0.00
+
+ Statistic                          RX                   TX                Total
+ ---------------- -------------------- -------------------- --------------------
+ Packets                       4064766            105577409            109642175
+   Unicast                           1               170133               170134
+   Multicast                   4064749             96962465            101027214
+   Broadcast                        16              8444811              8444827
+ Bytes                       903833924           7671979663           8575813587
+ Jumbos                              0                    0                    0
+ Dropped                             0                    0                    0
+ ...</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should see this in your <code>./configure</code> output:</p>
+<p>For a shorter version, <code>show interface brief</code></p>
 </div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cuda                          yes
-libcufile                     yes</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">S63-40-R1-sw5# show interface brief
+--------------------------------------------------------------------------------------------------------------
+Port      Native  Mode   Type           Enabled Status  Reason                 Speed   Description
+          VLAN                                                                 (Mb/s)
+--------------------------------------------------------------------------------------------------------------
+1/1/1     2       trunk  10GbT          yes     up                             10000   cdslmo401 LAG
+1/1/2     2       access 10GbT          yes     up                             10000   cdslmo4_dm01 P2
+1/1/3     2       trunk  10GbT          yes     up                             10000   cdslmo402 LAG
+1/1/4     2       access 10GbT          yes     up                             10000   cdslmo4_dm02 P2
+1/1/5     2       trunk  10GbT          yes     up                             10000   cdslmo403 LAG
+1/1/6     2       access 10GbT          yes     up                             10000   cdslmo4_dm03 P2
+1/1/7     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/8     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/9     --      routed 10GbT          no      down    Administratively down  --      --
+1/1/10    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/11    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/12    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/13    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/14    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/15    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/16    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/17    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/18    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/19    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/20    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/21    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/22    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/23    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/24    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/25    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/26    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/27    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/28    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/29    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/30    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/31    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/32    --      routed 10GbT          no      down    Administratively down  --      --
+1/1/33    1       access 10GbT          yes     up                             1000    cslmo500 port2
+1/1/34    1       access 10GbT          yes     up                             100     cslmo503 port2
+1/1/35    1       access 10GbT          yes     up                             1000    cslmo501 port2
+1/1/36    1       access 10GbT          yes     up                             1000    cslmo504 port2
+1/1/37    1       access 10GbT          yes     up                             1000    cslmo502 port2
+...</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Compile <code>fio</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">make</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Using a FIO jobfile with libcufile as its engine, we can get read and write
-throughput values:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console"># Example libcufile job, using cufile I/O
-#
-# Required environment variables:
-#     GPU_DEV_IDS : refer to option 'gpu_dev_ids'
-#     FIO_DIR     : 'directory'. This job uses cuda_io=cufile, so path(s) must
-#                   point to GPUDirect Storage filesystem(s)
-#
-
-[global]
-ioengine=libcufile
-directory=/e1000/ccarlson/fio
-gpu_dev_ids=0:1:2:3:4:5:6:7
-cuda_io=cufile
-# 'direct' must be 1 when using cuda_io=cufile
-direct=1
-# Performance is negatively affected if 'bs' is not a multiple of 4k.
-# Refer to GDS cuFile documentation.
-bs=16M
-size=4G
-numjobs=16
-# cudaMalloc fails if too many processes attach to the GPU, use threads.
-thread
-
-[write]
-rw=write
-
-[read]
-rw=read</code></pre>
 </div>
 </div>
 </div>

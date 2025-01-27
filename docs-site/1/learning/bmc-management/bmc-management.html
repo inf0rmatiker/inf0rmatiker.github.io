@@ -349,6 +349,15 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Switch Management</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../switch-management/switch-management.html">Switch Management</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
 </ul>
@@ -412,13 +421,40 @@
 </div>
 </div>
 <div class="sect2">
+<h3 id="_reset_ilo"><a class="anchor" href="#_reset_ilo"></a>Reset iLO</h3>
+<div class="paragraph">
+<p>iLO 4: Navigate to <code>Information &#8594; Diagnostics &#8594; Reset</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/bmc-management/ilo4_reset.png" alt="reset iLO 4">
+</div>
+</div>
+<div class="paragraph">
+<p>iLO 5: Navigate to <code>Information &#8594; Diagnostics &#8594; Reset</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/bmc-management/ilo5_reset.png" alt="reset iLO 5">
+</div>
+</div>
+<div class="paragraph">
+<p>Or, using <code>ipmitool</code> from the host server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ipmitool mc reset cold</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_virtual_media_mount"><a class="anchor" href="#_virtual_media_mount"></a>Virtual Media Mount</h3>
 <div class="paragraph">
 <p>You can use iLO&#8217;s Virtual Media Mount to insert a virtual CD/DVD into the node using an HTTP URL to an <code>.iso</code> file.</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="../_images/bmc-management/iLo_insert_virtual_media.png" alt="virtual media">
+<img src="../_images/bmc-management/ilo5_insert_virtual_media.png" alt="virtual media">
 </div>
 </div>
 </div>

@@ -5,6 +5,56 @@
 
 == HPE iLO
 
+=== `ilorest`
+
+ilorest user guide: https://servermanagementportal.ext.hpe.com/docs/redfishclients/ilorest-userguide/usage/
+
+Login with ilorest:
+
+[,console]
+----
+[root@cdslmo4-client01 ~]# ilorest login https://172.24.254.53 -u root -p <password>
+iLOrest : RESTful Interface Tool version 4.0.0.0
+Copyright (c) 2014-2022 Hewlett Packard Enterprise Development LP
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Discovering data...Done
+----
+
+=== Updating Firmware
+
+Firmware packages can be found in the HPE Support Center:
+https://support.hpe.com/connect/s/softwaredetails?language=en_US&collectionId=MTX-2dc80c4ae4b943fa&tab=releaseNotes
+
+Or in the LMO web server:
+http://lmo-pxe.hpc.amslabs.hpecorp.net/firmware/ilo/5/
+
+Using `ilorest` from a host/server:
+
+[,bash]
+----
+ilorest flashfwpkg <file_name.fwpkg> --url <iLO5_IP_Address> -u <iLO5_username> -p <iLO5_password>
+----
+
+.Example
+[,console]
+----
+[root@cdslmo4-client01 ~]# ilorest flashfwpkg ilo5_310.fwpkg --url https://172.24.254.53 -u root -p <password>
+iLOrest : RESTful Interface Tool version 4.0.0.0
+Copyright (c) 2014-2022 Hewlett Packard Enterprise Development LP
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Discovering data...Done
+Uploading firmware: ilo5_310.bin
+Successfully checked 'ilo5_310.bin'.
+Uploading component ilo5_310.bin.
+The operation completed successfully.
+Component ilo5_310.bin uploaded successfully.
+Waiting for iLO UpdateService to finish processing the component
+00 hour(s) 02 minute(s) 44 second(s)
+Firmware has successfully been flashed.
+iLO will reboot to complete flashing. Session will be terminated.
+----
+
+
 === Updating License
 
 If you have an expired license:

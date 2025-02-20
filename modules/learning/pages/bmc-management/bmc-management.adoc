@@ -5,6 +5,48 @@
 
 == HPE iLO
 
+=== Connect to iLO GUI through Tunnel
+
+Taken from:
+https://support.hpe.com/hpesc/public/docDisplay?docId=sd00003394en_us&page=GUID-23C22C3A-300F-48C7-996C-47EC35828CF5.html[Cray ClusterStor data services Installation Guide 2.2]
+
+Method 1: SOCKS Proxy
+
+1. SSH into intermediary node:
++
+[,bash]
+----
+ssh -D 8090 root@INTERMEDIARY_NODE
+----
+2. Configure the external system Firefox browser to use a SOCKS 5 proxy on `localhost` on port `8090`.
+This can be found under `Settings -> Network Settings`.
++
+image::docs-site:learning:bmc-management/firefox_socks_proxy.png[Firefox Network Settings]
+3. Navigate to the `https://<iLO_IP>` in your Firefox browser.
+
+Method 2: SSH Tunnel
+
+Create an SSH tunnel to forward port 443 traffic to the BMC:
+
+1. Create the tunnel using local SSH port forwarding. Replace `LOCAL_PORT` with an unused local port.
++
+[,bash]
+----
+ssh -L LOCAL_PORT:BMC_IP:443 INTERMEDIARY_NODE
+----
+2. Connect to the iLO web GUI interface of the BMC at `https://localhost:LOCAL_PORT`.
++
+.Example
+[,console]
+----
+➜  ~ ssh -L 8089:172.24.254.53:443 cdslmo4
+----
+
+Here, we're forwarding traffic on port `8089` of our local laptop to `172.24.254.53:443`,
+using `cdslmo4` as our intermediary node.
+
+Then, in a browser on your laptop, navigate to `https://localhost:8089`
+
 === `ilorest`
 
 ilorest user guide: https://servermanagementportal.ext.hpe.com/docs/redfishclients/ilorest-userguide/usage/
@@ -54,6 +96,81 @@ Firmware has successfully been flashed.
 iLO will reboot to complete flashing. Session will be terminated.
 ----
 
+=== Set iLO to DHCP Mode via SSH
+
+Check if the DHCP Endpoint is enabled, in the case below, it's not:
+
+[,console]
+----
+</>hpiLO-> show /map1/dhcpendpt1
+
+status=0
+status_tag=COMMAND COMPLETED
+Mon Feb  3 17:10:17 2025
+
+
+
+/map1/dhcpendpt1
+  Targets
+  Properties
+    EnabledState=no
+    OtherTypeDescription=DHCP
+  Verbs
+    cd version exit show set
+----
+
+Set the `EnabledState=yes`:
+
+[,console]
+----
+</>hpiLO-> set /map1/dhcpendpt1 EnabledState=yes
+
+status=0
+status_tag=COMMAND COMPLETED
+Mon Feb  3 17:11:30 2025
+
+Network settings change applied.
+
+
+Settings change applied, iLO will now be reset.
+Logged Out: It may take several minutes before you can log back in.
+
+CLI session stopped
+Received disconnect from 10.254.0.201 port 22:11:  Client Disconnect
+Disconnected from 10.254.0.201 port 22
+----
+
+After the iLO resets, make sure the new _IP Address Source_ is "DHCP Address":
+
+[,console]
+----
+cdslmo402:~ # ipmitool lan print
+Set in Progress         : Set Complete
+Auth Type Support       : NONE MD5 PASSWORD
+Auth Type Enable        : Callback : MD5 PASSWORD
+                        : User     : MD5 PASSWORD
+                        : Operator : MD5 PASSWORD
+                        : Admin    : MD5 PASSWORD
+                        : OEM      :
+IP Address Source       : DHCP Address
+IP Address              : 172.24.254.55
+Subnet Mask             : 255.255.0.0
+MAC Address             : b4:7a:f1:55:27:4a
+SNMP Community String   :
+BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+Default Gateway IP      : 172.24.255.254
+802.1q VLAN ID          : Disabled
+802.1q VLAN Priority    : 0
+RMCP+ Cipher Suites     : 0,1,2,3
+Cipher Suite Priv Max   : XuuaXXXXXXXXXXX
+                        :     X=Cipher Suite Unused
+                        :     c=CALLBACK
+                        :     u=USER
+                        :     o=OPERATOR
+                        :     a=ADMIN
+                        :     O=OEM
+Bad Password Threshold  : Not Available
+----
 
 === Updating License
 

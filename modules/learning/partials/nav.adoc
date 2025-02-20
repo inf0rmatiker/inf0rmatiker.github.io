@@ -91,3 +91,6 @@
 
 * Switch Management
 ** xref:docs-site:learning:switch-management/switch-management.adoc[Switch Management]
+
+* HPCM
+** xref:docs-site:learning:hpcm/hpcm.adoc[HPCM]

@@ -1,0 +1,12 @@
+= HPCM
+
+:toc: auto
+:showtitle:
+
+== Copy an Image
+
+* `-o`: original image
+* `-i`: new image
+
+`cm image copy -o rocky9.5 -i compute0`
+

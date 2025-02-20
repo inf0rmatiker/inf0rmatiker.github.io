@@ -358,6 +358,15 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">HPCM</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../hpcm/hpcm.html">HPCM</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
 </ul>
@@ -406,6 +415,74 @@
 <div class="sect1">
 <h2 id="_hpe_ilo"><a class="anchor" href="#_hpe_ilo"></a>HPE iLO</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_connect_to_ilo_gui_through_tunnel"><a class="anchor" href="#_connect_to_ilo_gui_through_tunnel"></a>Connect to iLO GUI through Tunnel</h3>
+<div class="paragraph">
+<p>Taken from:
+<a href="https://support.hpe.com/hpesc/public/docDisplay?docId=sd00003394en_us&amp;page=GUID-23C22C3A-300F-48C7-996C-47EC35828CF5.html">Cray ClusterStor data services Installation Guide 2.2</a></p>
+</div>
+<div class="paragraph">
+<p>Method 1: SOCKS Proxy</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>SSH into intermediary node:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh -D 8090 root@INTERMEDIARY_NODE</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Configure the external system Firefox browser to use a SOCKS 5 proxy on <code>localhost</code> on port <code>8090</code>.
+This can be found under <code>Settings &#8594; Network Settings</code>.</p>
+<div class="imageblock">
+<div class="content">
+<img src="../_images/bmc-management/firefox_socks_proxy.png" alt="Firefox Network Settings">
+</div>
+</div>
+</li>
+<li>
+<p>Navigate to the <code><a href="https://&lt;iLO_IP&gt" class="bare">https://&lt;iLO_IP&gt</a>;</code> in your Firefox browser.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Method 2: SSH Tunnel</p>
+</div>
+<div class="paragraph">
+<p>Create an SSH tunnel to forward port 443 traffic to the BMC:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the tunnel using local SSH port forwarding. Replace <code>LOCAL_PORT</code> with an unused local port.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh -L LOCAL_PORT:BMC_IP:443 INTERMEDIARY_NODE</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Connect to the iLO web GUI interface of the BMC at <code><a href="https://localhost:LOCAL_PORT" class="bare">https://localhost:LOCAL_PORT</a></code>.</p>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  ~ ssh -L 8089:172.24.254.53:443 cdslmo4</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Here, we&#8217;re forwarding traffic on port <code>8089</code> of our local laptop to <code>172.24.254.53:443</code>,
+using <code>cdslmo4</code> as our intermediary node.</p>
+</div>
+<div class="paragraph">
+<p>Then, in a browser on your laptop, navigate to <code><a href="https://localhost:8089" class="bare">https://localhost:8089</a></code></p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_ilorest"><a class="anchor" href="#_ilorest"></a><code>ilorest</code></h3>
 <div class="paragraph">
@@ -459,6 +536,86 @@ Waiting for iLO UpdateService to finish processing the component
 00 hour(s) 02 minute(s) 44 second(s)
 Firmware has successfully been flashed.
 iLO will reboot to complete flashing. Session will be terminated.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_ilo_to_dhcp_mode_via_ssh"><a class="anchor" href="#_set_ilo_to_dhcp_mode_via_ssh"></a>Set iLO to DHCP Mode via SSH</h3>
+<div class="paragraph">
+<p>Check if the DHCP Endpoint is enabled, in the case below, it&#8217;s not:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">&lt;/&gt;hpiLO-&gt; show /map1/dhcpendpt1
+
+status=0
+status_tag=COMMAND COMPLETED
+Mon Feb  3 17:10:17 2025
+
+
+
+/map1/dhcpendpt1
+  Targets
+  Properties
+    EnabledState=no
+    OtherTypeDescription=DHCP
+  Verbs
+    cd version exit show set</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the <code>EnabledState=yes</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">&lt;/&gt;hpiLO-&gt; set /map1/dhcpendpt1 EnabledState=yes
+
+status=0
+status_tag=COMMAND COMPLETED
+Mon Feb  3 17:11:30 2025
+
+Network settings change applied.
+
+
+Settings change applied, iLO will now be reset.
+Logged Out: It may take several minutes before you can log back in.
+
+CLI session stopped
+Received disconnect from 10.254.0.201 port 22:11:  Client Disconnect
+Disconnected from 10.254.0.201 port 22</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After the iLO resets, make sure the new <em>IP Address Source</em> is "DHCP Address":</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">cdslmo402:~ # ipmitool lan print
+Set in Progress         : Set Complete
+Auth Type Support       : NONE MD5 PASSWORD
+Auth Type Enable        : Callback : MD5 PASSWORD
+                        : User     : MD5 PASSWORD
+                        : Operator : MD5 PASSWORD
+                        : Admin    : MD5 PASSWORD
+                        : OEM      :
+IP Address Source       : DHCP Address
+IP Address              : 172.24.254.55
+Subnet Mask             : 255.255.0.0
+MAC Address             : b4:7a:f1:55:27:4a
+SNMP Community String   :
+BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+Default Gateway IP      : 172.24.255.254
+802.1q VLAN ID          : Disabled
+802.1q VLAN Priority    : 0
+RMCP+ Cipher Suites     : 0,1,2,3
+Cipher Suite Priv Max   : XuuaXXXXXXXXXXX
+                        :     X=Cipher Suite Unused
+                        :     c=CALLBACK
+                        :     u=USER
+                        :     o=OPERATOR
+                        :     a=ADMIN
+                        :     O=OEM
+Bad Password Threshold  : Not Available</code></pre>
 </div>
 </div>
 </div>

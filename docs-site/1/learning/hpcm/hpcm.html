@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installing Kubernetes on openSUSE Leap 15.3 :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/k8s-install.html">
+    <title>HPCM :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/hpcm/hpcm.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -72,16 +72,16 @@
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="crds.html">CRDs</a>
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-api-resources.html">Kubernetes Resources</a>
-  </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="k8s-install.html">Kubernetes Install</a>
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="kubectl.html">kubectl</a>
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
   </li>
 </ul>
   </li>
@@ -362,8 +362,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">HPCM</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../hpcm/hpcm.html">HPCM</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="hpcm.html">HPCM</a>
   </li>
 </ul>
   </li>
@@ -401,8 +401,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Kubernetes</li>
-    <li><a href="k8s-install.html">Kubernetes Install</a></li>
+    <li>HPCM</li>
+    <li><a href="hpcm.html">HPCM</a></li>
   </ul>
 </nav>
 </div>
@@ -411,191 +411,23 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Installing Kubernetes on openSUSE Leap 15.3</h1>
+<h1 class="page">HPCM</h1>
+<div class="sect1">
+<h2 id="_copy_an_image"><a class="anchor" href="#_copy_an_image"></a>Copy an Image</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>-o</code>: original image</p>
+</li>
+<li>
+<p><code>-i</code>: new image</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>Original documentation for how to install <code>kubeadm</code>: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" class="bare">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/</a></p>
+<p><code>cm image copy -o rocky9.5 -i compute0</code></p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Open these ports on the firewall: <a href="https://kubernetes.io/docs/reference/ports-and-protocols/" class="bare">https://kubernetes.io/docs/reference/ports-and-protocols/</a></p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p><code>firewall-cmd --add-port=6443/tcp --permanent</code></p>
-</li>
-<li>
-<p>Repeat for all required ports</p>
-</li>
-</ol>
-</div>
-</li>
-<li>
-<p>Install <code>conntrack</code>: <code>zypper install conntrack-tools</code></p>
-</li>
-<li>
-<p>Install <code>socat</code>: <code>zypper install socat</code></p>
-</li>
-<li>
-<p>Enable <code>ip_forward</code>: <code>echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward</code></p>
-<div class="ulist">
-<ul>
-<li>
-<p>Follow this guide: <a href="https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic" class="bare">https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Install <code>containerd</code> as the container runtime: Follow instructions on <a href="https://github.com/containerd/containerd/blob/main/docs/getting-started.md">containerd&#8217;s Getting Started page</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p>Go get runc and CNI plugin files (see following steps)</p>
-</li>
-<li>
-<p>Go get the <a href="https://github.com/containerd/containerd/releases">latest released containerd archive</a></p>
-</li>
-<li>
-<p>Untar it to <code>/usr/local</code>: <code>tar Cxzvf /usr/local containerd-1.6.6-linux-amd64.tar.gz</code></p>
-</li>
-<li>
-<p>Download <a href="https://github.com/containerd/containerd/blob/main/containerd.service">containerd.service</a> and copy it to <code>/usr/lib/systemd/system/containerd.service</code> (Official docs say to put it at <code>/usr/local/lib</code>, there&#8217;s nothing there and this won&#8217;t work. Put it in <code>/usr/lib/…</code>)</p>
-</li>
-<li>
-<p>Launch systemd daemon for containerd:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>systemctl daemon-reload</code></p>
-</li>
-<li>
-<p><code>systemctl enable --now containerd</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Get runc archive if you don&#8217;t already have it: <a href="https://github.com/opencontainers/runc/releases" class="bare">https://github.com/opencontainers/runc/releases</a></p>
-</li>
-<li>
-<p>Install it: <code>install -m 755 runc.amd64 /usr/local/sbin/runc</code></p>
-</li>
-<li>
-<p>Go get CNI plugins: <a href="https://github.com/containernetworking/plugins/releases" class="bare">https://github.com/containernetworking/plugins/releases</a>, and install them under <code>opt/cni/bin</code>:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>mkdir -p /opt/cni/bin</code></p>
-</li>
-<li>
-<p><code>tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v1.1.1.tgz</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Check it works by running <code>ctr --help</code></p>
-</li>
-<li>
-<p>Generate default containerd daemon configuration: <code>containerd config default &gt; /etc/containerd/config.toml</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Configure systemd as cgroup with runc:</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Edit <code>/etc/containerd/config.toml</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">   [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-       ...
-       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
-       SystemdCgroup = true</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Restart containerd: <code>sudo systemctl restart containerd</code></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Install <code>kubeadm</code>: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" class="bare">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/</a></p>
-</li>
-<li>
-<p>Install <code>critcl</code>:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> DOWNLOAD_DIR=/usr/local/bin
- sudo mkdir -p $DOWNLOAD_DIR
- VERSION="v1.24.2"
- wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
- sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
- rm -f crictl-$VERSION-linux-amd64.tar.gz</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Install <code>kubeadm</code>, <code>kubectl</code>, <code>kubelet</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"> RELEASE="$(curl -sSL https://dl.k8s.io/release/stable.txt)"`
- ARCH="amd64"
- cd $DOWNLOAD_DIR
- sudo curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/${ARCH}/{kubeadm,kubelet,kubectl}
- sudo chmod +x {kubeadm,kubelet,kubectl}
- RELEASE_VERSION="v0.4.0"
- curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service
- sudo mkdir -p /etc/systemd/system/kubelet.service.d
- curl -sSL "https://raw.githubusercontent.com/kubernetes/release/${RELEASE_VERSION}/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf" | sed "s:/usr/bin:${DOWNLOAD_DIR}:g" | sudo tee /etc/systemd/system/kubelet.service.d/10-kubeadm.conf</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Enable kubelet: <code>systemctl enable --now kubelet</code></p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">Your Kubernetes control-plane has initialized successfully!
-
-To start using your cluster, you need to run the following as a regular user:
-
- mkdir -p $HOME/.kube
- sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
- sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-Alternatively, if you are the root user, you can run:
-
- export KUBECONFIG=/etc/kubernetes/admin.conf</code></pre>
-</div>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>You should now deploy a pod network to the cluster.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>Run <code>kubectl apply -f &lt;podnetwork&gt;.yaml</code> with one of the options listed at: <a href="https://kubernetes.io/docs/concepts/cluster-administration/addons/" class="bare">https://kubernetes.io/docs/concepts/cluster-administration/addons/</a></p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Then you can join any number of worker nodes by running the following on each as <code>root</code>:</p>
-</li>
-</ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-token-ca-cert-hash sha256:2b725a2cda814b07ee07c9d704de5a5cc2451c746eeb5b32277ebe661b9a36e4</code></pre>
 </div>
 </div>
 </article>

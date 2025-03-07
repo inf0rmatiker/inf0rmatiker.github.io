@@ -559,6 +559,352 @@ vim-toml = 2:9.0.1677-2.fc39</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_building_rpms"><a class="anchor" href="#_building_rpms"></a>Building RPMs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Install build deps:</p>
+</div>
+<div class="listingblock">
+<div class="title">OpenSUSE</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper install -y rpmdevtools rpmlint</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create our source code package:</p>
+</div>
+<div class="listingblock">
+<div class="title">hello</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+echo "hello"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create the following directory structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning tree hello-0.1
+hello-0.1
+├── hello
+└── LICENSE
+
+0 directories, 2 files</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create source tarball from directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning tar -czvf hello-0.1.tar.gz hello-0.1/
+hello-0.1/
+hello-0.1/hello
+hello-0.1/LICENSE</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Rocky</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf install -y rpmdevtools rpmlint</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set <code>%packager</code> macro locally:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">echo '%packager Caleb Carlson &lt;caleb.carlson@hpe.com&gt;' &gt;&gt; ~/.rpmmacros</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set up build environment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rpmdev-setuptree</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should create the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning tree ~/rpmbuild
+/home/ccarlson/rpmbuild
+├── BUILD
+├── RPMS
+├── SOURCES
+├── SPECS
+└── SRPMS
+
+5 directories, 0 files</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy source tarball to <code>SOURCES/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp hello-0.1.tar.gz ~/rpmbuild/SOURCES/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create an RPM specfile:</p>
+</div>
+<div class="listingblock">
+<div class="title">hello.spec</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Name:           hello
+Version:        0.1
+Release:        1%{?dist}
+Summary:	Example Summary
+License:        GPLv3+
+Source:		hello-0.1.tar.gz
+BuildArch:      noarch
+
+%description
+Long description for hello package
+
+%prep
+%autosetup -p1
+
+%build
+
+%install
+install -D -p -m 0755 hello %{buildroot}%{_bindir}/hello
+
+%check
+
+%files
+%license LICENSE
+%{_bindir}/hello
+
+%changelog</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Copy your new .spec file to <code>SPECS/</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp hello.spec ~/rpmbuild/SPECS/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Build the specfile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning rpmbuild -ba ~/rpmbuild/SPECS/hello.spec
+Executing(%prep): /bin/sh -e /var/tmp/rpm-tmp.hlf7Q1
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ cd /home/ccarlson/rpmbuild/BUILD
++ rm -rf hello-0.1
++ /usr/bin/gzip -dc /home/ccarlson/rpmbuild/SOURCES/hello-0.1.tar.gz
++ /usr/bin/tar -xof -
++ STATUS=0
++ '[' 0 -ne 0 ']'
++ cd hello-0.1
++ /usr/bin/chmod -Rf a+rX,u+w,g-w,o-w .
++ exit 0
+Executing(%build): /bin/sh -e /var/tmp/rpm-tmp.uPr4jR
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ /usr/bin/rm -rf /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64
+++ dirname /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64
++ /usr/bin/mkdir -p /home/ccarlson/rpmbuild/BUILDROOT
++ /usr/bin/mkdir /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64
++ cd hello-0.1
++ exit 0
+Executing(%install): /bin/sh -e /var/tmp/rpm-tmp.FKlXB8
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ cd hello-0.1
++ install -D -p -m 0755 hello /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64/usr/bin/hello
++ '[' noarch = noarch ']'
++ case "${QA_CHECK_RPATHS:-}" in
++ /usr/lib/rpm/check-buildroot
++ /usr/lib/rpm/brp-compress
++ /usr/lib/rpm/brp-suse
+Executing(%check): /bin/sh -e /var/tmp/rpm-tmp.Lfi31a
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ cd hello-0.1
++ exit 0
+Processing files: hello-0.1-1.noarch
+Executing(%license): /bin/sh -e /var/tmp/rpm-tmp.72PFur
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ cd hello-0.1
++ LICENSEDIR=/home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64/usr/share/licenses/hello
++ export LC_ALL=C
++ LC_ALL=C
++ export LICENSEDIR
++ /usr/bin/mkdir -p /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64/usr/share/licenses/hello
++ cp -pr LICENSE /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64/usr/share/licenses/hello
++ exit 0
+Provides: hello = 0.1-1
+Requires(rpmlib): rpmlib(CompressedFileNames) &lt;= 3.0.4-1 rpmlib(FileDigests) &lt;= 4.6.0-1 rpmlib(PayloadFilesHavePrefix) &lt;= 4.0-1
+Requires: /bin/bash
+Checking for unpackaged file(s): /usr/lib/rpm/check-files /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64
+Wrote: /home/ccarlson/rpmbuild/SRPMS/hello-0.1-1.src.rpm
+Wrote: /home/ccarlson/rpmbuild/RPMS/noarch/hello-0.1-1.noarch.rpm
+Executing(%clean): /bin/sh -e /var/tmp/rpm-tmp.Wzvpwb
++ umask 022
++ cd /home/ccarlson/rpmbuild/BUILD
++ cd hello-0.1
++ /usr/bin/rm -rf /home/ccarlson/rpmbuild/BUILDROOT/hello-0.1-1.x86_64
++ exit 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point, your <code>~/rpmbuild</code> directory should look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning tree ~/rpmbuild
+/home/ccarlson/rpmbuild
+├── BUILD
+│   └── hello-0.1
+│       ├── hello
+│       └── LICENSE
+├── BUILDROOT
+├── RPMS
+│   └── noarch
+│       └── hello-0.1-1.noarch.rpm
+├── SOURCES
+│   └── hello-0.1.tar.gz
+├── SPECS
+│   └── hello.spec
+└── SRPMS
+    └── hello-0.1-1.src.rpm
+
+8 directories, 6 files</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Notice how it created SRPM <code>hello-0.1-1.src.rpm</code> and RPM <code>hello-0.1-1.noarch.rpm</code>.
+Now, we can install it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning sudo rpm -ivh ~/rpmbuild/RPMS/noarch/hello-0.1-1.noarch.rpm
+[sudo] password for ccarlson:
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:hello-0.1-1                      ################################# [100%]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just like magic, we&#8217;ve got our script in place:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">➜  rpm_learning which hello
+/usr/bin/hello
+➜  rpm_learning hello
+hello</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_a_repo"><a class="anchor" href="#_creating_a_repo"></a>Creating a Repo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a top level directory for your repo: <code>sudo mkdir /mnt/images/daos</code></p>
+</div>
+<div class="paragraph">
+<p>Create the following directory structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">/mnt/images/daos
+├── noarch
+├── src
+└── x86_64</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Put the <code>.noarch.rpm</code> files in <code>noarch/</code>, <code>src.rpm</code> files in <code>src</code>, and
+ <code>x86_64.rpm</code> files in <code>x86_64</code>. Then, from <code>daos/</code> run:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>`createrepo -v --database --xz .`</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now have a <code>repodata/</code> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sp06 images/daos » tree repodata
+repodata
+├── 23b820a8844abc23a5b283c9ff941782320a9a3b333c4a3c1ca94e4c65b5a361-filelists.xml.gz
+├── 31a838eeb46d082f280461ae2190e62d892cb53f05afe567edbdda441a322025-other.sqlite.xz
+├── 33c1ac96bb0ecd5e3767620b62ff59bab37112341a031320c7e0c47849190808-filelists.sqlite.xz
+├── 858d4bfcf1c5f862cabb5a616303f39f5bb3f10a86b5867807070c524b5a90ab-primary.sqlite.xz
+├── 9855b31aa757ccf244bd963acd26581075ea3c45739f23ff027b423c3c49e435-other.xml.gz
+├── a37e0e07c1e8fd7560ead2a4ff57497472d86dd730ae245787e83b00e15c1234-primary.xml.gz
+└── repomd.xml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since <code>/mnt/images</code> is a web-hosted destination, we should be able to add it
+to a <code>.repo</code> file for yum:</p>
+</div>
+<div class="listingblock">
+<div class="title">/etc/yum.repos.d/daos.repo</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[daos]
+name=DAOS 2.6.2
+baseurl=http://sp06.hpc.amslabs.hpecorp.net:8080/daos/
+enabled=1
+gpgcheck=0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See that it works:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-admin yum.repos.d]# dnf search -v daos
+DAOS 2.6.2                                                                                                                                 6.8 MB/s |  37 kB     00:00
+====================================================================== Name &amp; Summary Matched: daos =======================================================================
+daos.x86_64 : DAOS Storage Engine
+Repo        : daos
+Matched from:
+Provide    : daos = 2.6.2-2.el9
+
+daos-admin.x86_64 : DAOS admin tools
+Repo        : daos
+Matched from:
+Provide    : daos-admin = 2.6.2-2.el9
+
+daos-client.x86_64 : The DAOS client
+Repo        : daos
+Matched from:
+Provide    : daos-client = 2.6.2-2.el9
+
+daos-devel.x86_64 : The DAOS development libraries and headers
+Repo        : daos
+Matched from:
+Provide    : daos-devel = 2.6.2-2.el9
+
+daos-server.x86_64 : The DAOS server
+Repo        : daos
+Matched from:
+Provide    : daos-server = 2.6.2-2.el9</code></pre>
+</div>
+</div>
+</div>
+</div>
 </article>
   </div>
 </main>

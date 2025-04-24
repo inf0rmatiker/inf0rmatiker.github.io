@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Helpful kubectl Commands :: Caleb Carlson | Documentation</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/kubectl.html">
+    <title>Working with ISOs :: Caleb Carlson | Documentation</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/isos.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -72,16 +72,16 @@
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="crds.html">CRDs</a>
+    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-api-resources.html">Kubernetes Resources</a>
+    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="k8s-install.html">Kubernetes Install</a>
+    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="kubectl.html">kubectl</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
   </li>
 </ul>
   </li>
@@ -118,46 +118,46 @@
     <span class="nav-text">Installs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="installs/rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
+    <a class="nav-link" href="installs/opensuse-install.html">OpenSUSE Linux Install</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/isos.html">ISOs</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="isos.html">ISOs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
+    <a class="nav-link" href="rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
+    <a class="nav-link" href="tmux.html">Tmux</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../linux/user-management.html">User Management</a>
+    <a class="nav-link" href="user-management.html">User Management</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
+    <a class="nav-link" href="networking/mpi.html">MPI</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/rdma.html">RDMA Programming</a>
+    <a class="nav-link" href="networking/rdma.html">RDMA Programming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/socket_programming.html">Socket Programming</a>
+    <a class="nav-link" href="networking/socket_programming.html">Socket Programming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
+    <a class="nav-link" href="networking/ssh.html">SSH</a>
   </li>
 </ul>
   </li>
@@ -166,13 +166,13 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="storage/filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
+    <a class="nav-link" href="storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
@@ -404,8 +404,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Kubernetes</li>
-    <li><a href="kubectl.html">kubectl</a></li>
+    <li>Linux</li>
+    <li><a href="isos.html">ISOs</a></li>
   </ul>
 </nav>
 </div>
@@ -414,110 +414,41 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Helpful <code>kubectl</code> Commands</h1>
+<h1 class="page">Working with ISOs</h1>
 <div class="sect1">
-<h2 id="_set_default_namespace"><a class="anchor" href="#_set_default_namespace"></a>Set Default Namespace</h2>
+<h2 id="_mounting_an_iso"><a class="anchor" href="#_mounting_an_iso"></a>Mounting an ISO</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl config set-context --current --namespace=services</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_list_all_pods_in_a_bad_state"><a class="anchor" href="#_list_all_pods_in_a_bad_state"></a>List All Pods in a Bad State</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
-
-if [ $# -gt 0 ]; then
-    KUBECTL_OPTS="$*"
-else
-    KUBECTL_OPTS=-A
-fi
-
-kubectl get pods ${KUBECTL_OPTS} | grep -v -e Running -e Completed
-kubectl get pods ${KUBECTL_OPTS} | grep Running | grep -vE '(1/1|2/2|3/3|4/4|5/5|6/6)'
-kubectl get pods ${KUBECTL_OPTS} | grep wait-for.*Running</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_delete_a_resource"><a class="anchor" href="#_delete_a_resource"></a>Delete a Resource</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>By resource name:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl delete -n &lt;namespace&gt; &lt;resource&gt;</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_create_a_resource"><a class="anchor" href="#_create_a_resource"></a>Create a Resource</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Using a YAML file:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl apply -f file.yaml</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_port_forward_to_container_in_pod"><a class="anchor" href="#_port_forward_to_container_in_pod"></a>Port Forward to Container in Pod</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><a href="https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/">Port forward to access application in cluster</a></p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl port-forward &lt;pod&gt; -c &lt;container&gt; 28015:27017</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_get_logs_of_container_in_pod"><a class="anchor" href="#_get_logs_of_container_in_pod"></a>Get Logs of Container in Pod</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get logs -n &lt;namespace&gt; &lt;pod&gt; &lt;container&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir /mnt/test-iso
+mount -t iso9660 -o loop,ro /mnt/images/test.iso /mnt/test-iso</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Follow logs:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl get logs -f -n &lt;namespace&gt; &lt;pod&gt; &lt;container&gt;</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_get_shell_in_running_container"><a class="anchor" href="#_get_shell_in_running_container"></a>Get Shell in Running Container</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl exec -it -n &lt;namespace&gt; &lt;pod&gt; &lt;container&gt; -- /bin/sh</code></pre>
-</div>
+<p>This is a read-only filesystem, you cannot write/change the contents of the ISO
+directly. To do so, you&#8217;d need to copy the contents to a read-write directory,
+then change those contents, and re-build the ISO from that.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_restart_all_the_pods_in_a_daemonset"><a class="anchor" href="#_restart_all_the_pods_in_a_daemonset"></a>Restart all the Pods in a DaemonSet</h2>
+<h2 id="_creating_an_iso"><a class="anchor" href="#_creating_an_iso"></a>Creating an ISO</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>To get <code>mkisofs</code>: <code>dnf install xorriso</code></p>
+</div>
+<div class="paragraph">
+<p>Prepare a directory with the contents you want in your ISO. Here we&#8217;ll be
+packaging a DAOS ISO.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubectl rollout restart daemonset &lt;daemonset_name&gt;</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkisofs -v -untranslated-filenames \
+        -appid "DAOS 2.6.2" \
+        -publisher HPE \
+        -preparer HPE \
+        -V DAOS-2.6.2 \
+        -rational-rock -translation-table -o $HOME/DAOS-2.6.2-x86_64.iso .</code></pre>
 </div>
 </div>
 </div>

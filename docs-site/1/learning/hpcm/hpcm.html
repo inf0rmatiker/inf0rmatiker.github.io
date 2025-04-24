@@ -126,6 +126,9 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/isos.html">ISOs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../linux/rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -427,6 +430,31 @@
 </div>
 <div class="paragraph">
 <p><code>cm image copy -o rocky9.5 -i compute0</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_set_up_ib_network_on_nodes"><a class="anchor" href="#_set_up_ib_network_on_nodes"></a>Set up IB Network on Nodes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.calculator.net/ip-subnet-calculator.html" class="bare">https://www.calculator.net/ip-subnet-calculator.html</a></p>
+</div>
+<div class="paragraph">
+<p>Add a data network</p>
+</div>
+<div class="paragraph">
+<p><code>cm network add -w data1 --network-type ib --base-ip 10.230.0.0 --netmask  255.255.224.0 --gateway 10.230.31.255 --mtu 2044</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_images"><a class="anchor" href="#_images"></a>Images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Update image miniroot</p>
+</div>
+<div class="paragraph">
+<p><code>cm image update -i &lt;image_name&gt; -m</code></p>
 </div>
 </div>
 </div>

@@ -18,6 +18,7 @@
 ** Installs
 *** xref:docs-site:learning:linux/installs/rocky-install.adoc[Rocky Linux Install]
 *** xref:docs-site:learning:linux/installs/opensuse-install.adoc[OpenSUSE Linux Install]
+** xref:docs-site:learning:linux/isos.adoc[ISOs]
 ** xref:docs-site:learning:linux/rpms.adoc[RPMs]
 ** xref:docs-site:learning:linux/tmux.adoc[Tmux]
 ** xref:docs-site:learning:linux/user-management.adoc[User Management]

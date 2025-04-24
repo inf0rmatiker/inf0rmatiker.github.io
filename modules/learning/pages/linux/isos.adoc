@@ -1,0 +1,33 @@
+= Working with ISOs
+
+:showtitle:
+:toc: auto
+
+== Mounting an ISO
+
+[,bash]
+----
+mkdir /mnt/test-iso
+mount -t iso9660 -o loop,ro /mnt/images/test.iso /mnt/test-iso
+----
+
+This is a read-only filesystem, you cannot write/change the contents of the ISO
+directly. To do so, you'd need to copy the contents to a read-write directory,
+then change those contents, and re-build the ISO from that.
+
+== Creating an ISO
+
+To get `mkisofs`: `dnf install xorriso`
+
+Prepare a directory with the contents you want in your ISO. Here we'll be
+packaging a DAOS ISO.
+
+[,bash]
+----
+mkisofs -v -untranslated-filenames \
+        -appid "DAOS 2.6.2" \
+        -publisher HPE \
+        -preparer HPE \
+        -V DAOS-2.6.2 \
+        -rational-rock -translation-table -o $HOME/DAOS-2.6.2-x86_64.iso .
+----

@@ -1,3 +1,12 @@
 = Caleb Carlson - Documentation
 
+[cols="1a,1a"]
+|===
+|https://github.com/inf0rmatiker[GitHub]
+|https://inf0rmatiker.github.io/[GH Pages]
+
+|https://www.linkedin.com/in/inf0rmatiker/[LinkedIn]
+|mailto:ccarlson355@gmail.com[Email]
+|===
+
 Use the sidebar to navigate between topics.

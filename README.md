@@ -21,11 +21,13 @@ Using the [Makefile](./Makefile):
    ```
 
    * This generates the site to `build/`, you can view it by opening `build/index.html` in a browser.
+
 * **Create a new module under a category**
 
    ```bash
    make module
    ```
+
    * You'll need to specify the module name (i.e. `Docker`) and module category (i.e. `learning`):
    * Example:
 

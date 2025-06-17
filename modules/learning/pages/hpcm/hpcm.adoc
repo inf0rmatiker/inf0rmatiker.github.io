@@ -10,6 +10,44 @@
 
 `cm image copy -o rocky9.5 -i compute0`
 
+== Add Repo to CM from ISO
+
+`cm repo add <path_to_iso>`
+
+.Example
+[,console]
+----
+[root@trout-admin ~]# cm repo add /root/DAOS-2.6.3-x86_64.iso
+Mounting ISO file loopback...
+  Running: cp -a /tmp/tw9i4pO5bU /opt/clmgr/repos/other/DAOS-2.6.3-x86_64
+Detected existing repo metadata. Use --refresh to replace.
+Exporting repository for use with yume....
+Exporting /opt/clmgr/repos/other/DAOS-2.6.3-x86_64 through httpd, http://trout-admin/repo/opt/clmgr/repos/other/DAOS-2.6.3-x86_64
+Updating default rpm lists...
+Updating: /opt/clmgr/image/rpmlists/generated/generated-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-ice-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-lead-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-admin-rocky9.5.rpmlist
+----
+
+== Download Remote Repo to CM
+
+Here's how to download the EPEL repo (referenced by `/etc/yum.repos.d/epel.repo`)
+to the Cluster Manager repos. Note this is a fairly large repo, about 13G in size.
+
+[,bash]
+----
+mkdir /opt/clmgr/repos/other/EPEL-9-x86_64
+dnf reposync --download-metadata --download-path /opt/clmgr/repos/other/EPEL-9-x86_64 --repo epel
+mv /opt/clmgr/repos/other/EPEL-9-x86_64/epel/* /opt/clmgr/repos/other/EPEL-9-x86_64/
+rm -rf  /opt/clmgr/repos/other/EPEL-9-x86_64/epel
+cm repo add --custom --name EPEL-9-x86_64 /opt/clmgr/repos/other/EPEL-9-x86_64
+----
+
+== Update an Image
+
+
+
 == Set up IB Network on Nodes
 
 https://www.calculator.net/ip-subnet-calculator.html

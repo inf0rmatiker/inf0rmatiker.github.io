@@ -434,6 +434,54 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="_add_repo_to_cm_from_iso"><a class="anchor" href="#_add_repo_to_cm_from_iso"></a>Add Repo to CM from ISO</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>cm repo add &lt;path_to_iso&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@trout-admin ~]# cm repo add /root/DAOS-2.6.3-x86_64.iso
+Mounting ISO file loopback...
+  Running: cp -a /tmp/tw9i4pO5bU /opt/clmgr/repos/other/DAOS-2.6.3-x86_64
+Detected existing repo metadata. Use --refresh to replace.
+Exporting repository for use with yume....
+Exporting /opt/clmgr/repos/other/DAOS-2.6.3-x86_64 through httpd, http://trout-admin/repo/opt/clmgr/repos/other/DAOS-2.6.3-x86_64
+Updating default rpm lists...
+Updating: /opt/clmgr/image/rpmlists/generated/generated-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-ice-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-lead-rocky9.5.rpmlist
+Updating: /opt/clmgr/image/rpmlists/generated/generated-admin-rocky9.5.rpmlist</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_download_remote_repo_to_cm"><a class="anchor" href="#_download_remote_repo_to_cm"></a>Download Remote Repo to CM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here&#8217;s how to download the EPEL repo (referenced by <code>/etc/yum.repos.d/epel.repo</code>)
+to the Cluster Manager repos. Note this is a fairly large repo, about 13G in size.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir /opt/clmgr/repos/other/EPEL-9-x86_64
+dnf reposync --download-metadata --download-path /opt/clmgr/repos/other/EPEL-9-x86_64 --repo epel
+mv /opt/clmgr/repos/other/EPEL-9-x86_64/epel/* /opt/clmgr/repos/other/EPEL-9-x86_64/
+rm -rf  /opt/clmgr/repos/other/EPEL-9-x86_64/epel
+cm repo add --custom --name EPEL-9-x86_64 /opt/clmgr/repos/other/EPEL-9-x86_64</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_an_image"><a class="anchor" href="#_update_an_image"></a>Update an Image</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
 <h2 id="_set_up_ib_network_on_nodes"><a class="anchor" href="#_set_up_ib_network_on_nodes"></a>Set up IB Network on Nodes</h2>
 <div class="sectionbody">
 <div class="paragraph">

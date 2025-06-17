@@ -1,6 +1,6 @@
 = Caleb Carlson - Documentation
 
-[cols="1a,1a"]
+[cols="1,1"]
 |===
 |https://github.com/inf0rmatiker[GitHub]
 |https://inf0rmatiker.github.io/[GH Pages]

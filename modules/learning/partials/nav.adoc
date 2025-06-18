@@ -14,7 +14,6 @@
 ** xref:docs-site:learning:lustre/lustre-networking.adoc[Lustre Networking]
 
 * Linux
-
 ** Installs
 *** xref:docs-site:learning:linux/installs/rocky-install.adoc[Rocky Linux Install]
 *** xref:docs-site:learning:linux/installs/opensuse-install.adoc[OpenSUSE Linux Install]
@@ -39,18 +38,15 @@
 ** xref:docs-site:learning:docker/nginx-webserver.adoc[Nginx Webserver]
 ** xref:docs-site:learning:docker/registry-proxy.adoc[Registry Proxy]
 
-* Asciinema
-** xref:docs-site:learning:asciinema/asciinema.adoc[Asciinema]
+* xref:docs-site:learning:asciinema/asciinema.adoc[Asciinema]
 
-* BMC Management
-** xref:docs-site:learning:bmc-management/bmc-management.adoc[BMC Management]
+* xref:docs-site:learning:bmc-management/bmc-management.adoc[BMC Management]
 
 * Version Control
 ** xref:docs-site:learning:version-control/git/git.adoc[Git]
 ** xref:docs-site:learning:version-control/github/github.adoc[GitHub]
 
-* Algorithms
-** xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]
+* xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]
 
 * Machine Learning
 ** xref:docs-site:learning:machine-learning/benchmarks.adoc[Benchmarks]
@@ -83,15 +79,12 @@
 *** xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]
 ** xref:docs-site:learning:languages/go/go.adoc[Go]
 
-* Slurm
-** xref:docs-site:learning:slurm/slurm.adoc[Slurm]
+* xref:docs-site:learning:slurm/slurm.adoc[Slurm]
 
 * GPUs
 ** xref:docs-site:learning:gpus/gds.adoc[GPUDirect Storage]
 ** xref:docs-site:learning:gpus/numa.adoc[NUMA]
 
-* Switch Management
-** xref:docs-site:learning:switch-management/switch-management.adoc[Switch Management]
+* xref:docs-site:learning:switch-management/switch-management.adoc[Switch Management]
 
-* HPCM
-** xref:docs-site:learning:hpcm/hpcm.adoc[HPCM]
+* xref:docs-site:learning:hpcm/hpcm.adoc[HPCM]

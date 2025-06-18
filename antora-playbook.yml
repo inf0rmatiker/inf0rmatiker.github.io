@@ -1,5 +1,5 @@
 site:
-  title: Caleb Carlson | Documentation
+  title: Caleb Carlson | Docs Site
   url:  https://inf0rmatiker.github.io/
   start_page: docs-site:ROOT:index.adoc
 output:

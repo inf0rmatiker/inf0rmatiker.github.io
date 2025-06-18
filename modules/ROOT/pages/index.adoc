@@ -1,12 +1,23 @@
-= Caleb Carlson - Documentation
+= Overview
 
-[cols="1,1"]
+Use the sidebar to navigate between topics.
+
+== Profiles and Projects
+
+[cols="^1,^1"]
 |===
 |https://github.com/inf0rmatiker[GitHub]
-|https://inf0rmatiker.github.io/[GH Pages]
+|https://inf0rmatiker.github.io/[GitHub Pages]
 
 |https://www.linkedin.com/in/inf0rmatiker/[LinkedIn]
 |mailto:ccarlson355@gmail.com[Email]
 |===
 
-Use the sidebar to navigate between topics.
+== Published Research
+
+* https://dl.acm.org/doi/10.1145/3492324.3494164[Distributed Orchestration of Regression Models Over Administrative Boundaries]
+* https://ieeexplore.ieee.org/abstract/document/10020602[Resource Efficient Profiling of Spatial Variability in Performance of Regression Models]
+
+== Resume
+
+* https://github.com/inf0rmatiker/resume/releases/download/v1.0.0/caleb_carlson_resume.pdf[Caleb Carlson's Resume (PDF)]

@@ -595,6 +595,120 @@ CA 'mlx5_1'
 		Link layer: InfiniBand
 ----
 
+`ibv_devinfo`: Shows a more raw version about HCAs and their ports, like `ibstat`
+
+[,console]
+----
+[root@N0001 ~]# ibv_devinfo
+hca_id:	mlx5_0
+	transport:			InfiniBand (0)
+	fw_ver:				28.42.1000
+	node_guid:			5c25:7303:00a5:8b5c
+	sys_image_guid:			5c25:7303:00a5:8b5c
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000001120
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_INIT (2)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		65535
+			port_lmc:		0x00
+			link_layer:		InfiniBand
+
+hca_id:	mlx5_1
+	transport:			InfiniBand (0)
+	fw_ver:				28.42.1000
+	node_guid:			5c25:7303:00a5:8a9c
+	sys_image_guid:			5c25:7303:00a5:8a9c
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000001120
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_INIT (2)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		65535
+			port_lmc:		0x00
+			link_layer:		InfiniBand
+
+hca_id:	mlx5_2
+	transport:			InfiniBand (0)
+	fw_ver:				28.42.1000
+	node_guid:			5c25:7303:00a5:8b14
+	sys_image_guid:			5c25:7303:00a5:8b14
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000001120
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_INIT (2)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		65535
+			port_lmc:		0x00
+			link_layer:		InfiniBand
+
+hca_id:	mlx5_3
+	transport:			InfiniBand (0)
+	fw_ver:				28.42.1000
+	node_guid:			5c25:7303:00a5:8b44
+	sys_image_guid:			5c25:7303:00a5:8b44
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000001120
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_INIT (2)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		65535
+			port_lmc:		0x00
+			link_layer:		InfiniBand
+----
+
+`ibdev2netdev`: Shows a mapping of InfiniBand device to logical net device
+
+[,console]
+----
+[root@N0001 ~]# ibdev2netdev
+mlx5_0 port 1 ==> ibs3 (Down)
+mlx5_1 port 1 ==> ibs2 (Down)
+mlx5_2 port 1 ==> ibs5 (Down)
+mlx5_3 port 1 ==> ibs6 (Down)
+
+mawenzi-06:~ # ibdev2netdev
+mlx5_0 port 1 ==> ib0 (Up)
+mlx5_1 port 1 ==> ib1 (Down)
+----
+
+With verbose:
+
+[,console]
+----
+[root@N0001 ~]# ibdev2netdev -v
+0000:12:00.0 mlx5_0 (MT4129 - P45645-002 ) HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter                                                                                                       fw 28.42.1000 port 1 (INIT  ) ==> ibs3 (Down)
+0000:26:00.0 mlx5_1 (MT4129 - P45645-002 ) HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter                                                                                                       fw 28.42.1000 port 1 (INIT  ) ==> ibs2 (Down)
+0000:8a:00.0 mlx5_2 (MT4129 - P45645-002 ) HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter                                                                                                       fw 28.42.1000 port 1 (INIT  ) ==> ibs5 (Down)
+0000:9f:00.0 mlx5_3 (MT4129 - P45645-002 ) HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter                                                                                                       fw 28.42.1000 port 1 (INIT  ) ==> ibs6 (Down)
+
+mawenzi-06:~ # ibdev2netdev -v
+0000:87:00.0 mlx5_0 (MT4123 - P24250-001 ) HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter                                                                                                            fw 20.35.2000 port 1 (ACTIVE) ==> ib0 (Up)
+0000:03:00.0 mlx5_1 (MT4123 - P24250-001 ) HPE InfiniBand HDR/Ethernet 200Gb 1-port MCX653105A-HDAT QSFP56 x16 Adapter                                                                                                            fw 20.35.2000 port 1 (DOWN  ) ==> ib1 (Down)
+----
+
+
+
 == Tasks
 
 Show information about a Mellanox card link

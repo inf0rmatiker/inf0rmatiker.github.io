@@ -1,3 +1,116 @@
 = Algorithms
 
-Default template page for module to be replaced.
+:showtitle:
+:toc: auto
+
+== Sliding Window
+
+The Sliding Window algorithm helps you find a property of a substring, subarray or some
+window within a larger sequential list.
+
+There are two variations of this approach: _Fixed Sliding Window_, where the window size
+is static, and _Dynamic Sliding Window_ where the window size can increase and decrease
+based on some criteria.
+
+It's O(n) time where n is the size of the list.
+
+=== Example Problems
+
+https://leetcode.com/problems/longest-substring-without-repeating-characters[LeetCode: Longest Substring without Repeating Characters]
+
+*Problem prompt*
+Given a string `s`, find the length of the longest substring without duplicate characters.
+
+*Example 1*
+Input: `s = "pwwkew"`
+Output: `3`
+Explanation: The answer is `"wke"`, with the length of `3`.
+Notice that the answer must be a substring, `"pwke"` is a subsequence and not a substring.
+
+*Solution*
+This problem can be solved using a dynamic sliding window approach.
+
+Before we throw the algorithm at it, we need a basic sanity check to see if the input `s` is empty, in which
+case we should just return `0`:
+
+```go
+if len(s) == 0 {
+        return 0
+}
+```
+
+We'll need a set (in Go, use `map[byte]bool`) to store the set of unique characters in our current window:
+
+```go
+set := map[byte]bool
+```
+
+Our window will start out empty. We'll use an index `l` as a pointer to the beginning of our window, and `r` to denote the end
+of our window. We can initialize these both to `0`:
+
+```go
+l, r := 0, 0
+```
+
+We'll also need a `longest` variable to track the longest length of window we've seen so far:
+
+```go
+longest := 0
+```
+
+We'll want to process the input string `s` while the right pointer is within the string length:
+
+```go
+for r < len(s) {
+        // Advance/adjust our sliding window
+}
+```
+
+Every iteration we'll see if we can "take" the next character (`s[r]`) or not. We can take it if it's not already in our
+set, otherwise, we'll have to adjust our sliding window:
+
+```go
+if (!set[s[r]]) {
+        // take the current character, and advance to next character
+        set[s[r]] = true
+        r++
+} else {
+        // can't take current character, so trim the left character off our sliding window
+        // (shrink window from the left)
+        delete(set[s[l]])
+        l++
+}
+```
+
+Putting the whole solution together:
+
+```go
+func lengthOfLongestSubstring(s string) int {
+    longest := 0
+    l, r := 0, 0
+    set := map[byte]bool{}
+
+    if len(s) == 0 {
+        return 0
+    }
+
+    for r < len(s) {
+        if (!set[s[r]]) {
+            set[s[r]] = true
+            r++
+        } else {
+            delete(set, s[l])
+            l++
+        }
+
+        // Update longest seen substring length
+        if len(set) > longest {
+            longest = len(set)
+        }
+    }
+
+    return longest
+}
+```
+
+References: https://www.geeksforgeeks.org/dsa/window-sliding-technique/

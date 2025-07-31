@@ -334,6 +334,15 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="../hpcm/hpcm.html">HPCM</a>
   </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">todo</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../todo/todo.html">todo</a>
+  </li>
+</ul>
+  </li>
 </ul>
   </li>
 </ul>
@@ -378,8 +387,143 @@
 </aside>
 <article class="doc">
 <h1 class="page">Algorithms</h1>
+<div class="sect1">
+<h2 id="_sliding_window"><a class="anchor" href="#_sliding_window"></a>Sliding Window</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Default template page for module to be replaced.</p>
+<p>The Sliding Window algorithm helps you find a property of a substring, subarray or some
+window within a larger sequential list.</p>
+</div>
+<div class="paragraph">
+<p>There are two variations of this approach: <em>Fixed Sliding Window</em>, where the window size
+is static, and <em>Dynamic Sliding Window</em> where the window size can increase and decrease
+based on some criteria.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s O(n) time where n is the size of the list.</p>
+</div>
+<div class="sect2">
+<h3 id="_example_problems"><a class="anchor" href="#_example_problems"></a>Example Problems</h3>
+<div class="paragraph">
+<p><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">LeetCode: Longest Substring without Repeating Characters</a></p>
+</div>
+<div class="paragraph">
+<p><strong>Problem prompt</strong>
+Given a string <code>s</code>, find the length of the longest substring without duplicate characters.</p>
+</div>
+<div class="paragraph">
+<p><strong>Example 1</strong>
+Input: <code>s = "pwwkew"</code>
+Output: <code>3</code>
+Explanation: The answer is <code>"wke"</code>, with the length of <code>3</code>.
+Notice that the answer must be a substring, <code>"pwke"</code> is a subsequence and not a substring.</p>
+</div>
+<div class="paragraph">
+<p><strong>Solution</strong>
+This problem can be solved using a dynamic sliding window approach.</p>
+</div>
+<div class="paragraph">
+<p>Before we throw the algorithm at it, we need a basic sanity check to see if the input <code>s</code> is empty, in which
+case we should just return <code>0</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">if len(s) == 0 {
+        return 0
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll need a set (in Go, use <code>map[byte]bool</code>) to store the set of unique characters in our current window:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">set := map[byte]bool</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our window will start out empty. We&#8217;ll use an index <code>l</code> as a pointer to the beginning of our window, and <code>r</code> to denote the end
+of our window. We can initialize these both to <code>0</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">l, r := 0, 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll also need a <code>longest</code> variable to track the longest length of window we&#8217;ve seen so far:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">longest := 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll want to process the input string <code>s</code> while the right pointer is within the string length:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">for r &lt; len(s) {
+        // Advance/adjust our sliding window
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every iteration we&#8217;ll see if we can "take" the next character (<code>s[r]</code>) or not. We can take it if it&#8217;s not already in our
+set, otherwise, we&#8217;ll have to adjust our sliding window:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">if (!set[s[r]]) {
+        // take the current character, and advance to next character
+        set[s[r]] = true
+        r++
+} else {
+        // can't take current character, so trim the left character off our sliding window
+        // (shrink window from the left)
+        delete(set[s[l]])
+        l++
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Putting the whole solution together:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-go hljs" data-lang="go">func lengthOfLongestSubstring(s string) int {
+    longest := 0
+    l, r := 0, 0
+    set := map[byte]bool{}
+
+    if len(s) == 0 {
+        return 0
+    }
+
+    for r &lt; len(s) {
+        if (!set[s[r]]) {
+            set[s[r]] = true
+            r++
+        } else {
+            delete(set, s[l])
+            l++
+        }
+
+        // Update longest seen substring length
+        if len(set) &gt; longest {
+            longest = len(set)
+        }
+    }
+
+    return longest
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>References: <a href="https://www.geeksforgeeks.org/dsa/window-sliding-technique/" class="bare">https://www.geeksforgeeks.org/dsa/window-sliding-technique/</a></p>
+</div>
+</div>
+</div>
 </div>
 </article>
   </div>

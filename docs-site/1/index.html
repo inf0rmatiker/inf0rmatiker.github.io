@@ -394,7 +394,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_profiles_and_projects"><a class="anchor" href="#_profiles_and_projects"></a>Profiles and Projects</h2>
+<h2 id="_profiles"><a class="anchor" href="#_profiles"></a>Profiles</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -415,8 +415,53 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_published_research"><a class="anchor" href="#_published_research"></a>Published Research</h2>
+<h2 id="_about"><a class="anchor" href="#_about"></a>About</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p><strong>Education</strong></p>
+</div>
+<div class="paragraph">
+<p>Prior to my Master&#8217;s program, I spent four years getting a Bachelor of Science degree in Computer Science, with a Mathematics minor at CSU. Within three semesters, I was lead Teaching Assistant for <em>Java: Data Structures and Algorithms</em> class where I led labs, managed new TAs onboard, designed assignments, administered tests, and developed automated grading processes. Next, I moved up to TAing for junior-level <em>Introduction to Software Engineering</em> class where I played an active role as a Scrum Master, assisting with fullstack Agile development of end-to-end React apps with optimized Java servers and an SQL database backend. After two semesters of that, I moved into a new role as a TA for the <em>Operating Systems</em> class, and had the opportunity to not only teach students key concepts like hardware resource management, context switching, process management, thread safety, and virtualization, but also design a final project with Docker containers and Kubernetes. Lastly, I shifted into an Undergraduate Research Assistant in Dr. Sangmi Pallickara&#8217;s Big Data Lab, where I worked with graduate students on an LSTM RNN model to analyze point clouds from LIDAR data. Throughout all four years, I tutored several students for the entire undergradate cirriculum, and graduateed with a 3.98 GPA in May 2020.</p>
+</div>
+<div class="paragraph">
+<p>Beginning my Master&#8217;s program, I was given the opportunity to join the Pallickara&#8217;s Distributed Systems and Big Data lab under funding from the <a href="https://www.nsf.gov/">National Science Foundation</a>. There I collaborated with several colleagues and our P.I. to ingest, shard, and load-balance publicly available geospatial and temporal datasets from vendors. These were multiple petabytes in size and hosted on over 150 servers, serving as ground truth for an environmental risk modeling service: <a href="https://urban-sustain.org/aperture/">Aperture</a>. Towards the end of my program, I contributed to two research papers (see <a href="#published-research"><em>Published Research</em></a>) to scientific computing conferences, backed by a publicly-accessible service for uploading PyTorch, Tensorflow, or Scikit-Learn models and seeing inference results as a geospatial heatmap at different administrative granularities (census tract, county, state). I graduated with a Master&#8217;s of Science degree with a 4.0 GPA in May of 2022.</p>
+</div>
+<div class="paragraph">
+<p><strong>Industry</strong></p>
+</div>
+<div class="paragraph">
+<p>My industry experience began in summer of 2019, as an intern at <a href="https://ductus.global/">Ductus</a> in Longmont, CO, where I worked on a production codebase for a subscription-based cellular streaming API for Verizon. During that time, I gained valuable experience refactoring models for the Spring Boot framework, optimizing unit tests in JUnit, and implementing RBAC and API access auditing. Summer of 2020 I landed an internship at <a href="https://www.hpe.com/us/en/compute/hpc/supercomputing/cray-exascale-supercomputer.html">Cray, Inc</a>, which was just being acquired by HPE. Within a summer, I came up to speed on distributed object/block storage filesystems and helped design and implement a distributed service for managing Lustre filesystems and the underlying drives. Additionally, I created a tool for converting <a href="https://redfish.dmtf.org/">DMTF Redfish</a> / <a href="https://www.snia.org/education/what-is-swordfish">SNIA Swordfish</a> schemas into Go structs and constants. After completing my Master&#8217;s program, I was offered a full-time position at <a href="https://www.hpe.com/">HPE, Inc</a> as a Systems Software Engineer in the <a href="https://www.hpe.com/us/en/supercomputing.html">HPC Storage organization</a>. Here I&#8217;ve had the opportunity to work on many projects, across several teams. Below are just a few highlights from experience at HPE, in order of oldest to newest:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Improved node discovery and software mapping process in Kubernetes for add-on data mover nodes in the ClusterStor CDS product.</p>
+</li>
+<li>
+<p>Triaged issues like expired Docker/Kubernetes/Spire certificates, stale or missing OpenEBS volume mounts, and corrupted Postgres data for customers globally, helping achieve customer acceptance. Provided site engineers with tools to help identify/resolve issues and restore metadata backups, as well as updated images with patches.</p>
+</li>
+<li>
+<p>Investigated a potential storage product based on the <a href="https://www.talos.dev/">Talos OS</a> and collaborated with <a href="https://www.siderolabs.com/">Sidero Labs</a> to get InfiniBand device virtual passthrough enabled.</p>
+</li>
+<li>
+<p>Established an environment and tools to benchmark Lustre with Nvidia&#8217;s <a href="https://docs.nvidia.com/gpudirect-storage/">GPUDirect Storage</a> (GDS) technology using Mellanox ConnectX NICs. Assisted with diagnosing performance issues, collaborating with Nvidia engineers to debug bottlenecks in the transport callstack.</p>
+</li>
+<li>
+<p>Worked with key engineers on the core Lustre team and contributed to the OS/architecture-compatibility and maturity of <a href="https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support">DKMS</a> builds and package releases for the Lustre client. This helped tremendously with field installs and kernel compatibility as kernel updates were being rolled out onsite.</p>
+</li>
+<li>
+<p>Created a flexible, parameterized build pipeline using Jenkins and Docker-compose that builds requested client RPMs for Lustre releases and integration branches, uploading and signing the packages to Artifactory. This automated a significant portion of the release process and development lifecycle.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="published-research"><a class="anchor" href="#published-research"></a>Published Research</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Papers</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -424,6 +469,19 @@
 </li>
 <li>
 <p><a href="https://ieeexplore.ieee.org/abstract/document/10020602">Resource Efficient Profiling of Spatial Variability in Performance of Regression Models</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Public Services and Open-Source Projects</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://urban-sustain.org/aperture/" class="bare">https://urban-sustain.org/aperture/</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Project-Sustain/validation-service" class="bare">https://github.com/Project-Sustain/validation-service</a></p>
 </li>
 </ul>
 </div>

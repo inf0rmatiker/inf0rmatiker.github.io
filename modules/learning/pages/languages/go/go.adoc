@@ -7,6 +7,4 @@
 
 * https://go.dev/doc/[Go Documentation]
 * https://go.dev/tour/welcome/1[Go Tour]
-
-== Topics
-
+* https://go.dev/play/[Go Playground]

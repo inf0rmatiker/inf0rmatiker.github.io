@@ -452,6 +452,15 @@
 <li>
 <p>Created a flexible, parameterized build pipeline using Jenkins and Docker-compose that builds requested client RPMs for Lustre releases and integration branches, uploading and signing the packages to Artifactory. This automated a significant portion of the release process and development lifecycle.</p>
 </li>
+<li>
+<p>Improved Lustre Network kernel module tunables, allowing the timeout hierarchy tuned on a per-message basis, and modified at runtime. This allowed users to optimize tunables for specific network drivers instead of relying on global defaults.</p>
+</li>
+<li>
+<p>Validated and benchmarked Lustre filesystem throughput/IOPS with <a href="https://www.nextplatform.com/2024/11/26/hpe-upgrades-supercomputer-lineup-top-to-bottom-in-2025/">latest Cassini 2 400 Gb cards</a> and Rosetta switches over both RoCE and Slingshot.</p>
+</li>
+<li>
+<p>Helped bootstrap next-generation DAOS storage product by adopting <a href="https://support.hpe.com/connect/s/softwaredetails?language=en_US&amp;collectionId=MTX-a5c88c35897f4694">HPCM</a> as the base platform for our storage/cluster management software. Contributed necessary changes to HPCM platform to accommodate our use case.</p>
+</li>
 </ul>
 </div>
 </div>

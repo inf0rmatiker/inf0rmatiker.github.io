@@ -31,7 +31,9 @@ My industry experience began in summer of 2019, as an intern at https://ductus.g
 * Established an environment and tools to benchmark Lustre with Nvidia's https://docs.nvidia.com/gpudirect-storage/[GPUDirect Storage] (GDS) technology using Mellanox ConnectX NICs. Assisted with diagnosing performance issues, collaborating with Nvidia engineers to debug bottlenecks in the transport callstack.
 * Worked with key engineers on the core Lustre team and contributed to the OS/architecture-compatibility and maturity of https://en.wikipedia.org/wiki/Dynamic_Kernel_Module_Support[DKMS] builds and package releases for the Lustre client. This helped tremendously with field installs and kernel compatibility as kernel updates were being rolled out onsite.
 * Created a flexible, parameterized build pipeline using Jenkins and Docker-compose that builds requested client RPMs for Lustre releases and integration branches, uploading and signing the packages to Artifactory. This automated a significant portion of the release process and development lifecycle.
-
+* Improved Lustre Network kernel module tunables, allowing the timeout hierarchy tuned on a per-message basis, and modified at runtime. This allowed users to optimize tunables for specific network drivers instead of relying on global defaults.
+* Validated and benchmarked Lustre filesystem throughput/IOPS with https://www.nextplatform.com/2024/11/26/hpe-upgrades-supercomputer-lineup-top-to-bottom-in-2025/[latest Cassini 2 400 Gb cards] and Rosetta switches over both RoCE and Slingshot.
+* Helped bootstrap next-generation DAOS storage product by adopting https://support.hpe.com/connect/s/softwaredetails?language=en_US&collectionId=MTX-a5c88c35897f4694[HPCM] as the base platform for our storage/cluster management software. Contributed necessary changes to HPCM platform to accommodate our use case.
 
 
 

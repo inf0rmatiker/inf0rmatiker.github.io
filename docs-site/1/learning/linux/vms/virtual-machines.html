@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Drive Management :: Caleb Carlson | Docs Site</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/storage/drives.html">
+    <title>Linux Virtual Machines :: Caleb Carlson | Docs Site</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/vms/virtual-machines.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
@@ -167,18 +167,18 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="filesystems.html">Filesystems</a>
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="4">
-    <a class="nav-link" href="drives.html">Drives</a>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../vms/virtual-machines.html">Virtual Machines</a>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="virtual-machines.html">Virtual Machines</a>
   </li>
 </ul>
   </li>
@@ -391,8 +391,7 @@
     <li><a href="../../../index.html">Documentation</a></li>
     <li>Learning</li>
     <li>Linux</li>
-    <li>Storage</li>
-    <li><a href="drives.html">Drives</a></li>
+    <li><a href="virtual-machines.html">Virtual Machines</a></li>
   </ul>
 </nav>
 </div>
@@ -401,96 +400,39 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Drive Management</h1>
-<div class="sect1">
-<h2 id="_utilities"><a class="anchor" href="#_utilities"></a>Utilities</h2>
+<h1 class="page">Linux Virtual Machines</h1>
+<div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p>This document will explore creating and managing virtual machines on Linux with the following VM stack:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://linux.die.net/man/8/lsblk"><code>lsblk</code></a>: List information about block devices</p>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install">virt-install</a></p>
 </li>
 <li>
-<p><a href="https://linux.die.net/man/1/df"><code>df</code></a>: Report file system disk space usage</p>
-</li>
+<p><a href="https://www.libvirt.org/manpages/virsh.html">virsh</a></p>
+<div class="ulist">
+<ul>
 <li>
-<p><a href="https://linux.die.net/man/8/sgdisk"><code>sgdisk</code></a>: Command-line GUID partition table (GPT) manipulator for Linux and Unix</p>
-</li>
+<p><a href="https://www.libvirt.org/">libvirt</a></p>
+<div class="ulist">
+<ul>
 <li>
-<p><a href="https://linux.die.net/man/8/fdisk"><code>fdisk</code></a>: Manipulate disk partition table</p>
-</li>
+<p><a href="https://www.qemu.org/">qemu</a></p>
+<div class="ulist">
+<ul>
 <li>
-<p><a href="https://linux.die.net/man/8/parted"><code>parted</code></a>: GNU Parted - a partition manipulation program</p>
+<p><a href="https://linux-kvm.org/page/Main_Page">kvm</a></p>
 </li>
 </ul>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_print_drive_information"><a class="anchor" href="#_print_drive_information"></a>Print Drive Information</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Using <code>sgdisk --print &lt;device&gt;</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --print /dev/nvme0n1
-Disk /dev/nvme0n1: 3125627568 sectors, 1.5 TiB
-Model: MZXL51T6HBJR-000H3
-Sector size (logical/physical): 512/512 bytes
-Disk identifier (GUID): EF3781EC-7B13-453B-9651-FE12C5375137
-Partition table holds up to 128 entries
-Main partition table begins at sector 2 and ends at sector 33
-First usable sector is 34, last usable sector is 3125627534
-Partitions will be aligned on 2048-sector boundaries
-Total free space is 2967095917 sectors (1.4 TiB)
-
-Number  Start (sector)    End (sector)  Size       Code  Name
-   1            2048         1230847   600.0 MiB   EF00  EFI System Partition
-   2         1230848         3327999   1024.0 MiB  8300
-   3         3328000       158533631   74.0 GiB    8E00</code></pre>
-</div>
+</li>
+</ul>
 </div>
 </li>
-<li>
-<p>Using <code>fdisk --list &lt;device&gt;</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# fdisk --list /dev/nvme0n1
-Disk /dev/nvme0n1: 1.5 TiB, 1600321314816 bytes, 3125627568 sectors
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disklabel type: gpt
-Disk identifier: EF3781EC-7B13-453B-9651-FE12C5375137
-
-Device           Start       End   Sectors  Size Type
-/dev/nvme0n1p1    2048   1230847   1228800  600M EFI System
-/dev/nvme0n1p2 1230848   3327999   2097152    1G Linux filesystem
-/dev/nvme0n1p3 3328000 158533631 155205632   74G Linux LVM</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Using <code>lsblk</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# lsblk
-NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-sr0          11:0    1  2.1G  0 rom
-nvme2n1     259:0    0  1.5T  0 disk
-nvme0n1     259:1    0  1.5T  0 disk
-├─nvme0n1p1 259:5    0  600M  0 part /boot/efi
-├─nvme0n1p2 259:6    0    1G  0 part /boot
-└─nvme0n1p3 259:7    0   74G  0 part
-  ├─rl-root 253:0    0   70G  0 lvm  /
-  └─rl-swap 253:1    0    4G  0 lvm  [SWAP]
-nvme4n1     259:2    0  1.5T  0 disk
-└─nvme4n1p1 259:8    0  100G  0 part
-nvme3n1     259:3    0  1.5T  0 disk
-nvme1n1     259:4    0  1.5T  0 disk</code></pre>
-</div>
+</ul>
 </div>
 </li>
 </ul>
@@ -498,122 +440,234 @@ nvme1n1     259:4    0  1.5T  0 disk</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_cleardelete_partitions"><a class="anchor" href="#_cleardelete_partitions"></a>Clear/Delete Partitions</h2>
+<h2 id="_resources"><a class="anchor" href="#_resources"></a>Resources</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Whenever deleting partitions make sure to either reboot or run <code>partprobe</code> to inform the kernel of the partition changes.
-</td>
-</tr>
-</table>
-</div>
 <div class="ulist">
 <ul>
 <li>
-<p>Using <code>sgdisk --zap-all &lt;device&gt;</code>: zap (destroy) all GPT and MBR data structures</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --zap-all /dev/nvme4n1
-GPT data structures destroyed! You may now partition the disk using fdisk or
-other utilities.</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Using <code>sgdisk --delete &lt;partnum&gt; &lt;device&gt;</code>, delete the second partition on the <code>/dev/nvme4n1</code> drive</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --delete 2 /dev/nvme4n1
-The operation has completed successfully.</code></pre>
-</div>
-</div>
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_virtualization/4.3/html/technical_reference/qcow2">QCOW2: Storage Formats for Virtual Disks</a></p>
 </li>
 </ul>
+</div>
+<div class="videoblock">
+<div class="content">
+<iframe width="960" height="440" src="https://www.youtube.com/embed/XLETE7hqbWc?si=HK3kKXfKUUNDEaeQ?rel=0" frameborder="0" allowfullscreen></iframe>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_create_partitions"><a class="anchor" href="#_create_partitions"></a>Create Partitions</h2>
+<h2 id="_installation_on_opensuse_15_5"><a class="anchor" href="#_installation_on_opensuse_15_5"></a>Installation on OpenSUSE 15.5</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Whenever creating partitions make sure to either reboot or run <code>partprobe</code> to inform the kernel of the partition changes.
-</td>
-</tr>
-</table>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Using <code>sgdisk</code>, create a new partition on the <code>/dev/nvme0n1</code> drive, converting MBR partitions to GPT, 0 MiB from the last partition&#8217;s end, 100 GiB in size, change the partition label from <code>2</code> to <code>dpapi</code></p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# sgdisk --mbrtogpt --randomize-guids --new 2:+0M:+100G --change-name 2:dpapi /dev/nvme4n1
-Setting name!
-partNum is 1
-The operation has completed successfully.</code></pre>
-</div>
-</div>
-</li>
-</ul>
+<div class="paragraph">
+<p>Use <code>zypper</code> to install <code>libvirt</code>, <code>qemu</code>, and <code>virt-manager</code>:</p>
 </div>
 <div class="paragraph">
-<p>This creates an entry <code>/dev/disk/by-partlabel/dpapi &#8594; /dev/nvme0n1p2</code>.</p>
+<p>Note: This may install ~145 packages and may take a few minutes.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">zypper install libvirt qemu virt-manager</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, enable the <code>libvirtd</code> service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~/ccarlson # systemctl enable --now libvirtd
+Created symlink /etc/systemd/system/multi-user.target.wants/libvirtd.service → /usr/lib/systemd/system/libvirtd.service.
+Created symlink /etc/systemd/system/sockets.target.wants/virtlockd.socket → /usr/lib/systemd/system/virtlockd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/virtlogd.socket → /usr/lib/systemd/system/virtlogd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/libvirtd.socket → /usr/lib/systemd/system/libvirtd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/libvirtd-ro.socket → /usr/lib/systemd/system/libvirtd-ro.socket.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Start the <code>libvirtd</code> service:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~/ccarlson/vms # systemctl start libvirtd
+mawenzi-06:~/ccarlson/vms # systemctl status libvirtd
+● libvirtd.service - Virtualization daemon
+     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2025-08-21 14:48:14 MDT; 29s ago
+TriggeredBy: ● libvirtd.socket
+             ● libvirtd-admin.socket
+             ● libvirtd-ro.socket
+       Docs: man:libvirtd(8)
+             https://libvirt.org
+   Main PID: 28603 (libvirtd)
+      Tasks: 19 (limit: 32768)
+     CGroup: /system.slice/libvirtd.service
+             └─ 28603 /usr/sbin/libvirtd --timeout 120
+
+Aug 21 14:48:14 mawenzi-06 systemd[1]: Starting Virtualization daemon...
+Aug 21 14:48:14 mawenzi-06 systemd[1]: Started Virtualization daemon.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_virt_install"><a class="anchor" href="#_virt_install"></a>virt-install</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install" class="bare">https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install</a></p>
+</div>
+<div class="paragraph">
+<p>CLI for creating Guest domains (guest VMs).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_virsh"><a class="anchor" href="#_virsh"></a>virsh</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.libvirt.org/manpages/virsh.html" class="bare">https://www.libvirt.org/manpages/virsh.html</a></p>
+</div>
+<div class="paragraph">
+<p>Virsh is a management CLI that interfaces with the libvirt API and is used to manage VMs.</p>
+</div>
+<div class="paragraph">
+<p>Terminology:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Using <code>fdisk /dev/nvme0n4</code>, an interactive CLI, create a new GPT partition table, and a single partition of size 100 GiB</p>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-06 ~]# fdisk /dev/nvme4n1
-
-Welcome to fdisk (util-linux 2.32.1).
-Changes will remain in memory only, until you decide to write them.
-Be careful before using the write command.
-
-Device does not contain a recognized partition table.
-Created a new DOS disklabel with disk identifier 0xcfa29f92.
-
-Command (m for help): g
-Created a new GPT disklabel (GUID: EAA1BB8B-AF62-C948-9332-376F905FE637).
-
-Command (m for help): n
-Partition number (1-128, default 1): 1
-First sector (2048-3125627534, default 2048): 2048
-Last sector, +sectors or +size{K,M,G,T,P} (2048-3125627534, default 3125627534): +100G
-
-Created a new partition 1 of type 'Linux filesystem' and of size 100 GiB.
-
-Command (m for help): p
-Disk /dev/nvme4n1: 1.5 TiB, 1600321314816 bytes, 3125627568 sectors
-Units: sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-Disklabel type: gpt
-Disk identifier: EAA1BB8B-AF62-C948-9332-376F905FE637
-
-Device         Start       End   Sectors  Size Type
-/dev/nvme4n1p1  2048 209717247 209715200  100G Linux filesystem
-
-Command (m for help): w
-The partition table has been altered.
-Calling ioctl() to re-read partition table.
-Syncing disks.</code></pre>
-</div>
-</div>
+<p>Node: the baremetal host we&#8217;re running on</p>
+</li>
+<li>
+<p>Domain: A virtual machine</p>
 </li>
 </ul>
+</div>
+<div class="sect2">
+<h3 id="_list_networks"><a class="anchor" href="#_list_networks"></a>List networks</h3>
+<div class="paragraph">
+<p>Lists all networks.</p>
+</div>
+<div class="paragraph">
+<p><code>virsh net-list</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mawenzi-06:~ # virsh net-list
+ Name   State   Autostart   Persistent
+----------------------------------------</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_list_all_domains"><a class="anchor" href="#_list_all_domains"></a>List all domains</h3>
+<div class="paragraph">
+<p>Lists all domains, even ones that are shut off.</p>
+</div>
+<div class="paragraph">
+<p><code>virsh list --all</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sp08:~ # virsh list --all
+ Id   Name          State
+------------------------------
+ 1    cm_1_admin    running
+ 2    cm_1_n1       running
+ 3    cm_1_n2       running
+ 4    cm_2_admin    running
+ 5    cm_2_n1       running
+ 6    cm_2_n2       running
+ 7    cm_3_admin    running
+ 8    cm_3_n1       running
+ 9    cm_3_n2       running
+ -    cm_cc_admin   shut off
+ -    daos_1_n1     shut off
+ -    daos_1_n2     shut off
+ -    daos_1_n3     shut off
+ -    daos_1_n4     shut off
+ -    daos_1_n5     shut off</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_summary_information_about_domain"><a class="anchor" href="#_get_summary_information_about_domain"></a>Get summary information about domain</h3>
+<div class="paragraph">
+<p>Shows information about a domain.</p>
+</div>
+<div class="paragraph">
+<p><code>virsh dominfo &lt;domain&gt;</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sp08:~ # virsh dominfo cm_1_admin
+Id:             1
+Name:           cm_1_admin
+UUID:           0b44a7e9-b0ee-430b-9a3d-a2bbdd9eeb8c
+OS Type:        hvm
+State:          running
+CPU(s):         6
+CPU time:       2940.9s
+Max memory:     12582912 KiB
+Used memory:    12582912 KiB
+Persistent:     yes
+Autostart:      disable
+Managed save:   no
+Security model: apparmor
+Security DOI:   0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_get_information_about_host"><a class="anchor" href="#_get_information_about_host"></a>Get information about host</h3>
+<div class="paragraph">
+<p><code>virsh nodeinfo</code></p>
+</div>
+<div class="paragraph">
+<p>Shows information about our KVM host.</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">sp08:~ # virsh nodeinfo
+CPU model:           x86_64
+CPU(s):              24
+CPU frequency:       2510 MHz
+CPU socket(s):       1
+Core(s) per socket:  6
+Thread(s) per core:  2
+NUMA cell(s):        2
+Memory size:         98783136 KiB</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_start_a_domain"><a class="anchor" href="#_start_a_domain"></a>Start a domain</h3>
+<div class="paragraph">
+<p><code>virsh start &lt;domain&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>Starts up a domain. Akin to booting up a node.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_autostart_a_domain"><a class="anchor" href="#_autostart_a_domain"></a>Autostart a domain</h3>
+<div class="paragraph">
+<p><code>virsh autostart &lt;domain&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>Mark domain to automatically start when the host starts.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_libvirt"><a class="anchor" href="#_libvirt"></a>libvirt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.libvirt.org/" class="bare">https://www.libvirt.org/</a></p>
 </div>
 </div>
 </div>

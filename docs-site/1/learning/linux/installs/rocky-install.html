@@ -177,6 +177,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../vms/virtual-machines.html">Virtual Machines</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -213,7 +216,16 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/dynamic-programming.html">Dynamic Programming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/sliding-window.html">Sliding Window</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -717,10 +729,10 @@ EOF</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/environment &lt;&lt; EOF
-#Proxies for LR1
 http_proxy="http://proxy.houston.hpecorp.net:8080/"
 https_proxy="http://proxy.houston.hpecorp.net:8080/"
 ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
 EOF</code></pre>
 </div>
 </div>

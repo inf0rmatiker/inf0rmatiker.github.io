@@ -177,6 +177,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../vms/virtual-machines.html">Virtual Machines</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -213,7 +216,16 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../algorithms/algorithms.html">Algorithms</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/dynamic-programming.html">Dynamic Programming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/sliding-window.html">Sliding Window</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -679,6 +691,14 @@ IP6.GATEWAY:                            --</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">nmcli connection modify ibs1 ipv4.method manual ipv4.addresses 192.168.0.106/24</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_set_dns_for_a_connection"><a class="anchor" href="#_set_dns_for_a_connection"></a>Set DNS for a Connection</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">nmcli connection modify ens10f0 ipv4.dns "16.110.135.51 16.110.135.52"</code></pre>
 </div>
 </div>
 </div>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Algorithms :: Caleb Carlson | Docs Site</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/algorithms/algorithms.html">
+    <title>Sliding Window :: Caleb Carlson | Docs Site</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/algorithms/sliding-window.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -177,6 +177,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/vms/virtual-machines.html">Virtual Machines</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -212,8 +215,17 @@
   </li>
 </ul>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="algorithms.html">Algorithms</a>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="dynamic-programming.html">Dynamic Programming</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="3">
+    <a class="nav-link" href="sliding-window.html">Sliding Window</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -378,7 +390,8 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li><a href="algorithms.html">Algorithms</a></li>
+    <li>Algorithms</li>
+    <li><a href="sliding-window.html">Sliding Window</a></li>
   </ul>
 </nav>
 </div>
@@ -387,9 +400,8 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Algorithms</h1>
-<div class="sect1">
-<h2 id="_sliding_window"><a class="anchor" href="#_sliding_window"></a>Sliding Window</h2>
+<h1 class="page">Sliding Window</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Sliding Window algorithm helps you find a property of a substring, subarray or some
@@ -401,10 +413,14 @@ is static, and <em>Dynamic Sliding Window</em> where the window size can increas
 based on some criteria.</p>
 </div>
 <div class="paragraph">
-<p>It&#8217;s O(n) time where n is the size of the list.</p>
+<p>It&#8217;s O(n) time where n is the size of the list. This reduces the normal runtime of naive approach
+from O(n^2).</p>
 </div>
-<div class="sect2">
-<h3 id="_example_problems"><a class="anchor" href="#_example_problems"></a>Example Problems</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_problems"><a class="anchor" href="#_example_problems"></a>Example Problems</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">LeetCode: Longest Substring without Repeating Characters</a></p>
 </div>
@@ -522,7 +538,6 @@ set, otherwise, we&#8217;ll have to adjust our sliding window:</p>
 </div>
 <div class="paragraph">
 <p>References: <a href="https://www.geeksforgeeks.org/dsa/window-sliding-technique/" class="bare">https://www.geeksforgeeks.org/dsa/window-sliding-technique/</a></p>
-</div>
 </div>
 </div>
 </div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Installing Kubernetes on openSUSE Leap 15.3 :: Caleb Carlson | Docs Site</title>
+    <title>Installing Kubernetes :: Caleb Carlson | Docs Site</title>
     <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/k8s-install.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
@@ -177,6 +177,9 @@
   </li>
 </ul>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/vms/virtual-machines.html">Virtual Machines</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -213,7 +216,16 @@
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../algorithms/algorithms.html">Algorithms</a>
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/dynamic-programming.html">Dynamic Programming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../algorithms/sliding-window.html">Sliding Window</a>
+  </li>
+</ul>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -388,7 +400,10 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Installing Kubernetes on openSUSE Leap 15.3</h1>
+<h1 class="page">Installing Kubernetes</h1>
+<div class="sect1">
+<h2 id="_opensuse_leap_15_3"><a class="anchor" href="#_opensuse_leap_15_3"></a>OpenSUSE Leap 15.3</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Original documentation for how to install <code>kubeadm</code>: <a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/" class="bare">https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/</a></p>
 </div>
@@ -573,6 +588,910 @@ Alternatively, if you are the root user, you can run:
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-token-ca-cert-hash sha256:2b725a2cda814b07ee07c9d704de5a5cc2451c746eeb5b32277ebe661b9a36e4</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rocky_linux_9_5"><a class="anchor" href="#_rocky_linux_9_5"></a>Rocky Linux 9.5</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example install will be on the <code>mawenzi</code> cluster, using <code>mawenzi-01</code> as the admin node.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;re gonna be doing this the hard way, without help from <code>kubeadm</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_references"><a class="anchor" href="#_references"></a>References</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab0-README/">Rocky: Kubernetes the Hard Way</a></p>
+</li>
+<li>
+<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/">Kubernetes: Bootstrapping a cluster with kubeadm</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/">Installing kubeadm</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://kubernetes.io/docs/concepts/overview/components/">Kubernetes: Components</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h3>
+<div class="paragraph">
+<p><strong>Proxies</strong>:</p>
+</div>
+<div class="paragraph">
+<p>Set up DNF HPE proxy so we can download things with DNF from the internet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/dnf/dnf.conf &lt;&lt; EOF
+[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set up HTTP HPE proxy so we can download things with <code>wget</code>, etc, from the internet.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cat &gt;&gt; /etc/environment &lt;&lt; EOF
+http_proxy="http://proxy.houston.hpecorp.net:8080/"
+https_proxy="http://proxy.houston.hpecorp.net:8080/"
+ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
+EOF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upgrade as many packages, and the kernel with DNF as we can before we get started:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf upgrade</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Download basic CLI utilities</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf -y install wget curl vim openssl git</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_download_binaries"><a class="anchor" href="#_download_binaries"></a>Download binaries</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#download-binaries" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#download-binaries</a></p>
+</div>
+<div class="paragraph">
+<p>Make a Downloads directory</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# mkdir downloads
+[root@mawenzi-01 ~]# cd downloads/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create a script to help download all the binary components needed for the cluster.
+Adjust the versions based on the most recent released versions of things.
+These are the versions we&#8217;re using for this example.</p>
+</div>
+<div class="listingblock">
+<div class="title">download.sh</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+# https://kubernetes.io/releases/
+KUBERNETES_VERSION="v1.33.0"
+
+# https://github.com/opencontainers/runc/releases
+RUNC_VERSION="v1.3.0"
+
+# https://github.com/kubernetes-sigs/cri-tools/releases
+CRI_TOOLS_VERSION="v1.33.0"
+
+# https://github.com/containernetworking/plugins/releases
+CNI_PLUGINS_VERSION="v1.7.1"
+
+# https://github.com/containerd/containerd/releases
+CONTAINERD_VERSION="2.1.4"
+
+# https://github.com/etcd-io/etcd/releases/
+ETCD_VERSION="v3.6.4"
+
+download_urls=(
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-apiserver
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-controller-manager
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-scheduler
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-proxy
+	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubelet
+	https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRI_TOOLS_VERSION/crictl-$CRI_TOOLS_VERSION-linux-amd64.tar.gz
+	https://github.com/opencontainers/runc/releases/download/$RUNC_VERSION/runc.amd64
+	https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGINS_VERSION/cni-plugins-linux-amd64-$CNI_PLUGINS_VERSION.tgz
+	https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz
+	https://github.com/etcd-io/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz
+)
+
+for download_url in "${download_urls[@]}"; do
+	wget -q --show-progress  --https-only --timestamping "$download_url"
+done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Execute the script (after <code>chmod +x download.sh</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 Downloads]# ./download.sh
+kubectl                                    100%[=======================================================================================&gt;]  57.34M  29.8MB/s    in 1.9s
+kube-apiserver                             100%[=======================================================================================&gt;]  93.42M  23.2MB/s    in 4.1s
+kube-controller-manager                    100%[=======================================================================================&gt;]  86.55M  21.2MB/s    in 4.2s
+kube-scheduler                             100%[=======================================================================================&gt;]  66.38M  23.5MB/s    in 2.8s
+kube-proxy                                 100%[=======================================================================================&gt;]  67.32M  20.2MB/s    in 3.3s
+kubelet                                    100%[=======================================================================================&gt;]  77.91M  28.5MB/s    in 2.7s
+crictl-v1.33.0-linux-amd64.tar.gz          100%[=======================================================================================&gt;]  19.43M  16.0MB/s    in 1.2s
+runc.amd64                                 100%[=======================================================================================&gt;]  11.31M  13.0MB/s    in 0.9s
+cni-plugins-linux-amd64-v1.7.1.tgz         100%[=======================================================================================&gt;]  53.31M  17.2MB/s    in 3.1s
+containerd-2.1.4-linux-amd64.tar.gz        100%[=======================================================================================&gt;]  31.67M  14.0MB/s    in 2.3s
+etcd-v3.6.4-linux-amd64.tar.gz             100%[=======================================================================================&gt;]  22.53M  13.4MB/s    in 1.7s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Make the binaries executable: <code>chmod +x kube* runc.amd64</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_install_kubectl"><a class="anchor" href="#_install_kubectl"></a>Install kubectl</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#install-kubectl" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#install-kubectl</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">cp kubectl /usr/local/bin/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Verify version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 Downloads]# kubectl version --client
+Client Version: v1.33.0
+Kustomize Version: v5.6.0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_up_machines_file"><a class="anchor" href="#_set_up_machines_file"></a>Set up machines file</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#machine-database" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#machine-database</a></p>
+</div>
+<div class="paragraph">
+<p>Create a <code>machines.txt</code> file with the format: <code>IPV4_ADDRESS FQDN HOSTNAME POD_SUBNET</code>.</p>
+</div>
+<div class="paragraph">
+<p>Each column corresponds to a machine IP address <code>IPV4_ADDRESS</code>, fully qualified domain name <code>FQDN</code>,
+host name <code>HOSTNAME</code>, and the IP subnet <code>POD_SUBNET</code>. Kubernetes assigns one IP address per pod,
+and the <code>POD_SUBNET</code> represents the unique IP address range assigned to each machine in the cluster for doing so.</p>
+</div>
+<div class="listingblock">
+<div class="title">machines.txt</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">10.214.134.147 mawenzi-01.hpc.amslabs.hpecorp.net mawenzi-01
+10.214.130.159 mawenzi-02.hpc.amslabs.hpecorp.net mawenzi-02 10.200.0.0/24
+10.214.134.195 mawenzi-03.hpc.amslabs.hpecorp.net mawenzi-03 10.200.0.1/24</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_up_worker_nodes_ssh_access"><a class="anchor" href="#_set_up_worker_nodes_ssh_access"></a>Set up worker nodes SSH access</h3>
+<div class="paragraph">
+<p>With a blank install, you won&#8217;t have any SSH keys generated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 kubernetes]# ls -la ~/.ssh
+total 16
+drwx------. 2 root root   71 Aug 22 11:57 .
+dr-xr-x---. 5 root root 4096 Aug 22 11:53 ..
+-rw-------. 1 root root  195 Aug 22 10:02 authorized_keys
+-rw-------. 1 root root  828 Aug 22 11:57 known_hosts
+-rw-r--r--. 1 root root   92 Aug 22 11:57 known_hosts.old</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use <code>ssh-keygen</code> to generate a public/private key pair.</p>
+</div>
+<div class="paragraph">
+<p>Copy the public key to each node in the <code>machines.txt</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">while read IP FQDN HOST SUBNET; do
+  ssh-copy-id root@${IP}
+done &lt; machines.txt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 kubernetes]# ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa
+Your public key has been saved in /root/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:QxH4vc8bmPmzyAKa+HPk0nUsnRPdXIf51fBJx98zO0c root@mawenzi-01
+The key's randomart image is:
++---[RSA 3072]----+
+|       .o.    .*o|
+|      .  .    +.O|
+|       ... . o +*|
+|       .. o . ooE|
+|        So +   .+|
+|      o o.B+   o.|
+|   . * o o++.   o|
+|  . = + .. o+.   |
+|   ..+   .o ++   |
++----[SHA256]-----+</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_up_hostnames"><a class="anchor" href="#_set_up_hostnames"></a>Set up hostnames</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#hostnames" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#hostnames</a></p>
+</div>
+<div class="paragraph">
+<p>N/A: We already have hostnames from the lab so maybe we don&#8217;t need to do this?</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_provision_a_ca_and_tls_certificates"><a class="anchor" href="#_provision_a_ca_and_tls_certificates"></a>Provision a CA and TLS certificates</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab4-certificate-authority/" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab4-certificate-authority/</a></p>
+</div>
+<div class="paragraph">
+<p>In this lab, you will provision a PKI Infrastructure using OpenSSL to bootstrap a Certificate Authority and generate TLS certificates for the following components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>kube-apiserver</p>
+</li>
+<li>
+<p>kube-controller-manager</p>
+</li>
+<li>
+<p>kube-scheduler</p>
+</li>
+<li>
+<p>kubelet</p>
+</li>
+<li>
+<p>kube-proxy</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this section, you will provision a Certificate Authority that you will use to generate additional
+TLS certificates for the other Kubernetes components. Setting up CA and generating certificates with
+openssl can be time-consuming, especially when doing it for the first time.
+To streamline this lab, an openssl configuration file, <code>ca.conf</code>, must be included,
+which defines all the details needed to generate certificates for each Kubernetes component.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use the following <code>ca.conf</code> Certificate Authority configuration file:</p>
+</div>
+<div class="listingblock">
+<div class="title">ca.conf</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-text hljs" data-lang="text">[req]
+distinguished_name = req_distinguished_name
+prompt             = no
+x509_extensions    = ca_x509_extensions
+
+[ca_x509_extensions]
+basicConstraints = CA:TRUE
+keyUsage         = cRLSign, keyCertSign
+
+[req_distinguished_name]
+C   = US
+ST  = Colorado
+L   = Denver
+CN  = CA
+
+[admin]
+distinguished_name = admin_distinguished_name
+prompt             = no
+req_extensions     = default_req_extensions
+
+[admin_distinguished_name]
+CN = admin
+O  = system:masters
+
+# Service Accounts
+#
+# The Kubernetes Controller Manager leverages a key pair to generate
+# and sign service account tokens as described in the
+# [managing service accounts](https://kubernetes.io/docs/admin/service-accounts-admin/)
+# documentation.
+
+[service-accounts]
+distinguished_name = service-accounts_distinguished_name
+prompt             = no
+req_extensions     = default_req_extensions
+
+[service-accounts_distinguished_name]
+CN = service-accounts
+
+# Worker Nodes
+#
+# Kubernetes uses a [special-purpose authorization mode](https://kubernetes.io/docs/admin/authorization/node/)
+# called Node Authorizer, that specifically authorizes API requests made
+# by [Kubelets](https://kubernetes.io/docs/concepts/overview/components/#kubelet).
+# In order to be authorized by the Node Authorizer, Kubelets must use a credential
+# that identifies them as being in the `system:nodes` group, with a username
+# of `system:node:&lt;nodeName&gt;`.
+[mawenzi-02]
+distinguished_name = mawenzi-02_distinguished_name
+prompt             = no
+req_extensions     = mawenzi-02_req_extensions
+
+[mawenzi-02_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "mawenzi-02 Certificate"
+subjectAltName       = DNS:mawenzi-02, IP:127.0.0.1
+subjectKeyIdentifier = hash
+
+[mawenzi-02_distinguished_name]
+CN = system:node:mawenzi-02
+O  = system:nodes
+C  = US
+ST = Colorado
+L  = Denver
+
+[mawenzi-03]
+distinguished_name = mawenzi-03_distinguished_name
+prompt             = no
+req_extensions     = mawenzi-03_req_extensions
+
+[mawenzi-03_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "mawenzi-03 Certificate"
+subjectAltName       = DNS:mawenzi-03, IP:127.0.0.1
+subjectKeyIdentifier = hash
+
+[mawenzi-03_distinguished_name]
+CN = system:node:mawenzi-03
+O  = system:nodes
+C  = US
+ST = Colorado
+L  = Denver
+
+
+# Kube Proxy Section
+[kube-proxy]
+distinguished_name = kube-proxy_distinguished_name
+prompt             = no
+req_extensions     = kube-proxy_req_extensions
+
+[kube-proxy_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "Kube Proxy Certificate"
+subjectAltName       = DNS:kube-proxy, IP:127.0.0.1
+subjectKeyIdentifier = hash
+
+[kube-proxy_distinguished_name]
+CN = system:kube-proxy
+O  = system:node-proxier
+C  = US
+ST = Colorado
+L  = Denver
+
+
+# Controller Manager
+[kube-controller-manager]
+distinguished_name = kube-controller-manager_distinguished_name
+prompt             = no
+req_extensions     = kube-controller-manager_req_extensions
+
+[kube-controller-manager_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "Kube Controller Manager Certificate"
+subjectAltName       = DNS:kube-proxy, IP:127.0.0.1
+subjectKeyIdentifier = hash
+
+[kube-controller-manager_distinguished_name]
+CN = system:kube-controller-manager
+O  = system:kube-controller-manager
+C  = US
+ST = Colorado
+L  = Denver
+
+# Scheduler
+[kube-scheduler]
+distinguished_name = kube-scheduler_distinguished_name
+prompt             = no
+req_extensions     = kube-scheduler_req_extensions
+
+[kube-scheduler_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "Kube Scheduler Certificate"
+subjectAltName       = DNS:kube-scheduler, IP:127.0.0.1
+subjectKeyIdentifier = hash
+
+[kube-scheduler_distinguished_name]
+CN = system:kube-scheduler
+O  = system:system:kube-scheduler
+C  = US
+ST = Colorado
+L  = Denver
+
+
+# API Server
+#
+# The Kubernetes API server is automatically assigned the `kubernetes`
+# internal dns name, which will be linked to the first IP address (`10.32.0.1`)
+# from the address range (`10.32.0.0/24`) reserved for internal cluster
+# services.
+
+[kube-api-server]
+distinguished_name = kube-api-server_distinguished_name
+prompt             = no
+req_extensions     = kube-api-server_req_extensions
+
+[kube-api-server_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth, serverAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "Kube Scheduler Certificate"
+subjectAltName       = @kube-api-server_alt_names
+subjectKeyIdentifier = hash
+
+[kube-api-server_alt_names]
+IP.0  = 127.0.0.1
+IP.1  = 10.32.0.1
+DNS.0 = kubernetes
+DNS.1 = kubernetes.default
+DNS.2 = kubernetes.default.svc
+DNS.3 = kubernetes.default.svc.cluster
+DNS.4 = kubernetes.svc.cluster.local
+DNS.5 = server.kubernetes.local
+DNS.6 = api-server.kubernetes.local
+
+[kube-api-server_distinguished_name]
+CN = kubernetes
+C  = US
+ST = Colorado
+L  = Denver
+
+
+[default_req_extensions]
+basicConstraints     = CA:FALSE
+extendedKeyUsage     = clientAuth
+keyUsage             = critical, digitalSignature, keyEncipherment
+nsCertType           = client
+nsComment            = "Admin Client Certificate"
+subjectKeyIdentifier = hash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every certificate authority starts with a private key and root certificate. In this section,
+you will create a self-signed certificate authority, and while that is all you need for this tutorial,
+this is something you should not consider in a real-world production environment.</p>
+</div>
+<div class="paragraph">
+<p>Generate the CA configuration file, certificate, and private key:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">openssl genrsa -out ca.key 4096
+openssl req -x509 -new -sha512 -noenc \
+    -key ca.key -days 3653 \
+    -config ca.conf \
+    -out ca.crt</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should now have <code>ca.crt</code> and <code>ca.key</code> in your directory.
+You can view details of the <code>.crt</code> key by running: <code>openssl x509 -in ca.crt -text -noout | less</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_create_clientserver_certificates"><a class="anchor" href="#_create_clientserver_certificates"></a>Create client/server certificates</h3>
+<div class="paragraph">
+<p>In this section, you will generate client and server certificates for each Kubernetes
+component and a client certificate for the Kubernetes admin user.</p>
+</div>
+<div class="paragraph">
+<p>Generate the certificates and private keys:</p>
+</div>
+<div class="listingblock">
+<div class="title">gen_keys.sh</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+certs=(
+  "admin" "mawenzi-02" "mawenzi-03"
+  "kube-proxy" "kube-scheduler"
+  "kube-controller-manager"
+  "kube-api-server"
+  "service-accounts"
+)
+
+for i in ${certs[*]}; do
+  openssl genrsa -out "${i}.key" 4096
+
+  openssl req -new -key "${i}.key" -sha256 \
+    -config "ca.conf" -section ${i} \
+    -out "${i}.csr"
+
+  openssl x509 -req -days 3653 -in "${i}.csr" \
+    -copy_extensions copyall \
+    -sha256 -CA "ca.crt" \
+    -CAkey "ca.key" \
+    -CAcreateserial \
+    -out "${i}.crt"
+done</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 kubernetes]# ./gen_keys.sh
+Certificate request self-signature ok
+subject=CN=admin, O=system:masters
+Certificate request self-signature ok
+subject=CN=system:node:mawenzi-02, O=system:nodes, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=system:node:mawenzi-03, O=system:nodes, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=system:kube-proxy, O=system:node-proxier, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=system:kube-scheduler, O=system:system:kube-scheduler, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=system:kube-controller-manager, O=system:kube-controller-manager, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=kubernetes, C=US, ST=Colorado, L=Denver
+Certificate request self-signature ok
+subject=CN=service-accounts</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above command results will generate a private key, certificate request, and signed SSL certificate for each Kubernetes component.
+You can list the generated files with the following command: <code>ls -1 *.crt *.key *.csr</code></p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">admin.crt
+admin.csr
+admin.key
+ca.crt
+ca.key
+kube-api-server.crt
+kube-api-server.csr
+kube-api-server.key
+kube-controller-manager.crt
+kube-controller-manager.csr
+kube-controller-manager.key
+kube-proxy.crt
+kube-proxy.csr
+kube-proxy.key
+kube-scheduler.crt
+kube-scheduler.csr
+kube-scheduler.key
+mawenzi-02.crt
+mawenzi-02.csr
+mawenzi-02.key
+mawenzi-03.crt
+mawenzi-03.csr
+mawenzi-03.key
+service-accounts.crt
+service-accounts.csr
+service-accounts.key</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_distribute_the_keys"><a class="anchor" href="#_distribute_the_keys"></a>Distribute the keys</h3>
+<div class="paragraph">
+<p>Use the following script to distribute the keys and certificates to the worker nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+worker_nodes=("mawenzi-02" "mawenzi-03")
+
+for host in "${worker_nodes[@]}"; do
+  ssh root@$host mkdir /var/lib/kubelet/
+  scp ca.crt root@$host:/var/lib/kubelet/
+
+  scp $host.crt \
+    root@$host:/var/lib/kubelet/kubelet.crt
+
+  scp $host.key \
+    root@$host:/var/lib/kubelet/kubelet.key
+done</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generate_kubernetes_config_files_for_authentication"><a class="anchor" href="#_generate_kubernetes_config_files_for_authentication"></a>Generate Kubernetes config files for authentication</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab5-kubernetes-configuration-files/#the-kubelet-kubernetes-configuration-file" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab5-kubernetes-configuration-files/#the-kubelet-kubernetes-configuration-file</a></p>
+</div>
+<div class="paragraph">
+<p>Now we&#8217;ll generate kubeconfig files for the <code>kubelet</code> and the <code>admin</code> user.</p>
+</div>
+<div class="paragraph">
+<p>When generating kubeconfig files for Kubelets you must match the client certificate to the Kubelet&#8217;s node name.
+This will ensure Kubelets are properly authorized by the <a href="https://kubernetes.io/docs/reference/access-authn-authz/node/">Kubernetes Note Authorizer</a>.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use the following script, <code>gen_kubeconfigs.sh</code>, to generate the kubeconfig files for the node kubelets,
+kube-proxy, kube-controller-manager, kube-scheduler, and admin node.</p>
+</div>
+<div class="listingblock">
+<div class="title">gen_kubeconfigs.sh</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+cluster_name="mawenzi"
+worker_nodes=("mawenzi-02" "mawenzi-03")
+master_node="mawenzi-01"
+services=("kube-proxy" "kube-controller-manager" "kube-scheduler")
+
+# Worker node kubelet kubeconfig files
+for host in "${worker_nodes[@]}"; do
+  echo "Generating kubeconfig files for worker '$host' kubelet"
+  kubectl config set-cluster $cluster_name \
+    --certificate-authority=ca.crt \
+    --embed-certs=true \
+    --server=https://$master_node:6443 \
+    --kubeconfig=${host}.kubeconfig
+
+  kubectl config set-credentials system:node:${host} \
+    --client-certificate=${host}.crt \
+    --client-key=${host}.key \
+    --embed-certs=true \
+    --kubeconfig=${host}.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=system:node:${host} \
+    --kubeconfig=${host}.kubeconfig
+
+  kubectl config use-context default \
+    --kubeconfig=${host}.kubeconfig
+done
+
+# kube-proxy, kube-controller-manager, kube-scheduler
+for service in "${services[@]}"; do
+  kubectl config set-cluster $cluster_name \
+    --certificate-authority=ca.crt \
+    --embed-certs=true \
+    --server=https://$master:6443 \
+    --kubeconfig=$service.kubeconfig
+
+  kubectl config set-credentials system:$service \
+    --client-certificate=$service.crt \
+    --client-key=$service.key \
+    --embed-certs=true \
+    --kubeconfig=$service.kubeconfig
+
+  kubectl config set-context default \
+    --cluster=$cluster_name \
+    --user=system:$service \
+    --kubeconfig=$service.kubeconfig
+
+  kubectl config use-context default \
+    --kubeconfig=$service.kubeconfig
+done
+
+# admin
+kubectl config set-cluster $cluster_name \
+    --certificate-authority=ca.crt \
+    --embed-certs=true \
+    --server=https://127.0.0.1:6443 \
+    --kubeconfig=admin.kubeconfig
+
+kubectl config set-credentials admin \
+    --client-certificate=admin.crt \
+    --client-key=admin.key \
+    --embed-certs=true \
+    --kubeconfig=admin.kubeconfig
+
+kubectl config set-context default \
+    --cluster=kubernetes-the-hard-way \
+    --user=admin \
+    --kubeconfig=admin.kubeconfig
+
+kubectl config use-context default \
+    --kubeconfig=admin.kubeconfig
+done</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 kubernetes]# ./gen_kubeconfigs.sh
+Generating kubeconfig files for worker 'mawenzi-02' kubelet
+Cluster "mawenzi" set.
+User "system:node:mawenzi-02" set.
+Context "default" modified.
+Switched to context "default".
+Generating kubeconfig files for worker 'mawenzi-03' kubelet
+Cluster "mawenzi" set.
+User "system:node:mawenzi-03" set.
+Context "default" modified.
+Switched to context "default".
+Cluster "mawenzi" set.
+User "system:kube-proxy" set.
+Context "default" modified.
+Switched to context "default".
+Cluster "mawenzi" set.
+User "system:kube-controller-manager" set.
+Context "default" created.
+Switched to context "default".
+Cluster "mawenzi" set.
+User "system:kube-scheduler" set.
+Context "default" created.
+Switched to context "default".
+Cluster "mawenzi" set.
+User "admin" set.
+Context "default" created.
+Switched to context "default".</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And, we get:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>admin.kubeconfig</code></p>
+</li>
+<li>
+<p><code>kube-controller-manager.kubeconfig</code></p>
+</li>
+<li>
+<p><code>kube-proxy.kubeconfig</code></p>
+</li>
+<li>
+<p><code>kube-scheduler.kubeconfig</code></p>
+</li>
+<li>
+<p><code>mawenzi-02.kubeconfig</code></p>
+</li>
+<li>
+<p><code>mawenzi-03.kubeconfig</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generate_encryption_configuration_and_key"><a class="anchor" href="#_generate_encryption_configuration_and_key"></a>Generate encryption configuration and key</h3>
+<div class="paragraph">
+<p><a href="https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab6-data-encryption-keys/#lab-6-generating-the-data-encryption-configuration-and-key" class="bare">https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab6-data-encryption-keys/#lab-6-generating-the-data-encryption-configuration-and-key</a></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll generate an encryption key and an encryption configuration suitable for encrypting
+ <a href="https://kubernetes.io/docs/concepts/configuration/secret/">Kubernetes Secrets</a>.</p>
+</div>
+<div class="paragraph">
+<p>Generate a random encryption key, using <code>/dev/urandom</code> and <code>base64</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example:</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 kubernetes]# echo $ENCRYPTION_KEY
+wMCVvvm23ffr.............wx7naVcfsutjvED4Dg=</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Create the following encryption config YAML file:</p>
+</div>
+<div class="listingblock">
+<div class="title">encryption-config-template.yaml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: ${ENCRYPTION_KEY}
+      - identity: {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, substitute in the <code>$ENCRYPTION_KEY</code> variable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">envsubst &lt; encryption-config-template.yaml &gt; encryption-config.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(it should look like this now)</p>
+</div>
+<div class="listingblock">
+<div class="title">encryption-config.yaml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: wMCVvvm23ffr.............wx7naVcfsutjvED4Dg=
+      - identity: {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Check to make sure required ports are open: <a href="https://kubernetes.io/docs/reference/networking/ports-and-protocols/">Required Ports and Protocols</a></p>
+</div>
+<div class="listingblock">
+<div class="title">Example: Required port 6443 is not open</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ~]# nc 127.0.0.1 6443 -zv -w 2
+Ncat: Version 7.92 ( https://nmap.org/ncat )
+Ncat: Connection refused.</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </article>

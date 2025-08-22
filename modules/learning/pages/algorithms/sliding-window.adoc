@@ -1,9 +1,7 @@
-= Algorithms
+= Sliding Window
 
 :showtitle:
 :toc: auto
-
-== Sliding Window
 
 The Sliding Window algorithm helps you find a property of a substring, subarray or some
 window within a larger sequential list.
@@ -12,9 +10,10 @@ There are two variations of this approach: _Fixed Sliding Window_, where the win
 is static, and _Dynamic Sliding Window_ where the window size can increase and decrease
 based on some criteria.
 
-It's O(n) time where n is the size of the list.
+It's O(n) time where n is the size of the list. This reduces the normal runtime of naive approach
+from O(n^2).
 
-=== Example Problems
+== Example Problems
 
 https://leetcode.com/problems/longest-substring-without-repeating-characters[LeetCode: Longest Substring without Repeating Characters]
 

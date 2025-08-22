@@ -32,6 +32,7 @@
 *** xref:docs-site:learning:linux/storage/benchmarks.adoc[Benchmarks]
 *** xref:docs-site:learning:linux/storage/filesystems.adoc[Filesystems]
 *** xref:docs-site:learning:linux/storage/drives.adoc[Drives]
+** xref:docs-site:learning:linux/vms/virtual-machines.adoc[Virtual Machines]
 
 * Docker
 ** xref:docs-site:learning:docker/multiarch-building.adoc[Multi-Architecture Builds]
@@ -46,7 +47,9 @@
 ** xref:docs-site:learning:version-control/git/git.adoc[Git]
 ** xref:docs-site:learning:version-control/github/github.adoc[GitHub]
 
-* xref:docs-site:learning:algorithms/algorithms.adoc[Algorithms]
+* Algorithms
+** xref:docs-site:learning:algorithms/dynamic-programming.adoc[Dynamic Programming]
+** xref:docs-site:learning:algorithms/sliding-window.adoc[Sliding Window]
 
 * Machine Learning
 ** xref:docs-site:learning:machine-learning/benchmarks.adoc[Benchmarks]

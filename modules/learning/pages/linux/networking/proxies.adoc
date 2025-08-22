@@ -7,10 +7,10 @@ Gets loaded as environment variables by processes.
 [,bash]
 ----
 cat >> /etc/environment<< EOF
-#Proxies for LR1
 http_proxy="http://proxy.houston.hpecorp.net:8080/"
 https_proxy="http://proxy.houston.hpecorp.net:8080/"
 ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
 EOF
 ----
 
@@ -30,7 +30,7 @@ EOF
 | `no_proxy`
 | `NO_PROXY`
 | Do not use the proxy for these hostnames and IPs
-| `no_proxy=.us.cray.com,.hpe.com`
+| `no_proxy=admin,localhost,127.0.0.1,.us.cray.com,.hpe.com`
 |===
 
 The `no_proxy` variants tend to work based on string-based suffix matching. If your `no_proxy` is set to `.cray.com`, then requests to `foo.cray.com` will not use the configured proxy. Suffix matching works great for DNS names, but does not work well for IP addresses. If you have a whole subnet for which you do not want to use the proxy (e.g., `192.168.1.0/24`), then you must list out every IP address in `no_proxy` (`192.168.1.1,192.168.1.2,...192.168.1.254`).

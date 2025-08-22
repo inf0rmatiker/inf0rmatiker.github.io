@@ -1,0 +1,191 @@
+= Linux Virtual Machines
+
+:toc: auto
+
+This document will explore creating and managing virtual machines on Linux with the following VM stack:
+
+* https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install[virt-install]
+* https://www.libvirt.org/manpages/virsh.html[virsh]
+** https://www.libvirt.org/[libvirt]
+*** https://www.qemu.org/[qemu]
+**** https://linux-kvm.org/page/Main_Page[kvm]
+
+== Resources
+
+* https://docs.redhat.com/en/documentation/red_hat_virtualization/4.3/html/technical_reference/qcow2[QCOW2: Storage Formats for Virtual Disks]
+
+video::XLETE7hqbWc?si=HK3kKXfKUUNDEaeQ[youtube,width=960,height=440]
+
+== Installation on OpenSUSE 15.5
+
+Use `zypper` to install `libvirt`, `qemu`, and `virt-manager`:
+
+Note: This may install ~145 packages and may take a few minutes.
+
+[,bash]
+----
+zypper install libvirt qemu virt-manager
+----
+
+Next, enable the `libvirtd` service:
+
+[,console]
+----
+mawenzi-06:~/ccarlson # systemctl enable --now libvirtd
+Created symlink /etc/systemd/system/multi-user.target.wants/libvirtd.service → /usr/lib/systemd/system/libvirtd.service.
+Created symlink /etc/systemd/system/sockets.target.wants/virtlockd.socket → /usr/lib/systemd/system/virtlockd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/virtlogd.socket → /usr/lib/systemd/system/virtlogd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/libvirtd.socket → /usr/lib/systemd/system/libvirtd.socket.
+Created symlink /etc/systemd/system/sockets.target.wants/libvirtd-ro.socket → /usr/lib/systemd/system/libvirtd-ro.socket.
+----
+
+Start the `libvirtd` service:
+
+[,console]
+----
+mawenzi-06:~/ccarlson/vms # systemctl start libvirtd
+mawenzi-06:~/ccarlson/vms # systemctl status libvirtd
+● libvirtd.service - Virtualization daemon
+     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2025-08-21 14:48:14 MDT; 29s ago
+TriggeredBy: ● libvirtd.socket
+             ● libvirtd-admin.socket
+             ● libvirtd-ro.socket
+       Docs: man:libvirtd(8)
+             https://libvirt.org
+   Main PID: 28603 (libvirtd)
+      Tasks: 19 (limit: 32768)
+     CGroup: /system.slice/libvirtd.service
+             └─ 28603 /usr/sbin/libvirtd --timeout 120
+
+Aug 21 14:48:14 mawenzi-06 systemd[1]: Starting Virtualization daemon...
+Aug 21 14:48:14 mawenzi-06 systemd[1]: Started Virtualization daemon.
+----
+
+== virt-install
+
+https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/7/html/virtualization_deployment_and_administration_guide/sect-guest_virtual_machine_installation_overview-creating_guests_with_virt_install
+
+
+CLI for creating Guest domains (guest VMs).
+
+== virsh
+
+https://www.libvirt.org/manpages/virsh.html
+
+Virsh is a management CLI that interfaces with the libvirt API and is used to manage VMs.
+
+Terminology:
+
+* Node: the baremetal host we're running on
+* Domain: A virtual machine
+
+=== List networks
+
+Lists all networks.
+
+`virsh net-list`
+
+.Example
+[,console]
+----
+mawenzi-06:~ # virsh net-list
+ Name   State   Autostart   Persistent
+----------------------------------------
+----
+
+
+=== List all domains
+
+Lists all domains, even ones that are shut off.
+
+`virsh list --all`
+
+.Example
+[,console]
+----
+sp08:~ # virsh list --all
+ Id   Name          State
+------------------------------
+ 1    cm_1_admin    running
+ 2    cm_1_n1       running
+ 3    cm_1_n2       running
+ 4    cm_2_admin    running
+ 5    cm_2_n1       running
+ 6    cm_2_n2       running
+ 7    cm_3_admin    running
+ 8    cm_3_n1       running
+ 9    cm_3_n2       running
+ -    cm_cc_admin   shut off
+ -    daos_1_n1     shut off
+ -    daos_1_n2     shut off
+ -    daos_1_n3     shut off
+ -    daos_1_n4     shut off
+ -    daos_1_n5     shut off
+----
+
+=== Get summary information about domain
+
+Shows information about a domain.
+
+`virsh dominfo <domain>`
+
+.Example
+[,console]
+----
+sp08:~ # virsh dominfo cm_1_admin
+Id:             1
+Name:           cm_1_admin
+UUID:           0b44a7e9-b0ee-430b-9a3d-a2bbdd9eeb8c
+OS Type:        hvm
+State:          running
+CPU(s):         6
+CPU time:       2940.9s
+Max memory:     12582912 KiB
+Used memory:    12582912 KiB
+Persistent:     yes
+Autostart:      disable
+Managed save:   no
+Security model: apparmor
+Security DOI:   0
+----
+
+=== Get information about host
+
+`virsh nodeinfo`
+
+Shows information about our KVM host.
+
+.Example
+[,console]
+----
+sp08:~ # virsh nodeinfo
+CPU model:           x86_64
+CPU(s):              24
+CPU frequency:       2510 MHz
+CPU socket(s):       1
+Core(s) per socket:  6
+Thread(s) per core:  2
+NUMA cell(s):        2
+Memory size:         98783136 KiB
+----
+
+=== Start a domain
+
+`virsh start <domain>`
+
+Starts up a domain. Akin to booting up a node.
+
+=== Autostart a domain
+
+`virsh autostart <domain>`
+
+Mark domain to automatically start when the host starts.
+
+== libvirt
+
+https://www.libvirt.org/
+
+
+
+

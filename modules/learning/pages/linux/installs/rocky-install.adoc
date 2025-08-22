@@ -13,7 +13,7 @@ Install Rocky Linux 8.6 from HTTP web server using xref:docs-site:learning:bmc-m
 https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/installation_guide/vncwhitepaperadded[VNC Installation Guide]
 
 === Network Configuration
- 
+
 * Choose first non-virtual, plugged-in ethernet port (usually eno10n1)
 * Activate it to _ON_
 * Set hostname (not FQDN, just `mawenzi-04`)
@@ -200,9 +200,9 @@ EOF
 [,bash]
 ----
 cat >> /etc/environment << EOF
-#Proxies for LR1
 http_proxy="http://proxy.houston.hpecorp.net:8080/"
 https_proxy="http://proxy.houston.hpecorp.net:8080/"
 ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
+no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
 EOF
 ----

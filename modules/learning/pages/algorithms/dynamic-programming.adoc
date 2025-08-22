@@ -1,0 +1,26 @@
+= Dynamic Programming
+
+:showtitle:
+:toc: auto
+
+Dynamic Programming is less of a static "algorithm" and more of just a method for solving a type of problem in an
+efficient way.
+
+The problems this applies to are those recursive in nature, where we can break down the problem into sub-problems,
+and we're repeatedly calculating solutions for subproblems.
+
+The basic idea is to store the results of subproblems so we don't have to recompute them (or traverse that level of the
+problem tree again).
+
+Methods for storing these results for subproblems are either Memoization or Tabulation.
+
+== References
+
+* https://www.youtube.com/watch?v=oBt53YbR9Kk&t=4717s&ab_channel=freeCodeCamp.org[Dynamic Programming - Learn to Solve Algorithmic Problems & Coding Challenges]
+* https://youtu.be/Hdr64lKQ3e4?si=kI56djq5fm1gMoHx[YouTube: Mastering Dynamic Programming]
+* https://www.geeksforgeeks.org/competitive-programming/dynamic-programming/#[Geeks for Geeks: Dynamic Programming]
+
+
+== Example Problems
+
+https://leetcode.com/problems/generate-parentheses/description/?envType=problem-list-v2&envId=dynamic-programming

@@ -95,8 +95,6 @@ kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-toke
 
 This example install will be on the `mawenzi` cluster, using `mawenzi-01` as the admin node.
 
-We're gonna be doing this the hard way, without help from `kubeadm`.
-
 === References
 
 * https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab0-README/[Rocky: Kubernetes the Hard Way]
@@ -105,6 +103,8 @@ We're gonna be doing this the hard way, without help from `kubeadm`.
 * https://kubernetes.io/docs/concepts/overview/components/[Kubernetes: Components]
 
 === Prerequisites
+
+We'll start by preparing things for the control-plane node.
 
 *Proxies*:
 
@@ -124,6 +124,8 @@ EOF
 ----
 
 Set up HTTP HPE proxy so we can download things with `wget`, etc, from the internet.
+We'll need to disable this later on when setting up kubernetes; otherwise internal
+requests will try to use the proxy and will fail.
 
 [,bash]
 ----
@@ -134,6 +136,8 @@ ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
 no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
 EOF
 ----
+
+*Install utilities*:
 
 Upgrade as many packages, and the kernel with DNF as we can before we get started:
 
@@ -146,8 +150,262 @@ Download basic CLI utilities
 
 [,bash]
 ----
-dnf -y install wget curl vim openssl git
+dnf -y install wget curl vim openssl git tar conntrack-tools socat
 ----
+
+=== Enable IPv4 forwarding
+
+[,bash]
+----
+modprobe bridge
+modprobe br_netfilter
+echo "net.bridge.bridge-nf-call-iptables = 1" >> /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward
+----
+
+=== Disable firewalld
+
+[,bash]
+----
+systemctl stop firewalld
+systemctl disable firewalld
+----
+
+=== Disable swap
+
+[,bash]
+----
+# This only disables swap for the current session.
+swapoff -a
+
+# This will find any lines in /etc/fstab with 'swap' and comment them out
+sed -i.bak '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+----
+
+=== Disable SELinux
+
+[,bash]
+----
+setenforce 0
+sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+----
+
+=== Install containerd, CNI plugin, and runc
+
+https://github.com/containerd/containerd/blob/main/docs/getting-started.md
+
+This step will also install `runc.amd64` and CNI plugins.
+
+.download.sh
+[,bash]
+----
+#!/bin/bash
+
+# https://kubernetes.io/releases/
+# KUBERNETES_VERSION="v1.33.0"
+
+# https://github.com/opencontainers/runc/releases
+RUNC_VERSION="v1.3.0"
+
+# https://github.com/kubernetes-sigs/cri-tools/releases
+CRI_TOOLS_VERSION="v1.33.0"
+
+# https://github.com/containernetworking/plugins/releases
+CNI_PLUGINS_VERSION="v1.7.1"
+
+# https://github.com/containerd/containerd/releases
+CONTAINERD_VERSION="2.1.4"
+
+# https://github.com/etcd-io/etcd/releases/
+# ETCD_VERSION="v3.6.4"
+
+download_urls=(
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-apiserver
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-controller-manager
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-scheduler
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-proxy
+	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubelet
+	https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRI_TOOLS_VERSION/crictl-$CRI_TOOLS_VERSION-linux-amd64.tar.gz
+	https://github.com/opencontainers/runc/releases/download/$RUNC_VERSION/runc.amd64
+	https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGINS_VERSION/cni-plugins-linux-amd64-$CNI_PLUGINS_VERSION.tgz
+	https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz
+	# https://github.com/etcd-io/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz
+)
+
+for download_url in "${download_urls[@]}"; do
+	wget -q --show-progress  --https-only --timestamping "$download_url"
+done
+----
+
+Extract containerd tarball to `/usr/local`:
+
+[,bash]
+----
+tar Cxzvf /usr/local containerd-*-linux-amd64.tar.gz
+----
+
+We'll be running containerd with systemd. This unit file can be found here, and
+the below example uses modifications to the environment variables for the service
+to use the HPE proxy. This will allow the containerd runtime to pull images from
+outside the lab.
+
+Generate a default containerd configuration file:
+
+[,bash]
+----
+mkdir /etc/containerd
+containerd config default > /etc/containerd/config.toml
+----
+
+Edit this file and add systemd as the cgroup driver for containerd.
+https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd-systemd
+
+[,plaintext]
+----
+[plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc]
+  ...
+  [plugins.'io.containerd.cri.v1.runtime'.containerd.runtimes.runc.options]
+    SystemdCgroup = true
+----
+
+Install `runc.amd64`. This should have been downloaded from the `download.sh` script before, but if not,
+you can get it from https://github.com/opencontainers/runc/releases.
+
+[,bash]
+----
+install -m 755 runc.amd64 /usr/local/sbin/runc
+----
+
+Install CNI plugins. This should have been downloaded from the `download.sh` script before, but if not,
+you can get it from https://github.com/containernetworking/plugins/releases.
+
+[,bash]
+----
+mkdir -p /opt/cni/bin
+tar Cxzvf /opt/cni/bin cni-plugins-linux-amd64-v*.tgz
+----
+
+./usr/lib/systemd/system/containerd.service
+[,plaintext]
+----
+[Unit]
+Description=containerd container runtime
+Documentation=https://containerd.io
+After=network.target dbus.service
+
+[Service]
+Environment="HTTP_PROXY=http://proxy.houston.hpecorp.net:8080/"
+Environment="HTTPS_PROXY=http://proxy.houston.hpecorp.net:8080/"
+Environment="FTP_PROXY=http://proxy.houston.hpecorp.net:8080/"
+Environment="NO_PROXY=admin,localhost,127.0.0.1,.us.cray.com,.hpe.com,hpc.amslabs.hpecorp.net"
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/containerd
+
+Type=notify
+Delegate=yes
+KillMode=process
+Restart=always
+RestartSec=5
+
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+
+# Comment TasksMax if your systemd version does not supports it.
+# Only systemd 226 and above support this version.
+TasksMax=infinity
+OOMScoreAdjust=-999
+
+[Install]
+WantedBy=multi-user.target
+----
+
+With this in place, enable and load containerd with systemd:
+
+[,bash]
+----
+systemctl daemon-reload
+systemctl enable --now containerd
+----
+
+Check the status. It should look like this:
+
+[,console]
+----
+[root@mawenzi-01 downloads]# systemctl status containerd
+● containerd.service - containerd container runtime
+     Loaded: loaded (/usr/lib/systemd/system/containerd.service; enabled; preset: disabled)
+     Active: active (running) since Tue 2025-08-26 10:31:12 MDT; 3s ago
+       Docs: https://containerd.io
+    Process: 117075 ExecStartPre=/sbin/modprobe overlay (code=exited, status=0/SUCCESS)
+   Main PID: 117077 (containerd)
+      Tasks: 17
+     Memory: 36.2M
+        CPU: 194ms
+     CGroup: /system.slice/containerd.service
+             └─117077 /usr/local/bin/containerd
+
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426293642-06:00" level=info msg=serving... address=/run/containerd/containerd.sock.ttrpc
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426334788-06:00" level=info msg="Start cni network conf syncer for default"
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426447839-06:00" level=info msg=serving... address=/run/containerd/containerd.sock
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426473006-06:00" level=info msg="Start streaming server"
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426507981-06:00" level=info msg="Registered namespace \"k8s.io\" with NRI"
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426545321-06:00" level=info msg="runtime interface starting up..."
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426564517-06:00" level=info msg="starting plugins..."
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.426601917-06:00" level=info msg="Synchronizing NRI (plugin) with current runtime state"
+Aug 26 10:31:12 mawenzi-01 containerd[117077]: time="2025-08-26T10:31:12.427695697-06:00" level=info msg="containerd successfully booted in 0.121902s"
+Aug 26 10:31:12 mawenzi-01 systemd[1]: Started containerd container runtime.
+----
+
+=== Install Kubernetes packages
+
+This gets us `kubeadm`, `kubectl`, and `kubelet`.
+
+[,bash]
+----
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.33/rpm/
+enabled=1
+gpgcheck=1
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.33/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+EOF
+
+dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+----
+
+=== Enable kubelet systemd service
+
+Enable the kubelet service.
+
+[,bash]
+----
+systemctl enable --now kubelet
+----
+
+Note: If you check the status of the kubelet service (`systemctl status kubelet`), you'll see that it's
+exiting with code FAILURE. This is normal. It's restarting every few seconds, while we wait for `kubeadm`
+to tell it what to do.
+
+
+=== Using kubeadm to create cluster
+
+https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+We'll take a break from setting up the control-plane node, and go ahead and start
+configuring the other worker nodes in the cluster.
+
+
+
+
+
+
+
 
 === Download binaries
 
@@ -771,7 +1029,7 @@ kubectl config set-context default \
 
 kubectl config use-context default \
     --kubeconfig=admin.kubeconfig
-done
+
 ----
 
 Running this:
@@ -880,8 +1138,301 @@ resources:
       - identity: {}
 ----
 
+=== Bootstrapping the etcd cluster
 
+https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab7-bootstrapping-etcd/#lab-7-bootstrapping-the-etcd-cluster
 
+Create the following `etcd.service` systemd service file:
+
+[,console]
+----
+[Unit]
+Description=etcd
+Documentation=https://github.com/etcd-io/etcd
+
+[Service]
+Type=notify
+Environment="ETCD_UNSUPPORTED_ARCH=arm64"
+ExecStart=/usr/local/bin/etcd \
+  --name controller \
+  --initial-advertise-peer-urls http://127.0.0.1:2380 \
+  --listen-peer-urls http://127.0.0.1:2380 \
+  --listen-client-urls http://127.0.0.1:2379 \
+  --advertise-client-urls http://127.0.0.1:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster controller=http://127.0.0.1:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+[,bash]
+----
+mv etcd.service /etc/systemd/system/
+chmod 644 /etc/systemd/system/etcd.service
+----
+
+=== Install etcd
+
+Untar the etcd .tgz in `downloads/` and move its binaries to `/usr/local/bin`
+
+[,bash]
+----
+tar -xzvf etcd-v3.6.4-linux-amd64.tar.gz
+mv etcd-v3.6.4-linux-amd64/etcd* /usr/local/bin/
+----
+
+Back in the `kubernetes/` directory, configure the `etcd` server:
+
+[,bash]
+----
+mkdir -p /etc/etcd /var/lib/etcd && \
+  chmod 700 /var/lib/etcd && \
+  cp ca.crt kube-api-server.key kube-api-server.crt /etc/etcd/
+----
+
+=== Disable SELinux/firewall
+
+Although it is considered a bad security form, you might have to temporarily or permanently
+disable SELinux if you run into any issues starting the etcd systemd service.
+The proper fix is to investigate and create the needed policy files with tools
+such as `ausearch`, `audit2allow`, and others.
+
+The commands get SELinux out of the way and disable it by running the following:
+
+[,bash]
+----
+sudo sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+setenforce 0
+----
+
+=== Start the etcd server
+
+[,bash]
+----
+systemctl daemon-reload
+systemctl enable etcd
+systemctl start etcd
+----
+
+Check the status of etcd:
+
+[,bash]
+----
+systemctl status etcd
+etcdctl member list
+----
+
+=== Bootstrap the Kubernetes control plane
+
+We'll need to create the following systemd service YAML files on the controller.
+
+.kube-apiserver.service
+[,plaintext]
+----
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-apiserver \
+  --allow-privileged=true \
+  --apiserver-count=1 \
+  --audit-log-maxage=30 \
+  --audit-log-maxbackup=3 \
+  --audit-log-maxsize=100 \
+  --audit-log-path=/var/log/audit.log \
+  --authorization-mode=Node,RBAC \
+  --bind-address=0.0.0.0 \
+  --client-ca-file=/var/lib/kubernetes/ca.crt \
+  --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
+  --etcd-servers=http://127.0.0.1:2379 \
+  --event-ttl=1h \
+  --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \
+  --kubelet-certificate-authority=/var/lib/kubernetes/ca.crt \
+  --kubelet-client-certificate=/var/lib/kubernetes/kube-api-server.crt \
+  --kubelet-client-key=/var/lib/kubernetes/kube-api-server.key \
+  --runtime-config='api/all=true' \
+  --service-account-key-file=/var/lib/kubernetes/service-accounts.crt \
+  --service-account-signing-key-file=/var/lib/kubernetes/service-accounts.key \
+  --service-account-issuer=https://server.kubernetes.local:6443 \
+  --service-cluster-ip-range=10.32.0.0/24 \
+  --service-node-port-range=30000-32767 \
+  --tls-cert-file=/var/lib/kubernetes/kube-api-server.crt \
+  --tls-private-key-file=/var/lib/kubernetes/kube-api-server.key \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+.kube-controller-manager.service
+[,plaintext]
+----
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-controller-manager \
+  --bind-address=0.0.0.0 \
+  --cluster-cidr=10.200.0.0/16 \
+  --cluster-name=kubernetes \
+  --cluster-signing-cert-file=/var/lib/kubernetes/ca.crt \
+  --cluster-signing-key-file=/var/lib/kubernetes/ca.key \
+  --kubeconfig=/var/lib/kubernetes/kube-controller-manager.kubeconfig \
+  --root-ca-file=/var/lib/kubernetes/ca.crt \
+  --service-account-private-key-file=/var/lib/kubernetes/service-accounts.key \
+  --service-cluster-ip-range=10.32.0.0/24 \
+  --use-service-account-credentials=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+.kube-proxy.service
+[,plaintext]
+----
+[Unit]
+Description=Kubernetes Kube Proxy
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-proxy \
+  --config=/var/lib/kube-proxy/kube-proxy-config.yaml
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+.kube-scheduler.service
+[,plaintext]
+----
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-scheduler \
+  --config=/etc/kubernetes/config/kube-scheduler.yaml \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+.kubelet.service
+[,plaintext]
+----
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=containerd.service
+Requires=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \
+  --config=/var/lib/kubelet/kubelet-config.yaml \
+  --kubeconfig=/var/lib/kubelet/kubeconfig \
+  --register-node=true \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+----
+
+Create the Kubernetes configuration directory:
+
+[,bash]
+----
+mkdir -p /etc/kubernetes/config
+----
+
+Install the Kubernetes Controller Binaries:
+
+[,bash]
+----
+mv kube-apiserver \
+    kube-controller-manager \
+    kube-scheduler kubectl \
+    /usr/local/bin/
+----
+
+Configure the Kubernetes API Server:
+
+[,bash]
+----
+mkdir -p /var/lib/kubernetes/
+mv ca.crt ca.key \
+    kube-api-server.key kube-api-server.crt \
+    service-accounts.key service-accounts.crt \
+    encryption-config.yaml \
+    /var/lib/kubernetes/
+----
+
+Create the `kube-apiserver.service` systemd unit file:
+
+[,bash]
+----
+mv kube-apiserver.service /etc/systemd/system/kube-apiserver.service
+----
+
+Configure the Kubernetes Controller Manager
+
+[,bash]
+----
+mv kube-controller-manager.kubeconfig /var/lib/kubernetes/
+mv kube-controller-manager.service /etc/systemd/system/
+----
+
+Configure the Kubernetes Scheduler
+
+Create the following kube-scheduler YAML definition:
+
+.kube-scheduler.yaml
+[,yaml]
+----
+apiVersion: kubescheduler.config.k8s.io/v1
+kind: KubeSchedulerConfiguration
+clientConnection:
+  kubeconfig: "/var/lib/kubernetes/kube-scheduler.kubeconfig"
+leaderElection:
+  leaderElect: true
+----
+
+...and move it into place.
+
+[,bash]
+----
+mv kube-scheduler.kubeconfig /var/lib/kubernetes/
+mv kube-scheduler.yaml /etc/kubernetes/config/
+mv kube-scheduler.service /etc/systemd/system/
+----
+
+Start the controller services:
+
+[,bash]
+----
+systemctl daemon-reload
+
+systemctl enable kube-apiserver kube-controller-manager kube-scheduler
+
+----
 
 Check to make sure required ports are open: https://kubernetes.io/docs/reference/networking/ports-and-protocols/[Required Ports and Protocols]
 

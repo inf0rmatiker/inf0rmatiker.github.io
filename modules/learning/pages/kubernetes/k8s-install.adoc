@@ -95,6 +95,8 @@ kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-toke
 
 This example install will be on the `mawenzi` cluster, using `mawenzi-01` as the admin node.
 
+This guide does not cover installing Rocky Linux itself. For that, see: xref:../linux/installs/rocky-install.adoc[Rocky Linux Install Guide].
+
 === References
 
 * https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab0-README/[Rocky: Kubernetes the Hard Way]

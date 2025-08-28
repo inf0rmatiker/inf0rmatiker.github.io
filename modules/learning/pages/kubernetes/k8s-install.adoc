@@ -188,6 +188,8 @@ systemctl stop firewalld
 systemctl disable firewalld
 ----
 
+Note: I don't recommend doing this in a production cluster. This is only to simplify things for this dev cluster.
+
 === Disable swap
 
 [,bash]
@@ -206,6 +208,8 @@ sed -i.bak '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 setenforce 0
 sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 ----
+
+Note: I don't recommend doing this in a production cluster. This is only to simplify things for this dev cluster.
 
 === Install containerd, CNI plugin, and runc
 
@@ -547,7 +551,6 @@ kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/
 .Example:
 [,console]
 ----
-Your Kubernetes control-plane has initialized successfully!
 serviceaccount/flannel created
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created

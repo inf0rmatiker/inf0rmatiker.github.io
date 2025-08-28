@@ -222,9 +222,6 @@ This step will also install `runc.amd64` and CNI plugins.
 ----
 #!/bin/bash
 
-# https://kubernetes.io/releases/
-# KUBERNETES_VERSION="v1.33.0"
-
 # https://github.com/opencontainers/runc/releases
 RUNC_VERSION="v1.3.0"
 
@@ -237,21 +234,11 @@ CNI_PLUGINS_VERSION="v1.7.1"
 # https://github.com/containerd/containerd/releases
 CONTAINERD_VERSION="2.1.4"
 
-# https://github.com/etcd-io/etcd/releases/
-# ETCD_VERSION="v3.6.4"
-
 download_urls=(
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-apiserver
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-controller-manager
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-scheduler
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-proxy
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubelet
 	https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRI_TOOLS_VERSION/crictl-$CRI_TOOLS_VERSION-linux-amd64.tar.gz
 	https://github.com/opencontainers/runc/releases/download/$RUNC_VERSION/runc.amd64
 	https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGINS_VERSION/cni-plugins-linux-amd64-$CNI_PLUGINS_VERSION.tgz
 	https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz
-	# https://github.com/etcd-io/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz
 )
 
 for download_url in "${download_urls[@]}"; do

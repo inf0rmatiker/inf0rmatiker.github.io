@@ -727,6 +727,9 @@ echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward</code></pre>
 systemctl disable firewalld</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Note: I don&#8217;t recommend doing this in a production cluster. This is only to simplify things for this dev cluster.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_disable_swap"><a class="anchor" href="#_disable_swap"></a>Disable swap</h3>
@@ -748,6 +751,9 @@ sed -i.bak '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab</code></pre>
 sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Note: I don&#8217;t recommend doing this in a production cluster. This is only to simplify things for this dev cluster.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_install_containerd_cni_plugin_and_runc"><a class="anchor" href="#_install_containerd_cni_plugin_and_runc"></a>Install containerd, CNI plugin, and runc</h3>
@@ -762,9 +768,6 @@ sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config</code></pre
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
 
-# https://kubernetes.io/releases/
-# KUBERNETES_VERSION="v1.33.0"
-
 # https://github.com/opencontainers/runc/releases
 RUNC_VERSION="v1.3.0"
 
@@ -777,21 +780,11 @@ CNI_PLUGINS_VERSION="v1.7.1"
 # https://github.com/containerd/containerd/releases
 CONTAINERD_VERSION="2.1.4"
 
-# https://github.com/etcd-io/etcd/releases/
-# ETCD_VERSION="v3.6.4"
-
 download_urls=(
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-apiserver
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-controller-manager
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-scheduler
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-proxy
-	# https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubelet
 	https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRI_TOOLS_VERSION/crictl-$CRI_TOOLS_VERSION-linux-amd64.tar.gz
 	https://github.com/opencontainers/runc/releases/download/$RUNC_VERSION/runc.amd64
 	https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGINS_VERSION/cni-plugins-linux-amd64-$CNI_PLUGINS_VERSION.tgz
 	https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz
-	# https://github.com/etcd-io/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz
 )
 
 for download_url in "${download_urls[@]}"; do
@@ -1121,8 +1114,7 @@ Flannel in our <code>kubeadm init</code> command, we can just use the default se
 <div class="listingblock">
 <div class="title">Example:</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">Your Kubernetes control-plane has initialized successfully!
-serviceaccount/flannel created
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">serviceaccount/flannel created
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created
 configmap/kube-flannel-cfg created

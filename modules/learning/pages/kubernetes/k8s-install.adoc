@@ -100,11 +100,24 @@ This example install will be on the `mawenzi` cluster, using `mawenzi-01` as the
 * https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab0-README/[Rocky: Kubernetes the Hard Way]
 * https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/[Kubernetes: Bootstrapping a cluster with kubeadm]
 ** https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/[Installing kubeadm]
+** https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/[Create cluster with kubeadm]
+** https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta4/[Kubeadm Configuration]
+** https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/configure-cgroup-driver/[Configure cgroup driver]
+* https://github.com/flannel-io/flannel[Flannel: README]
 * https://kubernetes.io/docs/concepts/overview/components/[Kubernetes: Components]
 
 === Prerequisites
 
 We'll start by preparing things for the control-plane node.
+
+We'll need to decide on a private CIDR subnet to use for the pods in our cluster, and
+another to use for the services in our cluster.
+
+The default pod subnet that the https://github.com/flannel-io/flannel[Flannel CNI] uses
+is *10.244.0.0/16*.
+
+The default service subnet that Kubernetes uses is *10.96.0.0/12*.
+We'll be using these for our examples going forward.
 
 *Proxies*:
 
@@ -125,7 +138,10 @@ EOF
 
 Set up HTTP HPE proxy so we can download things with `wget`, etc, from the internet.
 We'll need to disable this later on when setting up kubernetes; otherwise internal
-requests will try to use the proxy and will fail.
+requests will try to use the proxy and will fail. `kubeadm` will also try to download
+things from the internet, so having the correct proxy environment set is critical.
+We'll need to make sure we _don't_ use a proxy for our pod subnet, our lab network subnet,
+or the service API subnet for kubernetes, so add those to the `no_proxy` section.
 
 [,bash]
 ----
@@ -133,7 +149,7 @@ cat >> /etc/environment << EOF
 http_proxy="http://proxy.houston.hpecorp.net:8080/"
 https_proxy="http://proxy.houston.hpecorp.net:8080/"
 ftp_proxy="http://proxy.houston.hpecorp.net:8080/"
-no_proxy="admin,localhost,127.0.0.1,.us.cray.com,.hpe.com"
+no_proxy="localhost,127.0.0.1,hpc.amslabs.hpecorp.net,10.214.128.0/21,10.96.0.0/12,10.244.0.0/16"
 EOF
 ----
 
@@ -143,7 +159,7 @@ Upgrade as many packages, and the kernel with DNF as we can before we get starte
 
 [,bash]
 ----
-dnf upgrade
+dnf -y upgrade
 ----
 
 Download basic CLI utilities
@@ -188,7 +204,7 @@ sed -i.bak '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 [,bash]
 ----
 setenforce 0
-sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
+sed -i 's/^SELINUX=enforcing$/SELINUX=disabled/' /etc/selinux/config
 ----
 
 === Install containerd, CNI plugin, and runc
@@ -299,7 +315,7 @@ After=network.target dbus.service
 Environment="HTTP_PROXY=http://proxy.houston.hpecorp.net:8080/"
 Environment="HTTPS_PROXY=http://proxy.houston.hpecorp.net:8080/"
 Environment="FTP_PROXY=http://proxy.houston.hpecorp.net:8080/"
-Environment="NO_PROXY=admin,localhost,127.0.0.1,.us.cray.com,.hpe.com,hpc.amslabs.hpecorp.net"
+Environment="NO_PROXY=localhost,127.0.0.1,.us.cray.com,.hpe.com,hpc.amslabs.hpecorp.net,10.214.128.0/21,10.96.0.0/12,10.244.0.0/16"
 ExecStartPre=-/sbin/modprobe overlay
 ExecStart=/usr/local/bin/containerd
 
@@ -389,138 +405,184 @@ systemctl enable --now kubelet
 ----
 
 Note: If you check the status of the kubelet service (`systemctl status kubelet`), you'll see that it's
-exiting with code FAILURE. This is normal. It's restarting every few seconds, while we wait for `kubeadm`
+exiting with code `FAILURE`. This is normal. It's restarting every few seconds, while we wait for `kubeadm`
 to tell it what to do.
 
 
-=== Using kubeadm to create cluster
+=== Using kubeadm to init cluster
 
 https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
-We'll take a break from setting up the control-plane node, and go ahead and start
-configuring the other worker nodes in the cluster.
+On the control-plane node, initialize the cluster with the following args:
 
-
-
-
-
-
-
-
-=== Download binaries
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#download-binaries
-
-Make a Downloads directory
-
-[,console]
-----
-[root@mawenzi-01 ~]# mkdir downloads
-[root@mawenzi-01 ~]# cd downloads/
-----
-
-Create a script to help download all the binary components needed for the cluster.
-Adjust the versions based on the most recent released versions of things.
-These are the versions we're using for this example.
-
-.download.sh
-[,bash]
-----
-#!/bin/bash
-
-# https://kubernetes.io/releases/
-KUBERNETES_VERSION="v1.33.0"
-
-# https://github.com/opencontainers/runc/releases
-RUNC_VERSION="v1.3.0"
-
-# https://github.com/kubernetes-sigs/cri-tools/releases
-CRI_TOOLS_VERSION="v1.33.0"
-
-# https://github.com/containernetworking/plugins/releases
-CNI_PLUGINS_VERSION="v1.7.1"
-
-# https://github.com/containerd/containerd/releases
-CONTAINERD_VERSION="2.1.4"
-
-# https://github.com/etcd-io/etcd/releases/
-ETCD_VERSION="v3.6.4"
-
-download_urls=(
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubectl
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-apiserver
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-controller-manager
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-scheduler
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kube-proxy
-	https://dl.k8s.io/$KUBERNETES_VERSION/bin/linux/amd64/kubelet
-	https://github.com/kubernetes-sigs/cri-tools/releases/download/$CRI_TOOLS_VERSION/crictl-$CRI_TOOLS_VERSION-linux-amd64.tar.gz
-	https://github.com/opencontainers/runc/releases/download/$RUNC_VERSION/runc.amd64
-	https://github.com/containernetworking/plugins/releases/download/$CNI_PLUGINS_VERSION/cni-plugins-linux-amd64-$CNI_PLUGINS_VERSION.tgz
-	https://github.com/containerd/containerd/releases/download/v$CONTAINERD_VERSION/containerd-$CONTAINERD_VERSION-linux-amd64.tar.gz
-	https://github.com/etcd-io/etcd/releases/download/$ETCD_VERSION/etcd-$ETCD_VERSION-linux-amd64.tar.gz
-)
-
-for download_url in "${download_urls[@]}"; do
-	wget -q --show-progress  --https-only --timestamping "$download_url"
-done
-
-----
-
-Execute the script (after `chmod +x download.sh`):
-
-[,console]
-----
-[root@mawenzi-01 Downloads]# ./download.sh
-kubectl                                    100%[=======================================================================================>]  57.34M  29.8MB/s    in 1.9s
-kube-apiserver                             100%[=======================================================================================>]  93.42M  23.2MB/s    in 4.1s
-kube-controller-manager                    100%[=======================================================================================>]  86.55M  21.2MB/s    in 4.2s
-kube-scheduler                             100%[=======================================================================================>]  66.38M  23.5MB/s    in 2.8s
-kube-proxy                                 100%[=======================================================================================>]  67.32M  20.2MB/s    in 3.3s
-kubelet                                    100%[=======================================================================================>]  77.91M  28.5MB/s    in 2.7s
-crictl-v1.33.0-linux-amd64.tar.gz          100%[=======================================================================================>]  19.43M  16.0MB/s    in 1.2s
-runc.amd64                                 100%[=======================================================================================>]  11.31M  13.0MB/s    in 0.9s
-cni-plugins-linux-amd64-v1.7.1.tgz         100%[=======================================================================================>]  53.31M  17.2MB/s    in 3.1s
-containerd-2.1.4-linux-amd64.tar.gz        100%[=======================================================================================>]  31.67M  14.0MB/s    in 2.3s
-etcd-v3.6.4-linux-amd64.tar.gz             100%[=======================================================================================>]  22.53M  13.4MB/s    in 1.7s
-----
-
-Make the binaries executable: `chmod +x kube* runc.amd64`.
-
-=== Install kubectl
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab2-jumpbox/#install-kubectl
+* `--node-name`: this will ensure that our control-plane's hostname will have an entry in the certificates that get generated.
+* `--pod-network-cidr`: this must match the Pod subnet we'll use with the Flannel CNI. This is Flannel's default.
 
 [,bash]
 ----
-cp kubectl /usr/local/bin/
+kubeadm init --pod-network-cidr 10.244.0.0/16 --node-name mawenzi-01
 ----
 
-Verify version:
+.Example
+[,console]
+----
+[root@mawenzi-01 ~]# https_proxy=http://proxy.houston.hpecorp.net:8080 no_proxy="localhost,127.0.0.1,hpc.amslabs.hpecorp.net,10.214.128.0/21,10.96.0.0/12,10.244.0.0/16" kubeadm init --pod-network-cidr 10.244.0.0/16 --node-name mawenzi-01
+I0827 16:25:40.233312   14045 version.go:261] remote version is much newer: v1.34.0; falling back to: stable-1.33
+[init] Using Kubernetes version: v1.33.4
+[preflight] Running pre-flight checks
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action beforehand using 'kubeadm config images pull'
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local mawenzi-01] and IPs [10.96.0.1 10.214.134.147]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [localhost mawenzi-01] and IPs [10.214.134.147 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [localhost mawenzi-01] and IPs [10.214.134.147 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "super-admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests"
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 1.501224529s
+[control-plane-check] Waiting for healthy control plane components. This can take up to 4m0s
+[control-plane-check] Checking kube-apiserver at https://10.214.134.147:6443/livez
+[control-plane-check] Checking kube-controller-manager at https://127.0.0.1:10257/healthz
+[control-plane-check] Checking kube-scheduler at https://127.0.0.1:10259/livez
+[control-plane-check] kube-scheduler is healthy after 2.718165783s
+[control-plane-check] kube-controller-manager is healthy after 4.187683893s
+[control-plane-check] kube-apiserver is healthy after 4.501363588s
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
+[upload-certs] Skipping phase. Please see --upload-certs
+[mark-control-plane] Marking the node mawenzi-01 as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
+[mark-control-plane] Marking the node mawenzi-01 as control-plane by adding the taints [node-role.kubernetes.io/control-plane:NoSchedule]
+[bootstrap-token] Using token: ano6ya.1nfsxs6sv96a2mvv
+[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 10.214.134.147:6443 --token ano6ya.1nfsxs6....a2mvv \
+	--discovery-token-ca-cert-hash sha256:66077c37436bc739bdd55238bda....31e57fbd42c64f482d0ca9e86a62f1ab
+----
+
+Save the output, particularly the `kubeadm join` command, to a text file. We'll use it later.
+
+Next, run:
+
+[,bash]
+----
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+export KUBECONFIG=/etc/kubernetes/admin.conf
+----
+
+And add this to your `~/.bashrc` or `~/.zshrc` file: `export KUBECONFIG=/etc/kubernetes/admin.conf`
+
+You should now be able to see that `systemctl status kubelet` is reporting Active/Running and should be
+relatively healthy.
+
+=== Installing Flannel CNI
+
+We'll now need to install a CNI so we have the host-to-pod networking layer available. The CNI
+is what's responsible for configuring network interfaces for Linux containers, assigning IPs
+to pods, etc.
+
+Without this, pods have no way of communicating with each other, and this is a critical step in
+getting a cluster running.
+
+We'll be using https://github.com/flannel-io/flannel[Flannel CNI] for this. Since we used the default Pod CIDR for
+Flannel in our `kubeadm init` command, we can just use the default set of Flannel CRDs:
+
+[,bash]
+----
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+----
+
+.Example:
+[,console]
+----
+Your Kubernetes control-plane has initialized successfully!
+serviceaccount/flannel created
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+configmap/kube-flannel-cfg created
+daemonset.apps/kube-flannel-ds created
+----
+
+This creates a Flannel `ServiceAccount`, RBAC CRDs, `ConfigMap`, and a `DaemonSet`.
+The `DaemonSet` will run a Flannel pod on every node in the cluster, which will be
+responsible for managing that node's networking.
+
+Check the nodes and pods for the cluster now:
 
 [,console]
 ----
-[root@mawenzi-01 Downloads]# kubectl version --client
-Client Version: v1.33.0
-Kustomize Version: v5.6.0
+[root@mawenzi-01 ~]# kubectl get nodes
+NAME         STATUS   ROLES           AGE     VERSION
+mawenzi-01   Ready    control-plane   5h13m   v1.33.4
+
+[root@mawenzi-01 ~]# kubectl get pods -A
+NAMESPACE      NAME                                 READY   STATUS    RESTARTS   AGE
+kube-flannel   kube-flannel-ds-4482d                1/1     Running   0          5h11m
+kube-system    coredns-674b8bbfcf-hlgg8             1/1     Running   0          5h11m
+kube-system    coredns-674b8bbfcf-nk92m             1/1     Running   0          5h11m
+kube-system    etcd-mawenzi-01                      1/1     Running   6          5h11m
+kube-system    kube-apiserver-mawenzi-01            1/1     Running   1          5h11m
+kube-system    kube-controller-manager-mawenzi-01   1/1     Running   1          5h11m
+kube-system    kube-proxy-7mb9w                     1/1     Running   0          5h11m
+kube-system    kube-scheduler-mawenzi-01            1/1     Running   1          5h11m
 ----
 
-=== Set up machines file
+Nodes are now ready to join the cluster!
 
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#machine-database
-
-Create a `machines.txt` file with the format: `IPV4_ADDRESS FQDN HOSTNAME POD_SUBNET`.
-
-Each column corresponds to a machine IP address `IPV4_ADDRESS`, fully qualified domain name `FQDN`,
-host name `HOSTNAME`, and the IP subnet `POD_SUBNET`. Kubernetes assigns one IP address per pod,
-and the `POD_SUBNET` represents the unique IP address range assigned to each machine in the cluster for doing so.
-
-.machines.txt
-[,console]
-----
-10.214.134.147 mawenzi-01.hpc.amslabs.hpecorp.net mawenzi-01
-10.214.130.159 mawenzi-02.hpc.amslabs.hpecorp.net mawenzi-02 10.200.0.0/24
-10.214.134.195 mawenzi-03.hpc.amslabs.hpecorp.net mawenzi-03 10.200.0.1/24
-----
+At this point, I'd recommend setting up password-less SSH to the nodes in your cluster to make your life easier,
+before moving on to setting up those nodes.
 
 === Set up worker nodes SSH access
 
@@ -538,15 +600,6 @@ dr-xr-x---. 5 root root 4096 Aug 22 11:53 ..
 ----
 
 Use `ssh-keygen` to generate a public/private key pair.
-
-Copy the public key to each node in the `machines.txt` file.
-
-[,bash]
------
-while read IP FQDN HOST SUBNET; do
-  ssh-copy-id root@${IP}
-done < machines.txt
------
 
 [,console]
 ----
@@ -573,873 +626,85 @@ The key's randomart image is:
 +----[SHA256]-----+
 ----
 
-=== Set up hostnames
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab3-compute-resources/#hostnames
-
-N/A: We already have hostnames from the lab so maybe we don't need to do this?
-
-=== Provision a CA and TLS certificates
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab4-certificate-authority/
-
-In this lab, you will provision a PKI Infrastructure using OpenSSL to bootstrap a Certificate Authority and generate TLS certificates for the following components:
-
-* kube-apiserver
-* kube-controller-manager
-* kube-scheduler
-* kubelet
-* kube-proxy
-
-In this section, you will provision a Certificate Authority that you will use to generate additional
-TLS certificates for the other Kubernetes components. Setting up CA and generating certificates with
-openssl can be time-consuming, especially when doing it for the first time.
-To streamline this lab, an openssl configuration file, `ca.conf`, must be included,
-which defines all the details needed to generate certificates for each Kubernetes component.
-
-We'll use the following `ca.conf` Certificate Authority configuration file:
-
-.ca.conf
-[,text]
-----
-[req]
-distinguished_name = req_distinguished_name
-prompt             = no
-x509_extensions    = ca_x509_extensions
-
-[ca_x509_extensions]
-basicConstraints = CA:TRUE
-keyUsage         = cRLSign, keyCertSign
-
-[req_distinguished_name]
-C   = US
-ST  = Colorado
-L   = Denver
-CN  = CA
-
-[admin]
-distinguished_name = admin_distinguished_name
-prompt             = no
-req_extensions     = default_req_extensions
-
-[admin_distinguished_name]
-CN = admin
-O  = system:masters
-
-# Service Accounts
-#
-# The Kubernetes Controller Manager leverages a key pair to generate
-# and sign service account tokens as described in the
-# [managing service accounts](https://kubernetes.io/docs/admin/service-accounts-admin/)
-# documentation.
-
-[service-accounts]
-distinguished_name = service-accounts_distinguished_name
-prompt             = no
-req_extensions     = default_req_extensions
-
-[service-accounts_distinguished_name]
-CN = service-accounts
-
-# Worker Nodes
-#
-# Kubernetes uses a [special-purpose authorization mode](https://kubernetes.io/docs/admin/authorization/node/)
-# called Node Authorizer, that specifically authorizes API requests made
-# by [Kubelets](https://kubernetes.io/docs/concepts/overview/components/#kubelet).
-# In order to be authorized by the Node Authorizer, Kubelets must use a credential
-# that identifies them as being in the `system:nodes` group, with a username
-# of `system:node:<nodeName>`.
-[mawenzi-02]
-distinguished_name = mawenzi-02_distinguished_name
-prompt             = no
-req_extensions     = mawenzi-02_req_extensions
-
-[mawenzi-02_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "mawenzi-02 Certificate"
-subjectAltName       = DNS:mawenzi-02, IP:127.0.0.1
-subjectKeyIdentifier = hash
-
-[mawenzi-02_distinguished_name]
-CN = system:node:mawenzi-02
-O  = system:nodes
-C  = US
-ST = Colorado
-L  = Denver
-
-[mawenzi-03]
-distinguished_name = mawenzi-03_distinguished_name
-prompt             = no
-req_extensions     = mawenzi-03_req_extensions
-
-[mawenzi-03_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "mawenzi-03 Certificate"
-subjectAltName       = DNS:mawenzi-03, IP:127.0.0.1
-subjectKeyIdentifier = hash
-
-[mawenzi-03_distinguished_name]
-CN = system:node:mawenzi-03
-O  = system:nodes
-C  = US
-ST = Colorado
-L  = Denver
-
-
-# Kube Proxy Section
-[kube-proxy]
-distinguished_name = kube-proxy_distinguished_name
-prompt             = no
-req_extensions     = kube-proxy_req_extensions
-
-[kube-proxy_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "Kube Proxy Certificate"
-subjectAltName       = DNS:kube-proxy, IP:127.0.0.1
-subjectKeyIdentifier = hash
-
-[kube-proxy_distinguished_name]
-CN = system:kube-proxy
-O  = system:node-proxier
-C  = US
-ST = Colorado
-L  = Denver
-
-
-# Controller Manager
-[kube-controller-manager]
-distinguished_name = kube-controller-manager_distinguished_name
-prompt             = no
-req_extensions     = kube-controller-manager_req_extensions
-
-[kube-controller-manager_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "Kube Controller Manager Certificate"
-subjectAltName       = DNS:kube-proxy, IP:127.0.0.1
-subjectKeyIdentifier = hash
-
-[kube-controller-manager_distinguished_name]
-CN = system:kube-controller-manager
-O  = system:kube-controller-manager
-C  = US
-ST = Colorado
-L  = Denver
-
-# Scheduler
-[kube-scheduler]
-distinguished_name = kube-scheduler_distinguished_name
-prompt             = no
-req_extensions     = kube-scheduler_req_extensions
-
-[kube-scheduler_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "Kube Scheduler Certificate"
-subjectAltName       = DNS:kube-scheduler, IP:127.0.0.1
-subjectKeyIdentifier = hash
-
-[kube-scheduler_distinguished_name]
-CN = system:kube-scheduler
-O  = system:system:kube-scheduler
-C  = US
-ST = Colorado
-L  = Denver
-
-
-# API Server
-#
-# The Kubernetes API server is automatically assigned the `kubernetes`
-# internal dns name, which will be linked to the first IP address (`10.32.0.1`)
-# from the address range (`10.32.0.0/24`) reserved for internal cluster
-# services.
-
-[kube-api-server]
-distinguished_name = kube-api-server_distinguished_name
-prompt             = no
-req_extensions     = kube-api-server_req_extensions
-
-[kube-api-server_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth, serverAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "Kube Scheduler Certificate"
-subjectAltName       = @kube-api-server_alt_names
-subjectKeyIdentifier = hash
-
-[kube-api-server_alt_names]
-IP.0  = 127.0.0.1
-IP.1  = 10.32.0.1
-DNS.0 = kubernetes
-DNS.1 = kubernetes.default
-DNS.2 = kubernetes.default.svc
-DNS.3 = kubernetes.default.svc.cluster
-DNS.4 = kubernetes.svc.cluster.local
-DNS.5 = server.kubernetes.local
-DNS.6 = api-server.kubernetes.local
-
-[kube-api-server_distinguished_name]
-CN = kubernetes
-C  = US
-ST = Colorado
-L  = Denver
-
-
-[default_req_extensions]
-basicConstraints     = CA:FALSE
-extendedKeyUsage     = clientAuth
-keyUsage             = critical, digitalSignature, keyEncipherment
-nsCertType           = client
-nsComment            = "Admin Client Certificate"
-subjectKeyIdentifier = hash
-----
-
-Every certificate authority starts with a private key and root certificate. In this section,
-you will create a self-signed certificate authority, and while that is all you need for this tutorial,
-this is something you should not consider in a real-world production environment.
-
-Generate the CA configuration file, certificate, and private key:
+Copy the public key to each node in your cluster.
 
 [,bash]
-----
-openssl genrsa -out ca.key 4096
-openssl req -x509 -new -sha512 -noenc \
-    -key ca.key -days 3653 \
-    -config ca.conf \
-    -out ca.crt
-----
+-----
+ssh-copy-id root@${IP}
+-----
 
-You should now have `ca.crt` and `ca.key` in your directory.
-You can view details of the `.crt` key by running: `openssl x509 -in ca.crt -text -noout | less`.
+=== Joining Nodes to the Cluster
 
-=== Create client/server certificates
+Every node in the cluster will have to have the same steps done to:
 
-In this section, you will generate client and server certificates for each Kubernetes
-component and a client certificate for the Kubernetes admin user.
+* Set proxies; dnf configuration
+* Install basic dependencies
+* Disable swap
+* Disable firewalls and SELinux, open ports
+* Enable port forwarding, bridge networks, etc
+* Install containerd, runc, CNI plugins
+** Configure containerd to use systemd as cgroup manager
+** Run containerd with systemd, using appropriate service file
+* Install kubelet, kubectl, and kubeadm
+** Run kubelet with systemd
 
-Generate the certificates and private keys:
+You'll follow all the same steps from xref:_prerequisites[Prerequisites] up until
+xref:_using_kubeadm_to_init_cluster[Using kubeadm to init cluster] to prepare a worker node.
 
-.gen_keys.sh
-[,bash]
-----
-#!/bin/bash
-
-certs=(
-  "admin" "mawenzi-02" "mawenzi-03"
-  "kube-proxy" "kube-scheduler"
-  "kube-controller-manager"
-  "kube-api-server"
-  "service-accounts"
-)
-
-for i in ${certs[*]}; do
-  openssl genrsa -out "${i}.key" 4096
-
-  openssl req -new -key "${i}.key" -sha256 \
-    -config "ca.conf" -section ${i} \
-    -out "${i}.csr"
-
-  openssl x509 -req -days 3653 -in "${i}.csr" \
-    -copy_extensions copyall \
-    -sha256 -CA "ca.crt" \
-    -CAkey "ca.key" \
-    -CAcreateserial \
-    -out "${i}.crt"
-done
-----
+Taking the output from the original `kubeadm init` command, which you should have saved to a file,
+run the `kubeadm join` command with the token.
 
 .Example
 [,console]
 ----
-[root@mawenzi-01 kubernetes]# ./gen_keys.sh
-Certificate request self-signature ok
-subject=CN=admin, O=system:masters
-Certificate request self-signature ok
-subject=CN=system:node:mawenzi-02, O=system:nodes, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=system:node:mawenzi-03, O=system:nodes, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=system:kube-proxy, O=system:node-proxier, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=system:kube-scheduler, O=system:system:kube-scheduler, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=system:kube-controller-manager, O=system:kube-controller-manager, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=kubernetes, C=US, ST=Colorado, L=Denver
-Certificate request self-signature ok
-subject=CN=service-accounts
+[root@mawenzi-02 ~]# kubeadm join 10.214.134.147:6443 --token ano6ya.1nfs......6a2mvv \
+        --discovery-token-ca-cert-hash sha256:66077c37436bc739bdd55238.....e8e31e57fbd42c64f482d0ca9e86a62f1ab
+[preflight] Running pre-flight checks
+[preflight] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...
+[preflight] Use 'kubeadm init phase upload-config --config your-config-file' to re-upload it.
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Starting the kubelet
+[kubelet-check] Waiting for a healthy kubelet at http://127.0.0.1:10248/healthz. This can take up to 4m0s
+[kubelet-check] The kubelet is healthy after 501.800726ms
+[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap
+
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+
+Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 ----
 
-The above command results will generate a private key, certificate request, and signed SSL certificate for each Kubernetes component.
-You can list the generated files with the following command: `ls -1 *.crt *.key *.csr`
-
-.Example
-[,console]
-----
-admin.crt
-admin.csr
-admin.key
-ca.crt
-ca.key
-kube-api-server.crt
-kube-api-server.csr
-kube-api-server.key
-kube-controller-manager.crt
-kube-controller-manager.csr
-kube-controller-manager.key
-kube-proxy.crt
-kube-proxy.csr
-kube-proxy.key
-kube-scheduler.crt
-kube-scheduler.csr
-kube-scheduler.key
-mawenzi-02.crt
-mawenzi-02.csr
-mawenzi-02.key
-mawenzi-03.crt
-mawenzi-03.csr
-mawenzi-03.key
-service-accounts.crt
-service-accounts.csr
-service-accounts.key
-----
-
-=== Distribute the keys
-
-Use the following script to distribute the keys and certificates to the worker nodes:
-
-[,bash]
-----
-#!/bin/bash
-
-worker_nodes=("mawenzi-02" "mawenzi-03")
-
-for host in "${worker_nodes[@]}"; do
-  ssh root@$host mkdir /var/lib/kubelet/
-  scp ca.crt root@$host:/var/lib/kubelet/
-
-  scp $host.crt \
-    root@$host:/var/lib/kubelet/kubelet.crt
-
-  scp $host.key \
-    root@$host:/var/lib/kubelet/kubelet.key
-done
-----
-
-=== Generate Kubernetes config files for authentication
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab5-kubernetes-configuration-files/#the-kubelet-kubernetes-configuration-file
-
-Now we'll generate kubeconfig files for the `kubelet` and the `admin` user.
-
-When generating kubeconfig files for Kubelets you must match the client certificate to the Kubelet's node name.
-This will ensure Kubelets are properly authorized by the https://kubernetes.io/docs/reference/access-authn-authz/node/[Kubernetes Note Authorizer].
-
-We'll use the following script, `gen_kubeconfigs.sh`, to generate the kubeconfig files for the node kubelets,
-kube-proxy, kube-controller-manager, kube-scheduler, and admin node.
-
-.gen_kubeconfigs.sh
-[,bash]
-----
-#!/bin/bash
-
-cluster_name="mawenzi"
-worker_nodes=("mawenzi-02" "mawenzi-03")
-master_node="mawenzi-01"
-services=("kube-proxy" "kube-controller-manager" "kube-scheduler")
-
-# Worker node kubelet kubeconfig files
-for host in "${worker_nodes[@]}"; do
-  echo "Generating kubeconfig files for worker '$host' kubelet"
-  kubectl config set-cluster $cluster_name \
-    --certificate-authority=ca.crt \
-    --embed-certs=true \
-    --server=https://$master_node:6443 \
-    --kubeconfig=${host}.kubeconfig
-
-  kubectl config set-credentials system:node:${host} \
-    --client-certificate=${host}.crt \
-    --client-key=${host}.key \
-    --embed-certs=true \
-    --kubeconfig=${host}.kubeconfig
-
-  kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
-    --user=system:node:${host} \
-    --kubeconfig=${host}.kubeconfig
-
-  kubectl config use-context default \
-    --kubeconfig=${host}.kubeconfig
-done
-
-# kube-proxy, kube-controller-manager, kube-scheduler
-for service in "${services[@]}"; do
-  kubectl config set-cluster $cluster_name \
-    --certificate-authority=ca.crt \
-    --embed-certs=true \
-    --server=https://$master:6443 \
-    --kubeconfig=$service.kubeconfig
-
-  kubectl config set-credentials system:$service \
-    --client-certificate=$service.crt \
-    --client-key=$service.key \
-    --embed-certs=true \
-    --kubeconfig=$service.kubeconfig
-
-  kubectl config set-context default \
-    --cluster=$cluster_name \
-    --user=system:$service \
-    --kubeconfig=$service.kubeconfig
-
-  kubectl config use-context default \
-    --kubeconfig=$service.kubeconfig
-done
-
-# admin
-kubectl config set-cluster $cluster_name \
-    --certificate-authority=ca.crt \
-    --embed-certs=true \
-    --server=https://127.0.0.1:6443 \
-    --kubeconfig=admin.kubeconfig
-
-kubectl config set-credentials admin \
-    --client-certificate=admin.crt \
-    --client-key=admin.key \
-    --embed-certs=true \
-    --kubeconfig=admin.kubeconfig
-
-kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
-    --user=admin \
-    --kubeconfig=admin.kubeconfig
-
-kubectl config use-context default \
-    --kubeconfig=admin.kubeconfig
-
-----
-
-Running this:
+On the control-plane node, run `kubectl get nodes`:
 
 [,console]
 ----
-[root@mawenzi-01 kubernetes]# ./gen_kubeconfigs.sh
-Generating kubeconfig files for worker 'mawenzi-02' kubelet
-Cluster "mawenzi" set.
-User "system:node:mawenzi-02" set.
-Context "default" modified.
-Switched to context "default".
-Generating kubeconfig files for worker 'mawenzi-03' kubelet
-Cluster "mawenzi" set.
-User "system:node:mawenzi-03" set.
-Context "default" modified.
-Switched to context "default".
-Cluster "mawenzi" set.
-User "system:kube-proxy" set.
-Context "default" modified.
-Switched to context "default".
-Cluster "mawenzi" set.
-User "system:kube-controller-manager" set.
-Context "default" created.
-Switched to context "default".
-Cluster "mawenzi" set.
-User "system:kube-scheduler" set.
-Context "default" created.
-Switched to context "default".
-Cluster "mawenzi" set.
-User "admin" set.
-Context "default" created.
-Switched to context "default".
+[root@mawenzi-01 ~]# kubectl get nodes
+NAME         STATUS   ROLES           AGE     VERSION
+mawenzi-01   Ready    control-plane   5h24m   v1.33.4
+mawenzi-02   Ready    <none>          29m     v1.33.4
 ----
 
-And, we get:
-
-* `admin.kubeconfig`
-* `kube-controller-manager.kubeconfig`
-* `kube-proxy.kubeconfig`
-* `kube-scheduler.kubeconfig`
-* `mawenzi-02.kubeconfig`
-* `mawenzi-03.kubeconfig`
-
-=== Generate encryption configuration and key
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab6-data-encryption-keys/#lab-6-generating-the-data-encryption-configuration-and-key
-
-We'll generate an encryption key and an encryption configuration suitable for encrypting
- https://kubernetes.io/docs/concepts/configuration/secret/[Kubernetes Secrets].
-
-Generate a random encryption key, using `/dev/urandom` and `base64`:
-
-[,bash]
-----
-export ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
-----
-
-.Example:
-[,console]
-----
-[root@mawenzi-01 kubernetes]# echo $ENCRYPTION_KEY
-wMCVvvm23ffr.............wx7naVcfsutjvED4Dg=
-----
-
-Create the following encryption config YAML file:
-
-.encryption-config-template.yaml
-[,yaml]
-----
-kind: EncryptionConfig
-apiVersion: v1
-resources:
-  - resources:
-      - secrets
-    providers:
-      - aescbc:
-          keys:
-            - name: key1
-              secret: ${ENCRYPTION_KEY}
-      - identity: {}
-----
-
-Then, substitute in the `$ENCRYPTION_KEY` variable:
-
-[,bash]
-----
-envsubst < encryption-config-template.yaml > encryption-config.yaml
-----
-
-(it should look like this now)
-
-.encryption-config.yaml
-[,yaml]
-----
-kind: EncryptionConfig
-apiVersion: v1
-resources:
-  - resources:
-      - secrets
-    providers:
-      - aescbc:
-          keys:
-            - name: key1
-              secret: wMCVvvm23ffr.............wx7naVcfsutjvED4Dg=
-      - identity: {}
-----
-
-=== Bootstrapping the etcd cluster
-
-https://docs.rockylinux.org/labs/kubernetes-the-hard-way/lab7-bootstrapping-etcd/#lab-7-bootstrapping-the-etcd-cluster
-
-Create the following `etcd.service` systemd service file:
+We've got a new node in our cluster!
+You should also see an instance of `kube-proxy`, and `kube-flannel` running on the node:
 
 [,console]
 ----
-[Unit]
-Description=etcd
-Documentation=https://github.com/etcd-io/etcd
-
-[Service]
-Type=notify
-Environment="ETCD_UNSUPPORTED_ARCH=arm64"
-ExecStart=/usr/local/bin/etcd \
-  --name controller \
-  --initial-advertise-peer-urls http://127.0.0.1:2380 \
-  --listen-peer-urls http://127.0.0.1:2380 \
-  --listen-client-urls http://127.0.0.1:2379 \
-  --advertise-client-urls http://127.0.0.1:2379 \
-  --initial-cluster-token etcd-cluster-0 \
-  --initial-cluster controller=http://127.0.0.1:2380 \
-  --initial-cluster-state new \
-  --data-dir=/var/lib/etcd
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
+[root@mawenzi-01 ~]# kubectl get pods -A -o wide | grep mawenzi-02
+kube-flannel   kube-flannel-ds-cdw8t                1/1     Running   0          30m     10.214.130.159   mawenzi-02   <none>           <none>
+kube-system    kube-proxy-826t2                     1/1     Running   0          30m     10.214.130.159   mawenzi-02   <none>           <none>
 ----
 
-[,bash]
-----
-mv etcd.service /etc/systemd/system/
-chmod 644 /etc/systemd/system/etcd.service
-----
+Now, rinse and repeat for the rest of the nodes:
 
-=== Install etcd
+...
 
-Untar the etcd .tgz in `downloads/` and move its binaries to `/usr/local/bin`
-
-[,bash]
-----
-tar -xzvf etcd-v3.6.4-linux-amd64.tar.gz
-mv etcd-v3.6.4-linux-amd64/etcd* /usr/local/bin/
-----
-
-Back in the `kubernetes/` directory, configure the `etcd` server:
-
-[,bash]
-----
-mkdir -p /etc/etcd /var/lib/etcd && \
-  chmod 700 /var/lib/etcd && \
-  cp ca.crt kube-api-server.key kube-api-server.crt /etc/etcd/
-----
-
-=== Disable SELinux/firewall
-
-Although it is considered a bad security form, you might have to temporarily or permanently
-disable SELinux if you run into any issues starting the etcd systemd service.
-The proper fix is to investigate and create the needed policy files with tools
-such as `ausearch`, `audit2allow`, and others.
-
-The commands get SELinux out of the way and disable it by running the following:
-
-[,bash]
-----
-sudo sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-setenforce 0
-----
-
-=== Start the etcd server
-
-[,bash]
-----
-systemctl daemon-reload
-systemctl enable etcd
-systemctl start etcd
-----
-
-Check the status of etcd:
-
-[,bash]
-----
-systemctl status etcd
-etcdctl member list
-----
-
-=== Bootstrap the Kubernetes control plane
-
-We'll need to create the following systemd service YAML files on the controller.
-
-.kube-apiserver.service
-[,plaintext]
-----
-[Unit]
-Description=Kubernetes API Server
-Documentation=https://github.com/kubernetes/kubernetes
-
-[Service]
-ExecStart=/usr/local/bin/kube-apiserver \
-  --allow-privileged=true \
-  --apiserver-count=1 \
-  --audit-log-maxage=30 \
-  --audit-log-maxbackup=3 \
-  --audit-log-maxsize=100 \
-  --audit-log-path=/var/log/audit.log \
-  --authorization-mode=Node,RBAC \
-  --bind-address=0.0.0.0 \
-  --client-ca-file=/var/lib/kubernetes/ca.crt \
-  --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
-  --etcd-servers=http://127.0.0.1:2379 \
-  --event-ttl=1h \
-  --encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \
-  --kubelet-certificate-authority=/var/lib/kubernetes/ca.crt \
-  --kubelet-client-certificate=/var/lib/kubernetes/kube-api-server.crt \
-  --kubelet-client-key=/var/lib/kubernetes/kube-api-server.key \
-  --runtime-config='api/all=true' \
-  --service-account-key-file=/var/lib/kubernetes/service-accounts.crt \
-  --service-account-signing-key-file=/var/lib/kubernetes/service-accounts.key \
-  --service-account-issuer=https://server.kubernetes.local:6443 \
-  --service-cluster-ip-range=10.32.0.0/24 \
-  --service-node-port-range=30000-32767 \
-  --tls-cert-file=/var/lib/kubernetes/kube-api-server.crt \
-  --tls-private-key-file=/var/lib/kubernetes/kube-api-server.key \
-  --v=2
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-----
-
-.kube-controller-manager.service
-[,plaintext]
-----
-[Unit]
-Description=Kubernetes Controller Manager
-Documentation=https://github.com/kubernetes/kubernetes
-
-[Service]
-ExecStart=/usr/local/bin/kube-controller-manager \
-  --bind-address=0.0.0.0 \
-  --cluster-cidr=10.200.0.0/16 \
-  --cluster-name=kubernetes \
-  --cluster-signing-cert-file=/var/lib/kubernetes/ca.crt \
-  --cluster-signing-key-file=/var/lib/kubernetes/ca.key \
-  --kubeconfig=/var/lib/kubernetes/kube-controller-manager.kubeconfig \
-  --root-ca-file=/var/lib/kubernetes/ca.crt \
-  --service-account-private-key-file=/var/lib/kubernetes/service-accounts.key \
-  --service-cluster-ip-range=10.32.0.0/24 \
-  --use-service-account-credentials=true \
-  --v=2
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-----
-
-.kube-proxy.service
-[,plaintext]
-----
-[Unit]
-Description=Kubernetes Kube Proxy
-Documentation=https://github.com/kubernetes/kubernetes
-
-[Service]
-ExecStart=/usr/local/bin/kube-proxy \
-  --config=/var/lib/kube-proxy/kube-proxy-config.yaml
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-----
-
-.kube-scheduler.service
-[,plaintext]
-----
-[Unit]
-Description=Kubernetes Scheduler
-Documentation=https://github.com/kubernetes/kubernetes
-
-[Service]
-ExecStart=/usr/local/bin/kube-scheduler \
-  --config=/etc/kubernetes/config/kube-scheduler.yaml \
-  --v=2
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-----
-
-.kubelet.service
-[,plaintext]
-----
-[Unit]
-Description=Kubernetes Kubelet
-Documentation=https://github.com/kubernetes/kubernetes
-After=containerd.service
-Requires=containerd.service
-
-[Service]
-ExecStart=/usr/local/bin/kubelet \
-  --config=/var/lib/kubelet/kubelet-config.yaml \
-  --kubeconfig=/var/lib/kubelet/kubeconfig \
-  --register-node=true \
-  --v=2
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-----
-
-Create the Kubernetes configuration directory:
-
-[,bash]
-----
-mkdir -p /etc/kubernetes/config
-----
-
-Install the Kubernetes Controller Binaries:
-
-[,bash]
-----
-mv kube-apiserver \
-    kube-controller-manager \
-    kube-scheduler kubectl \
-    /usr/local/bin/
-----
-
-Configure the Kubernetes API Server:
-
-[,bash]
-----
-mkdir -p /var/lib/kubernetes/
-mv ca.crt ca.key \
-    kube-api-server.key kube-api-server.crt \
-    service-accounts.key service-accounts.crt \
-    encryption-config.yaml \
-    /var/lib/kubernetes/
-----
-
-Create the `kube-apiserver.service` systemd unit file:
-
-[,bash]
-----
-mv kube-apiserver.service /etc/systemd/system/kube-apiserver.service
-----
-
-Configure the Kubernetes Controller Manager
-
-[,bash]
-----
-mv kube-controller-manager.kubeconfig /var/lib/kubernetes/
-mv kube-controller-manager.service /etc/systemd/system/
-----
-
-Configure the Kubernetes Scheduler
-
-Create the following kube-scheduler YAML definition:
-
-.kube-scheduler.yaml
-[,yaml]
-----
-apiVersion: kubescheduler.config.k8s.io/v1
-kind: KubeSchedulerConfiguration
-clientConnection:
-  kubeconfig: "/var/lib/kubernetes/kube-scheduler.kubeconfig"
-leaderElection:
-  leaderElect: true
-----
-
-...and move it into place.
-
-[,bash]
-----
-mv kube-scheduler.kubeconfig /var/lib/kubernetes/
-mv kube-scheduler.yaml /etc/kubernetes/config/
-mv kube-scheduler.service /etc/systemd/system/
-----
-
-Start the controller services:
-
-[,bash]
-----
-systemctl daemon-reload
-
-systemctl enable kube-apiserver kube-controller-manager kube-scheduler
-
-----
-
-Check to make sure required ports are open: https://kubernetes.io/docs/reference/networking/ports-and-protocols/[Required Ports and Protocols]
-
-.Example: Required port 6443 is not open
 [,console]
 ----
-[root@mawenzi-01 ~]# nc 127.0.0.1 6443 -zv -w 2
-Ncat: Version 7.92 ( https://nmap.org/ncat )
-Ncat: Connection refused.
+[root@mawenzi-01 ~]# kubectl get nodes
+NAME         STATUS   ROLES           AGE     VERSION
+mawenzi-01   Ready    control-plane   5h31m   v1.33.4
+mawenzi-02   Ready    <none>          35m     v1.33.4
+mawenzi-03   Ready    <none>          21s     v1.33.4
 ----

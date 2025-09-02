@@ -91,7 +91,7 @@ Alternatively, if you are the root user, you can run:
 kubeadm join 172.26.143.70:6443 --token oos4yr.46zwgo9mzqavckkx --discovery-token-ca-cert-hash sha256:2b725a2cda814b07ee07c9d704de5a5cc2451c746eeb5b32277ebe661b9a36e4
 ----
 
-== Rocky Linux 9.5
+== Rocky Linux 9.6
 
 This example install will be on the `mawenzi` cluster, using `mawenzi-01` as the admin node.
 

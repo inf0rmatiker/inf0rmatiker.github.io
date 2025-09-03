@@ -1,4 +1,6 @@
 
+* xref:docs-site:learning:ansible/ansible.adoc[Ansible]
+
 * Kubernetes
 ** xref:docs-site:learning:kubernetes/crds.adoc[CRDs]
 ** xref:docs-site:learning:kubernetes/k8s-api-resources.adoc[Kubernetes Resources]

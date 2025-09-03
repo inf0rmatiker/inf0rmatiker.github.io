@@ -1,0 +1,238 @@
+= Ansible
+
+:toc: auto
+
+For the examples in this guide, we'll be using Rocky Linux 9.6 for our Ansible controller node.
+
+== References
+
+* https://docs.rockylinux.org/10/books/learning_ansible/01-basic/[Rocky Linux: Ansible Basics]
+** https://docs.rockylinux.org/10/books/learning_ansible/01-basic/#configuration-files[Configuration Files]
+* https://docs.ansible.com/ansible/latest/getting_started/introduction.html?extIdCarryOver=true&sc_cid=RHCTG0250000454097[RHEL: Introduction to Ansible]
+
+Video Playlists:
+
+* https://www.youtube.com/watch?v=3RiVKs8GHYQ&list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&ab_channel=LearnLinuxTV[Getting Started with Ansible]
+
+== Prerequisites
+
+We'll need the latest version of `python3` and `python3-pip` in order to install Ansible with `pip`
+
+[,bash]
+----
+dnf update -y
+dnf install python3 python3-pip -y
+pip3 install --upgrade pip
+----
+
+Check pip version:
+
+[,console]
+----
+[root@mawenzi-01 ansible]# python3 -m pip -V
+pip 25.2 from /usr/local/lib/python3.9/site-packages/pip (python 3.9)
+----
+
+== Installation
+
+Install Ansible using `pip`:
+
+[,bash]
+----
+python3 -m pip install --user ansible
+----
+
+.Example
+[,console]
+----
+[root@mawenzi-01 ansible]# python3 -m pip install --user ansible
+Collecting ansible
+  Downloading ansible-8.7.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting ansible-core~=2.15.7 (from ansible)
+  Downloading ansible_core-2.15.13-py3-none-any.whl.metadata (7.0 kB)
+Collecting jinja2>=3.0.0 (from ansible-core~=2.15.7->ansible)
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: PyYAML>=5.1 in /usr/lib64/python3.9/site-packages (from ansible-core~=2.15.7->ansible) (5.4.1)
+Collecting cryptography (from ansible-core~=2.15.7->ansible)
+  Downloading cryptography-45.0.7-cp37-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting packaging (from ansible-core~=2.15.7->ansible)
+  Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting resolvelib<1.1.0,>=0.5.3 (from ansible-core~=2.15.7->ansible)
+  Downloading resolvelib-1.0.1-py2.py3-none-any.whl.metadata (4.0 kB)
+Collecting importlib-resources<5.1,>=5.0 (from ansible-core~=2.15.7->ansible)
+  Downloading importlib_resources-5.0.7-py3-none-any.whl.metadata (2.8 kB)
+Collecting MarkupSafe>=2.0 (from jinja2>=3.0.0->ansible-core~=2.15.7->ansible)
+  Downloading MarkupSafe-3.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+Collecting cffi>=1.14 (from cryptography->ansible-core~=2.15.7->ansible)
+  Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+Collecting pycparser (from cffi>=1.14->cryptography->ansible-core~=2.15.7->ansible)
+  Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+Downloading ansible-8.7.0-py3-none-any.whl (48.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.4/48.4 MB 1.8 MB/s  0:00:28
+Downloading ansible_core-2.15.13-py3-none-any.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 4.6 MB/s  0:00:00
+Downloading importlib_resources-5.0.7-py3-none-any.whl (24 kB)
+Downloading resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading MarkupSafe-3.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+Downloading cryptography-45.0.7-cp37-abi3-manylinux_2_34_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 4.4 MB/s  0:00:00
+Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (445 kB)
+Downloading packaging-25.0-py3-none-any.whl (66 kB)
+Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+Installing collected packages: resolvelib, pycparser, packaging, MarkupSafe, importlib-resources, jinja2, cffi, cryptography, ansible-core, ansible
+Successfully installed MarkupSafe-3.0.2 ansible-8.7.0 ansible-core-2.15.13 cffi-1.17.1 cryptography-45.0.7 importlib-resources-5.0.7 jinja2-3.1.6 packaging-25.0 pycparser-2.22 resolvelib-1.0.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+----
+
+Confirm installation with `ansible --version`:
+
+.Example
+[,console]
+----
+[root@mawenzi-01 ansible]# ansible --version
+ansible [core 2.15.13]
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /root/.local/lib/python3.9/site-packages/ansible
+  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
+  executable location = /root/.local/bin/ansible
+  python version = 3.9.21 (main, Jun 27 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/bin/python3)
+  jinja version = 3.1.6
+  libyaml = True
+----
+
+== Configuring Ansible
+
+* https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html[Configuration Introduction]
+* https://docs.ansible.com/ansible/latest/reference_appendices/config.html#ansible-configuration-settings[Configuration Settings]
+
+Generate a default ansible configuration file (`ansible.cfg`) to the local directory:
+
+[,bash]
+----
+ansible-config init --disabled > ansible.cfg
+----
+
+Also, create a `hosts` inventory file with the names of your servers, and whatever group you want them in.
+For this example, we'll be using `mawenzi-02` through `mawenzi-07` and will be putting them in the `ungrouped` group:
+
+.hosts file
+[,ini]
+----
+mawenzi-02
+mawenzi-03
+mawenzi-04
+----
+
+Edit these config files to your liking, then copy them to the default location `/etc/ansible`:
+
+[,bash]
+----
+mkdir -p /etc/ansible && cp ./ansible.cfg ./hosts /etc/ansible/
+----
+
+== Set up SSH access
+
+Use the following script to set up passwordless-SSH access to your managed nodes:
+
+.setup_ssh.sh
+[,bash]
+----
+#!/bin/bash
+
+ansible_keyfile="$HOME/.ssh/id_ed25519_ansible"
+if [[ ! -f "$ansible_keyfile" ]]; then
+	ssh-keygen -t ed25519 -C "Ansible" -f "$ansible_keyfile" -N ""
+else
+	echo "$ansible_keyfile already exists; skipping"
+fi
+
+while IFS= read -r host ; do
+	if [[ -n $host ]]; then
+		ssh-copy-id -i $ansible_keyfile.pub $host
+	fi
+done < hosts
+----
+
+== Test Ansible Connection
+
+Run the Ansible `ping` module to discover facts about nodes in your inventory.
+You can specify the inventory file and keyfile to use manually, like:
+
+[,bash]
+----
+ansible all --key-file ~/.ssh/id_ed25519_ansible -i hosts -m ping
+----
+
+Or, you can set the field `private_key_file=/root/.ssh/id_ed25519_ansible` in your `ansible.cfg`,
+and put your `hosts` file at `/etc/ansible/hosts` so all you have to run is `ansible all -m ping`.
+
+.Example
+[,bash]
+----
+[root@mawenzi-01 ansible]# ansible all -m ping
+mawenzi-02 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+mawenzi-04 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+mawenzi-03 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+----
+
+List Ansible hosts:
+
+[,console]
+----
+[root@mawenzi-01 ansible]# ansible all --list-hosts
+  hosts (3):
+    mawenzi-02
+    mawenzi-03
+    mawenzi-04
+----
+
+== Running Ad-hoc Ansible Commands
+
+You can run shell commands with ansible via `ansible <hosts> -m shell -a <command>`:
+
+.Example
+[,console]
+----
+[root@mawenzi-01 ansible]# ansible all -m shell -a uptime
+mawenzi-02 | CHANGED | rc=0 >>
+ 15:55:42 up 8 days,  6:00,  1 user,  load average: 0.04, 0.03, 0.00
+mawenzi-04 | CHANGED | rc=0 >>
+ 15:55:42 up 45 min,  1 user,  load average: 0.00, 0.00, 0.00
+mawenzi-03 | CHANGED | rc=0 >>
+ 15:55:42 up 7 days,  4:03,  1 user,  load average: 1.44, 1.53, 1.45
+----
+
+.Example 2
+[,console]
+----
+[root@mawenzi-01 ansible]# ansible mawenzi-02 -m shell -a 'dnf install vim -y'
+mawenzi-02 | CHANGED | rc=0 >>
+Last metadata expiration check: 2:34:52 ago on Wed 03 Sep 2025 01:32:39 PM MDT.
+Package vim-enhanced-2:8.2.2637-22.el9_6.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!
+----
+
+== Playbooks
+

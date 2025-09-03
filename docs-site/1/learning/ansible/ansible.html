@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Linux User Management :: Caleb Carlson | Docs Site</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/user-management.html">
+    <title>Ansible :: Caleb Carlson | Docs Site</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/ansible/ansible.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -68,8 +68,8 @@
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Learning</span>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../ansible/ansible.html">Ansible</a>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="ansible.html">Ansible</a>
   </li>
   <li class="nav-item" data-depth="2">
     <button class="nav-item-toggle"></button>
@@ -122,46 +122,46 @@
     <span class="nav-text">Installs</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="installs/rocky-install.html">Rocky Linux Install</a>
+    <a class="nav-link" href="../linux/installs/rocky-install.html">Rocky Linux Install</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="installs/opensuse-install.html">OpenSUSE Linux Install</a>
+    <a class="nav-link" href="../linux/installs/opensuse-install.html">OpenSUSE Linux Install</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="isos.html">ISOs</a>
+    <a class="nav-link" href="../linux/isos.html">ISOs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="rpms.html">RPMs</a>
+    <a class="nav-link" href="../linux/rpms.html">RPMs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="tmux.html">Tmux</a>
+    <a class="nav-link" href="../linux/tmux.html">Tmux</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="user-management.html">User Management</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../linux/user-management.html">User Management</a>
   </li>
   <li class="nav-item" data-depth="3">
     <button class="nav-item-toggle"></button>
     <span class="nav-text">Networking</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/linux-networking.html">Linux</a>
+    <a class="nav-link" href="../linux/networking/linux-networking.html">Linux</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/mpi.html">MPI</a>
+    <a class="nav-link" href="../linux/networking/mpi.html">MPI</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/proxies.html">Proxies</a>
+    <a class="nav-link" href="../linux/networking/proxies.html">Proxies</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/rdma.html">RDMA Programming</a>
+    <a class="nav-link" href="../linux/networking/rdma.html">RDMA Programming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/socket_programming.html">Socket Programming</a>
+    <a class="nav-link" href="../linux/networking/socket_programming.html">Socket Programming</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="networking/ssh.html">SSH</a>
+    <a class="nav-link" href="../linux/networking/ssh.html">SSH</a>
   </li>
 </ul>
   </li>
@@ -170,18 +170,18 @@
     <span class="nav-text">Storage</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/benchmarks.html">Benchmarks</a>
+    <a class="nav-link" href="../linux/storage/benchmarks.html">Benchmarks</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/filesystems.html">Filesystems</a>
+    <a class="nav-link" href="../linux/storage/filesystems.html">Filesystems</a>
   </li>
   <li class="nav-item" data-depth="4">
-    <a class="nav-link" href="storage/drives.html">Drives</a>
+    <a class="nav-link" href="../linux/storage/drives.html">Drives</a>
   </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="vms/virtual-machines.html">Virtual Machines</a>
+    <a class="nav-link" href="../linux/vms/virtual-machines.html">Virtual Machines</a>
   </li>
 </ul>
   </li>
@@ -393,8 +393,7 @@
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
     <li>Learning</li>
-    <li>Linux</li>
-    <li><a href="user-management.html">User Management</a></li>
+    <li><a href="ansible.html">Ansible</a></li>
   </ul>
 </nav>
 </div>
@@ -403,101 +402,307 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Linux User Management</h1>
-<div class="sect1">
-<h2 id="_create_a_user"><a class="anchor" href="#_create_a_user"></a>Create a User</h2>
+<h1 class="page">Ansible</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Use <code>useradd</code> to create a user.</p>
+<p>For the examples in this guide, we&#8217;ll be using Rocky Linux 9.6 for our Ansible controller node.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://man7.org/linux/man-pages/man8/useradd.8.html"><code>useradd</code></a></p>
+<p><a href="https://docs.rockylinux.org/10/books/learning_ansible/01-basic/">Rocky Linux: Ansible Basics</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.rockylinux.org/10/books/learning_ansible/01-basic/#configuration-files">Configuration Files</a></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><a href="https://docs.ansible.com/ansible/latest/getting_started/introduction.html?extIdCarryOver=true&amp;sc_cid=RHCTG0250000454097">RHEL: Introduction to Ansible</a></p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Example:</p>
+<p>Video Playlists:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.youtube.com/watch?v=3RiVKs8GHYQ&amp;list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&amp;ab_channel=LearnLinuxTV">Getting Started with Ansible</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a>Prerequisites</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll need the latest version of <code>python3</code> and <code>python3-pip</code> in order to install Ansible with <code>pip</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">dnf update -y
+dnf install python3 python3-pip -y
+pip3 install --upgrade pip</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Optionally, you can specify the shell used for that user upon creation:</p>
+<p>Check pip version:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --shell=/usr/bin/zsh ctesdahl</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can also specify which groups the user will be a part of:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">useradd --groups=docker ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# python3 -m pip -V
+pip 25.2 from /usr/local/lib/python3.9/site-packages/pip (python 3.9)</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_change_or_set_user_password"><a class="anchor" href="#_change_or_set_user_password"></a>Change or Set User Password</h2>
+<h2 id="_installation"><a class="anchor" href="#_installation"></a>Installation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>From <code>root</code> account, you can set another user&#8217;s password:</p>
+<p>Install Ansible using <code>pip</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd ctesdahl</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">python3 -m pip install --user ansible</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# python3 -m pip install --user ansible
+Collecting ansible
+  Downloading ansible-8.7.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting ansible-core~=2.15.7 (from ansible)
+  Downloading ansible_core-2.15.13-py3-none-any.whl.metadata (7.0 kB)
+Collecting jinja2&gt;=3.0.0 (from ansible-core~=2.15.7-&gt;ansible)
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Requirement already satisfied: PyYAML&gt;=5.1 in /usr/lib64/python3.9/site-packages (from ansible-core~=2.15.7-&gt;ansible) (5.4.1)
+Collecting cryptography (from ansible-core~=2.15.7-&gt;ansible)
+  Downloading cryptography-45.0.7-cp37-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+Collecting packaging (from ansible-core~=2.15.7-&gt;ansible)
+  Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting resolvelib&lt;1.1.0,&gt;=0.5.3 (from ansible-core~=2.15.7-&gt;ansible)
+  Downloading resolvelib-1.0.1-py2.py3-none-any.whl.metadata (4.0 kB)
+Collecting importlib-resources&lt;5.1,&gt;=5.0 (from ansible-core~=2.15.7-&gt;ansible)
+  Downloading importlib_resources-5.0.7-py3-none-any.whl.metadata (2.8 kB)
+Collecting MarkupSafe&gt;=2.0 (from jinja2&gt;=3.0.0-&gt;ansible-core~=2.15.7-&gt;ansible)
+  Downloading MarkupSafe-3.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.0 kB)
+Collecting cffi&gt;=1.14 (from cryptography-&gt;ansible-core~=2.15.7-&gt;ansible)
+  Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (1.5 kB)
+Collecting pycparser (from cffi&gt;=1.14-&gt;cryptography-&gt;ansible-core~=2.15.7-&gt;ansible)
+  Downloading pycparser-2.22-py3-none-any.whl.metadata (943 bytes)
+Downloading ansible-8.7.0-py3-none-any.whl (48.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.4/48.4 MB 1.8 MB/s  0:00:28
+Downloading ansible_core-2.15.13-py3-none-any.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 4.6 MB/s  0:00:00
+Downloading importlib_resources-5.0.7-py3-none-any.whl (24 kB)
+Downloading resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+Downloading MarkupSafe-3.0.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (20 kB)
+Downloading cryptography-45.0.7-cp37-abi3-manylinux_2_34_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 4.4 MB/s  0:00:00
+Downloading cffi-1.17.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (445 kB)
+Downloading packaging-25.0-py3-none-any.whl (66 kB)
+Downloading pycparser-2.22-py3-none-any.whl (117 kB)
+Installing collected packages: resolvelib, pycparser, packaging, MarkupSafe, importlib-resources, jinja2, cffi, cryptography, ansible-core, ansible
+Successfully installed MarkupSafe-3.0.2 ansible-8.7.0 ansible-core-2.15.13 cffi-1.17.1 cryptography-45.0.7 importlib-resources-5.0.7 jinja2-3.1.6 packaging-25.0 pycparser-2.22 resolvelib-1.0.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you&#8217;re just wanting to change the password on the current account:</p>
+<p>Confirm installation with <code>ansible --version</code>:</p>
 </div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">passwd</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible --version
+ansible [core 2.15.13]
+  config file = None
+  configured module search path = ['/root/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /root/.local/lib/python3.9/site-packages/ansible
+  ansible collection location = /root/.ansible/collections:/usr/share/ansible/collections
+  executable location = /root/.local/bin/ansible
+  python version = 3.9.21 (main, Jun 27 2025, 00:00:00) [GCC 11.5.0 20240719 (Red Hat 11.5.0-5)] (/usr/bin/python3)
+  jinja version = 3.1.6
+  libyaml = True</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_add_user_to_sudoers"><a class="anchor" href="#_add_user_to_sudoers"></a>Add User to Sudoers</h2>
+<h2 id="_configuring_ansible"><a class="anchor" href="#_configuring_ansible"></a>Configuring Ansible</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_configuration.html">Configuration Introduction</a></p>
+</li>
+<li>
+<p><a href="https://docs.ansible.com/ansible/latest/reference_appendices/config.html#ansible-configuration-settings">Configuration Settings</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Generate a default ansible configuration file (<code>ansible.cfg</code>) to the local directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-config init --disabled &gt; ansible.cfg</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, create a <code>hosts</code> inventory file with the names of your servers, and whatever group you want them in.
+For this example, we&#8217;ll be using <code>mawenzi-02</code> through <code>mawenzi-07</code> and will be putting them in the <code>ungrouped</code> group:</p>
+</div>
+<div class="listingblock">
+<div class="title">hosts file</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">mawenzi-02
+mawenzi-03
+mawenzi-04</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Edit these config files to your liking, then copy them to the default location <code>/etc/ansible</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir -p /etc/ansible &amp;&amp; cp ./ansible.cfg ./hosts /etc/ansible/</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_set_up_ssh_access"><a class="anchor" href="#_set_up_ssh_access"></a>Set up SSH access</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Edit the <code>/etc/sudoers</code> file:</p>
+<p>Use the following script to set up passwordless-SSH access to your managed nodes:</p>
+</div>
+<div class="listingblock">
+<div class="title">setup_ssh.sh</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">#!/bin/bash
+
+ansible_keyfile="$HOME/.ssh/id_ed25519_ansible"
+if [[ ! -f "$ansible_keyfile" ]]; then
+	ssh-keygen -t ed25519 -C "Ansible" -f "$ansible_keyfile" -N ""
+else
+	echo "$ansible_keyfile already exists; skipping"
+fi
+
+while IFS= read -r host ; do
+	if [[ -n $host ]]; then
+		ssh-copy-id -i $ansible_keyfile.pub $host
+	fi
+done &lt; hosts</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_test_ansible_connection"><a class="anchor" href="#_test_ansible_connection"></a>Test Ansible Connection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Run the Ansible <code>ping</code> module to discover facts about nodes in your inventory.
+You can specify the inventory file and keyfile to use manually, like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">visudo</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible all --key-file ~/.ssh/id_ed25519_ansible -i hosts -m ping</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You should see existing sudoers, including <code>root</code>:</p>
+<p>Or, you can set the field <code>private_key_file=/root/.ssh/id_ed25519_ansible</code> in your <code>ansible.cfg</code>,
+and put your <code>hosts</code> file at <code>/etc/ansible/hosts</code> so all you have to run is <code>ansible all -m ping</code>.</p>
 </div>
 <div class="listingblock">
+<div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">##
-## User privilege specification
-##
-root ALL=(ALL) ALL
-tmorneau ALL=(ALL) ALL
-dmatthews ALL=(ALL) ALL
-mattheda ALL=(ALL) ALL
-ccarlson ALL=(ALL) ALL</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@mawenzi-01 ansible]# ansible all -m ping
+mawenzi-02 | SUCCESS =&gt; {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+mawenzi-04 | SUCCESS =&gt; {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+mawenzi-03 | SUCCESS =&gt; {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Add an entry for the new user:</p>
+<p>List Ansible hosts:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-asciidoc hljs" data-lang="asciidoc">ctesdahl ALL=(ALL) ALL</code></pre>
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible all --list-hosts
+  hosts (3):
+    mawenzi-02
+    mawenzi-03
+    mawenzi-04</code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_ad_hoc_ansible_commands"><a class="anchor" href="#_running_ad_hoc_ansible_commands"></a>Running Ad-hoc Ansible Commands</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can run shell commands with ansible via <code>ansible &lt;hosts&gt; -m shell -a &lt;command&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible all -m shell -a uptime
+mawenzi-02 | CHANGED | rc=0 &gt;&gt;
+ 15:55:42 up 8 days,  6:00,  1 user,  load average: 0.04, 0.03, 0.00
+mawenzi-04 | CHANGED | rc=0 &gt;&gt;
+ 15:55:42 up 45 min,  1 user,  load average: 0.00, 0.00, 0.00
+mawenzi-03 | CHANGED | rc=0 &gt;&gt;
+ 15:55:42 up 7 days,  4:03,  1 user,  load average: 1.44, 1.53, 1.45</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">Example 2</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible mawenzi-02 -m shell -a 'dnf install vim -y'
+mawenzi-02 | CHANGED | rc=0 &gt;&gt;
+Last metadata expiration check: 2:34:52 ago on Wed 03 Sep 2025 01:32:39 PM MDT.
+Package vim-enhanced-2:8.2.2637-22.el9_6.x86_64 is already installed.
+Dependencies resolved.
+Nothing to do.
+Complete!</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_playbooks"><a class="anchor" href="#_playbooks"></a>Playbooks</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 </article>

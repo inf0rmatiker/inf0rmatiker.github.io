@@ -52,4 +52,4 @@ Public Services and Open-Source Projects
 
 == Resume
 
-* https://github.com/inf0rmatiker/resume/releases/download/v1.0.1/caleb_carlson_resume_2025_08.pdf[Caleb Carlson's Resume (PDF)]
+* https://github.com/inf0rmatiker/resume/releases/download/v1.0.2/caleb_carlson_resume_2025_09.pdf[Caleb Carlson's Resume (PDF)]

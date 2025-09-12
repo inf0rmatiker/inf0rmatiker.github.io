@@ -562,6 +562,17 @@ ansible [core 2.15.13]
 </div>
 </div>
 <div class="paragraph">
+<p>Or, you can use the following bare-bones <code>ansible.conf</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">ansible.conf</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[defaults]
+inventory=hosts
+private_key_file=/root/.ssh/id_ed25519_ansible</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Also, create a <code>hosts</code> inventory file with the names of your servers, and whatever group you want them in.
 For this example, we&#8217;ll be using <code>mawenzi-02</code> through <code>mawenzi-07</code> and will be putting them in the <code>ungrouped</code> group:</p>
 </div>
@@ -629,7 +640,7 @@ and put your <code>hosts</code> file at <code>/etc/ansible/hosts</code> so all y
 <div class="listingblock">
 <div class="title">Example</div>
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">[root@mawenzi-01 ansible]# ansible all -m ping
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible all -m ping
 mawenzi-02 | SUCCESS =&gt; {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python3"
@@ -702,7 +713,105 @@ Complete!</code></pre>
 <div class="sect1">
 <h2 id="_playbooks"><a class="anchor" href="#_playbooks"></a>Playbooks</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>We can create playbooks, which are essentially just YAML definitions of tasks we want to perform.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll start with an example playbook that copies a pre-defined, static <code>dnf.conf</code> file to <code>/etc/dnf/dnf.conf</code> on
+all target nodes.</p>
+</div>
+<div class="paragraph">
+<p>Create the following directory structure:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">.
+├── ansible.cfg
+├── configfiles
+│   └── dnf.conf
+├── hosts
+├── install_ansible.sh
+├── playbooks
+│   └── install_dnf_conf.yml
+└── setup_ssh.sh</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>dnf.conf</code> file will have the following contents:</p>
+</div>
+<div class="listingblock">
+<div class="title">configfiles/dnf.conf</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-ini hljs" data-lang="ini">[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#8230;&#8203;and the playbook will define a <code>task</code> using a <code>copy</code> action:</p>
+</div>
+<div class="listingblock">
+<div class="title">playbooks/install_dnf_conf.yml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">---
+- name: Install a dnf.conf file for HPE proxy
+  hosts: all
+  become: yes
 
+  tasks:
+    - name: Copy static dnf.conf file from controller
+      copy:
+        src: ../configfiles/dnf.conf # Path on control node
+        dest: /etc/dnf/dnf.conf # Destination path on target node
+        owner: root # Desired owner on target node
+        group: root # Desired group on target node
+        mode: '0644' # Desired permissions on target node</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll run the playbook with <code>ansible-playbook &lt;playbook_path&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ansible-playbook playbooks/install_dnf_conf.yml
+
+PLAY [Install a dnf.conf file for HPE proxy] ******************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************
+ok: [mawenzi-02]
+ok: [mawenzi-04]
+ok: [mawenzi-03]
+
+TASK [Copy static dnf.conf file from controller] **************************************************************************************************************************
+changed: [mawenzi-02]
+changed: [mawenzi-04]
+changed: [mawenzi-03]
+
+PLAY RECAP ****************************************************************************************************************************************************************
+mawenzi-02                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+mawenzi-03                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+mawenzi-04                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, using SSH we can verify that <code>/etc/dnf/dnf.conf</code> was successfully replaced:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@mawenzi-01 ansible]# ssh mawenzi-02 cat /etc/dnf/dnf.conf
+[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080</code></pre>
+</div>
+</div>
 </div>
 </div>
 </article>

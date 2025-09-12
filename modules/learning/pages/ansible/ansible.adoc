@@ -114,6 +114,16 @@ Generate a default ansible configuration file (`ansible.cfg`) to the local direc
 ansible-config init --disabled > ansible.cfg
 ----
 
+Or, you can use the following bare-bones `ansible.conf`:
+
+.ansible.conf
+[,ini]
+----
+[defaults]
+inventory=hosts
+private_key_file=/root/.ssh/id_ed25519_ansible
+----
+
 Also, create a `hosts` inventory file with the names of your servers, and whatever group you want them in.
 For this example, we'll be using `mawenzi-02` through `mawenzi-07` and will be putting them in the `ungrouped` group:
 
@@ -169,7 +179,7 @@ Or, you can set the field `private_key_file=/root/.ssh/id_ed25519_ansible` in yo
 and put your `hosts` file at `/etc/ansible/hosts` so all you have to run is `ansible all -m ping`.
 
 .Example
-[,bash]
+[,console]
 ----
 [root@mawenzi-01 ansible]# ansible all -m ping
 mawenzi-02 | SUCCESS => {
@@ -236,3 +246,95 @@ Complete!
 
 == Playbooks
 
+We can create playbooks, which are essentially just YAML definitions of tasks we want to perform.
+
+We'll start with an example playbook that copies a pre-defined, static `dnf.conf` file to `/etc/dnf/dnf.conf` on
+all target nodes.
+
+
+Create the following directory structure:
+
+[,console]
+----
+.
+├── ansible.cfg
+├── configfiles
+│   └── dnf.conf
+├── hosts
+├── install_ansible.sh
+├── playbooks
+│   └── install_dnf_conf.yml
+└── setup_ssh.sh
+----
+
+The `dnf.conf` file will have the following contents:
+
+.configfiles/dnf.conf
+[,ini]
+----
+[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+----
+
+...and the playbook will define a `task` using a `copy` action:
+
+.playbooks/install_dnf_conf.yml
+[,yaml]
+----
+---
+- name: Install a dnf.conf file for HPE proxy
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Copy static dnf.conf file from controller
+      copy:
+        src: ../configfiles/dnf.conf # Path on control node
+        dest: /etc/dnf/dnf.conf # Destination path on target node
+        owner: root # Desired owner on target node
+        group: root # Desired group on target node
+        mode: '0644' # Desired permissions on target node
+----
+
+We'll run the playbook with `ansible-playbook <playbook_path>`:
+
+[,console]
+----
+[root@mawenzi-01 ansible]# ansible-playbook playbooks/install_dnf_conf.yml
+
+PLAY [Install a dnf.conf file for HPE proxy] ******************************************************************************************************************************
+
+TASK [Gathering Facts] ****************************************************************************************************************************************************
+ok: [mawenzi-02]
+ok: [mawenzi-04]
+ok: [mawenzi-03]
+
+TASK [Copy static dnf.conf file from controller] **************************************************************************************************************************
+changed: [mawenzi-02]
+changed: [mawenzi-04]
+changed: [mawenzi-03]
+
+PLAY RECAP ****************************************************************************************************************************************************************
+mawenzi-02                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+mawenzi-03                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+mawenzi-04                 : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+----
+
+Then, using SSH we can verify that `/etc/dnf/dnf.conf` was successfully replaced:
+
+[,console]
+----
+[root@mawenzi-01 ansible]# ssh mawenzi-02 cat /etc/dnf/dnf.conf
+[main]
+gpgcheck=0
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True
+skip_if_unavailable=False
+proxy=http://proxy.houston.hpecorp.net:8080
+----

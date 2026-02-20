@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RDMA over Converged Ethernet (RoCE) :: Caleb Carlson | Docs Site</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/linux/networking/roce.html">
+    <meta name="generator" content="Antora 3.1.4">
+    <link rel="stylesheet" href="../../../../../_/css/site.css">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://inf0rmatiker.github.io">Caleb Carlson | Docs Site</a>
+      <button class="navbar-burger" aria-controls="topbar-nav" aria-expanded="false" aria-label="Toggle main menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://inf0rmatiker.github.io/">Home</a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs-site" data-version="1">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="../../../index.html">Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="../../../index.html">Overview</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Projects</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">VU Meter</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/vu-meter/vu-meter.html">VU Meter</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">PC Exhaust</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../../projects/pc-exhaust/pc-exhaust.html">PC Exhaust</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../ansible/ansible.html">Ansible</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Kubernetes</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/k8s-install.html">Kubernetes Install</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Lustre</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/compiling-lustre.html">Compiling Lustre</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/development.html">Development</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-client.html">Lustre Client</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-server.html">Lustre Server</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../lustre/lustre-networking.html">Lustre Networking</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Linux</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Installs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/rocky-install.html">Rocky Linux Install</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../installs/opensuse-install.html">OpenSUSE Linux Install</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../isos.html">ISOs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../rpms.html">RPMs</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../tmux.html">Tmux</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../user-management.html">User Management</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Networking</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="linux-networking.html">Linux</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="mpi.html">MPI</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="proxies.html">Proxies</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="rdma.html">RDMA Programming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="socket_programming.html">Socket Programming</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="ssh.html">SSH</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Storage</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/filesystems.html">Filesystems</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../storage/drives.html">Drives</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../vms/virtual-machines.html">Virtual Machines</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Docker</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/multiarch-building.html">Multi-Architecture Builds</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/nginx-webserver.html">Nginx Webserver</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../docker/registry-proxy.html">Registry Proxy</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../asciinema/asciinema.html">Asciinema</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../bmc-management/bmc-management.html">BMC Management</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Version Control</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/git/git.html">Git</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../version-control/github/github.html">GitHub</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Algorithms</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/dynamic-programming.html">Dynamic Programming</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../algorithms/sliding-window.html">Sliding Window</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Machine Learning</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/benchmarks.html">Benchmarks</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../machine-learning/determinedai.html">Determined AI</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">REST APIs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../rest-apis/api-security.html">Secure Development</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">InfiniBand</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/infiniband.html">InfiniBand</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../infiniband/monitoring.html">Fabric Monitoring</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Languages</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">C</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/c/getopt.html">Getopt</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="../../languages/cpp/cpp.html">C++</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/arrays.html">Arrays</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/branch_control.html">Branch Control</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/classes.html">Classes</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/compiling.html">Compiling and Executing</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/development_environment.html">Development Environment</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/error_handling.html">Error Handling</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/functions.html">Functions</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/input_streams.html">Input Streams</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/macros.html">Macros</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/pointers.html">Pointers</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/structures.html">Stuctures</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/types.html">Types</a>
+  </li>
+  <li class="nav-item" data-depth="4">
+    <a class="nav-link" href="../../languages/cpp/vectors.html">Vectors</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../languages/go/go.html">Go</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../slurm/slurm.html">Slurm</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">GPUs</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/gds.html">GPUDirect Storage</a>
+  </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../gpus/numa.html">NUMA</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../switch-management/switch-management.html">Switch Management</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="../../hpcm/hpcm.html">HPCM</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">todo</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../todo/todo.html">todo</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Documentation</span>
+    <span class="version">1</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <div class="title"><a href="../../../index.html">Documentation</a></div>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="../../../index.html">1</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../../index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="../../../index.html">Documentation</a></li>
+    <li><a href="roce.html">RDMA over Converged Ethernet (RoCE)</a></li>
+  </ul>
+</nav>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">RDMA over Converged Ethernet (RoCE)</h1>
+<div class="sect1">
+<h2 id="_setup_and_configuration"><a class="anchor" href="#_setup_and_configuration"></a>Setup and Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For this document we&#8217;ll be using two nodes, each with at least one ConnectX-7 VPI card installed,
+cabled to an Nvidia SN5600 Ethernet switch using breakout (2x) cables.</p>
+</div>
+<div class="paragraph">
+<p>First thing we need to do is set the VPI cards to Ethernet mode if they&#8217;re in InfiniBand mode currently.</p>
+</div>
+<div class="paragraph">
+<p>Check mode with <code>ibstat</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@sturgeon-admin ~]# ibstat
+CA 'mlx5_0'
+	CA type: MT4129
+	Number of ports: 1
+	Firmware version: 28.40.1000
+	Hardware version: 0
+	Node GUID: 0x5c25730300a0454a
+	System image GUID: 0x5c25730300a0454a
+	Port 1:
+		State: Active
+		Physical state: LinkUp
+		Rate: 400
+		Base lid: 0
+		LMC: 0
+		SM lid: 0
+		Capability mask: 0x00010000
+		Port GUID: 0x5e2573fffea0454a
+		Link layer: Ethernet</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another way is to check with <code>mlxconfig</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@sturgeon-admin ~]# mlxconfig -d mlx5_0 query LINK_TYPE_P1
+
+Device #1:
+----------
+
+Device type:        ConnectX7
+Name:               MCX75310AAS-NEAT_HPE2_Ax
+Description:        HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter
+Device:             mlx5_0
+
+Configurations:                                          Next Boot
+        LINK_TYPE_P1                                ETH(2)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Set the link mode to Ethernet if needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">[root@sturgeon-admin ~]# mlxconfig -d mlx5_0 set LINK_TYPE_P1=2
+
+Device #1:
+----------
+
+Device type:        ConnectX7
+Name:               MCX75310AAS-NEAT_HPE2_Ax
+Description:        HPE InfiniBand NDR/Ethernet 400Gb 1-port OSFP PCIe5 x16 MCX75310AAS-NEAT Adapter
+Device:             mlx5_0
+
+Configurations:                                          Next Boot       New
+        LINK_TYPE_P1                                ETH(2)               ETH(2)
+
+ Apply new Configuration? (y/n) [n] : y
+Applying... Done!
+-I- Please reboot machine to load new configurations.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the mode changed, you&#8217;ll need to reboot the machine.
+Do this for all adapters not already in Ethernet mode.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>Copyright © 2023-2025 Caleb Carlson. All rights reserved.
+</footer>
+<script id="site-script" src="../../../../../_/js/site.js" data-ui-root-path="../../../../../_"></script>
+<script async src="../../../../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Configuring a private registry to use a proxy server :: Caleb Carlson | Docs Site</title>
-    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/docker/registry-proxy.html">
+    <title>Kubernetes Networking :: Caleb Carlson | Docs Site</title>
+    <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/kubernetes/networking.html">
     <meta name="generator" content="Antora 3.1.4">
     <link rel="stylesheet" href="../../../../_/css/site.css">
   </head>
@@ -76,16 +76,16 @@
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../kubernetes/crds.html">CRDs</a>
+    <a class="nav-link" href="crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../kubernetes/k8s-api-resources.html">Kubernetes Resources</a>
+    <a class="nav-link" href="k8s-api-resources.html">Kubernetes Resources</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../kubernetes/k8s-install.html">Kubernetes Install</a>
+    <a class="nav-link" href="k8s-install.html">Kubernetes Install</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../kubernetes/kubectl.html">kubectl</a>
+    <a class="nav-link" href="kubectl.html">kubectl</a>
   </li>
 </ul>
   </li>
@@ -190,13 +190,13 @@
     <span class="nav-text">Docker</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="multiarch-building.html">Multi-Architecture Builds</a>
+    <a class="nav-link" href="../docker/multiarch-building.html">Multi-Architecture Builds</a>
   </li>
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="nginx-webserver.html">Nginx Webserver</a>
+    <a class="nav-link" href="../docker/nginx-webserver.html">Nginx Webserver</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="3">
-    <a class="nav-link" href="registry-proxy.html">Registry Proxy</a>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../docker/registry-proxy.html">Registry Proxy</a>
   </li>
 </ul>
   </li>
@@ -401,9 +401,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="../../index.html">Documentation</a></li>
-    <li>Learning</li>
-    <li>Docker</li>
-    <li><a href="registry-proxy.html">Registry Proxy</a></li>
+    <li><a href="networking.html">Kubernetes Networking</a></li>
   </ul>
 </nav>
 </div>
@@ -412,95 +410,209 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<h1 class="page">Configuring a private registry to use a proxy server</h1>
+<h1 class="page">Kubernetes Networking</h1>
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Official docs: <a href="https://docs.docker.com/network/proxy/#configure-the-docker-client" class="bare">https://docs.docker.com/network/proxy/#configure-the-docker-client</a></p>
+<p>Official Documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/concepts/services-networking/">Kubernetes Networking Concepts</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Helpful videos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.youtube.com/watch?v=J8jAzqbXxjE&amp;t=622s">Kubernetes Networking Explained</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=T4Z7visMM4E">Kubernetes Services Explained | ClusterIP vs NodePort vs LoadBalancer vs Headless Service</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=80Ew_fsV4rM">Kubernetes Ingress Tutorial for Beginners</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configure_the_docker_client"><a class="anchor" href="#_configure_the_docker_client"></a>Configure the Docker client</h2>
+<h2 id="_pods"><a class="anchor" href="#_pods"></a>Pods</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>On the Docker client, create or edit the file <code>~/.docker/config</code>.json in the home directory of the user that starts containers. Add JSON similar to the following example. Substitute the type of proxy with <code>httpsProxy</code> or <code>ftpProxy</code> if necessary, and substitute the address and port of the proxy server. You can also configure multiple proxy servers simultaneously.</p>
+<p>Each pod gets its own IP address. Containers within the pod communicate with each other
+using the <code>'localhost'</code> interface, and pods communicate with each other using their assigned IP addresses.</p>
 </div>
 <div class="paragraph">
-<p>+
-You can optionally exclude hosts or ranges from going through the proxy server by setting a <code>noProxy</code> key to one or more comma-separated IP addresses or hosts. Using the <code>*</code> character as a wildcard for hosts and using CIDR notation for IP addresses is supported as shown in this example:</p>
+<p>By default, all pods can communicate with each other across the cluster.</p>
 </div>
 <div class="paragraph">
-<p>+</p>
+<p>How is this implemented? How do pods get assigned IPs and virtual network interfaces, network namespaces, etc?</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json"> {
-     "proxies":
-     {
-         "default":
-         {
-             "httpProxy": "http://192.168.1.12:3128",
-             "httpsProxy": "http://192.168.1.12:3128",
-             "noProxy": "*.test.example.com,.example2.com,127.0.0.0/8"
-         }
-     }
- }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>+
-Save the file.</p>
-</div>
-<div class="paragraph">
-<p>When you create or start new containers, the environment variables are set automatically within the container.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_use_environment_variables"><a class="anchor" href="#_use_environment_variables"></a>Use environment variables</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_set_the_environment_variables_manually"><a class="anchor" href="#_set_the_environment_variables_manually"></a>Set the environment variables manually</h3>
+<h3 id="_container_networking_interface_cni"><a class="anchor" href="#_container_networking_interface_cni"></a>Container Networking Interface (CNI)</h3>
 <div class="paragraph">
-<p>When you build the image, or using the <code>--env</code> flag when you create or run the container, you can set one or more of the following variables to the appropriate value. This method makes the image less portable, so if you have Docker 17.07 or higher, you should configure the Docker client instead.</p>
+<p>This is done by the CNI. This is a plugin to Kubernetes that provides networking to containers.
+It configures (virtual) network interfaces, assigns IP addresses, and sets up routes.</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
+<div class="paragraph">
+<p>Some examples of CNI plugins:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/flannel-io/flannel/blob/master/Documentation/kubernetes.md">Flannel</a> - easy/lightweight, but doesn&#8217;t support network policies</p>
+</li>
+<li>
+<p><a href="https://cilium.io/">Cilium</a> - more complex, based on eBPF, but supports network policies and advanced features</p>
+</li>
+<li>
+<p><a href="https://www.projectcalico.org/">Calico</a> - supports network policies and advanced features, but can be more complex to set up</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_ebpf"><a class="anchor" href="#_ebpf"></a>eBPF</h4>
+<div class="paragraph">
+<p>extended Berkeley Packet Filter. This is a technology that allows you to run sandboxed programs in the kernel without changing kernel source code or loading kernel modules. Cilium uses eBPF to implement its networking and security features.</p>
+</div>
+<div class="paragraph">
+<p>Allows you a way to extend kernel functionality safely by providing isolated functions that get triggered by certain events (like a packet arriving at a network interface). This allows Cilium to implement features like load balancing, network policies, and observability without needing to modify the kernel or use iptables.</p>
+</div>
+<div class="paragraph">
+<p>eBPF runs at the logical junction between the kernel and hardware devices, so it&#8217;s able to make decisions early when receiving inputs from those devices.
+The functions you provide (hooks) to eBPF have links back to the running user-space processes, so you can have your eBPF functions trigger events in user-space, and you can have user-space processes trigger events in eBPF functions.</p>
+</div>
+<div class="paragraph">
+<p>Some use cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Network Filtering</strong>: eBPF can enforce simple to complex rules very early in the recv path. This is done tailored to network namespaces, etc.
+Can also handle egress filtering for things like content filtering, loss prevention, etc.</p>
+</li>
+<li>
+<p><strong>Observability</strong>: eBPF can see traffic from all devices on the server, and can provide detailed telemetry on that traffic, which is useful for monitoring and debugging.</p>
+</li>
+<li>
+<p><strong>Security</strong>: eBPF can be used to implement security features like intrusion detection, or by asking the kernel to kill misbehaving processes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_gateway_api"><a class="anchor" href="#_gateway_api"></a>Gateway API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is a set of modular APIs for controlling North/South traffic (traffic entering and leaving the cluster), as well as East/West traffic (traffic between services within the cluster, aka service mesh). It is a more flexible and extensible alternative to Ingress.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.youtube.com/watch?v=q76XVCTDZCY">An Introduction to Gateway API for Beginners in Kubernetes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_services"><a class="anchor" href="#_services"></a>Services</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kubernetes.io/docs/concepts/services-networking/service/">Services</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A Kubernetes <code>Service</code> is an abstraction to expose services running on a set of Pods as a network service.
+Handles the problem of pod ephemerality and load balancing. When pods come and go, they get new IP addresses.
+This makes it difficult for clients to reliably access the pods. A <code>Service</code> provides a stable IP address and DNS name that clients can use to access the service, regardless of the underlying pod IPs.</p>
+</div>
+<div class="sect2">
+<h3 id="_clusterip"><a class="anchor" href="#_clusterip"></a>ClusterIP</h3>
+<div class="paragraph">
+<p>This is an internal-only service that is only accessible from within the cluster, and is the default type of service.</p>
+</div>
+<div class="paragraph">
+<p>This creates an internal, private IP address within the cluster, for communication between services and the backing pods.
+It cannot be accessed externally.</p>
+</div>
+<div class="paragraph">
+<p>Traffic goes through a proxy, (for example, <code>kube-proxy</code>), which forwards traffic to the appropriate backing pods of the service
+based on the service&#8217;s load-balancing strategy.</p>
+</div>
+<div class="paragraph">
+<p>Kubernetes assigns a stable, virtual IP to the service, which remains constant regardless of the backing pods' IP addresses. This allows clients to reliably access the service without needing to track changes in the pod IPs. The <code>kube-proxy</code> component maintains a set of network rules (under the hood, using <code>iptables</code>, <code>ipvs</code>, or <code>nftables</code>) to route traffic.</p>
+</div>
+<div class="paragraph">
+<p>So when a request is made to the service&#8217;s ClusterIP, <code>kube-proxy</code> intercepts the traffic and forwards it to one of the backing pods based on the defined load-balancing strategy (e.g., round-robin, least connections).</p>
+</div>
+<div class="paragraph">
+<p>The <code>Service</code> updates the list of available pod IPs as the pods are scaled up and down.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_loadbalancer"><a class="anchor" href="#_loadbalancer"></a>LoadBalancer</h3>
+<div class="paragraph">
+<p>This is similar to ClusterIP, but exposes your application externally using a cloud provider&#8217;s load balancer.
+When you create this type of service, Kubernetes tries to use the specified cloud load balancer API to provision a load balancer
+for your service. This external load balancer directs traffic to the appropriate nodes on a nodeport that Kubernetes opens on each node.
+From there, <code>kube-proxy</code> routes the traffic to the appropriate backing pods of the service based on the service&#8217;s load-balancing strategy.
+Each <code>LoadBalancer</code> service typically gets its own public IP address, which can be costly if many services are exposed this way.</p>
+</div>
+<div class="admonitionblock note">
+<table>
 <tr>
-<th class="tableblock halign-left valign-top">Variable</th>
-<th class="tableblock halign-left valign-top">Dockerfile example</th>
-<th class="tableblock halign-left valign-top"><code>docker run</code> example</th>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This is only available if your cluster is running in a supported cloud environment.
+There is also <a href="https://metallb.io/">MetalLB</a> or Cilium for scenarios where you want to use LoadBalancer services in on-premises or bare-metal clusters.
+</td>
 </tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTP_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV HTTP_PROXY="http://192.168.1.12:3128"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env HTTP_PROXY="http://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HTTPS_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV HTTPS_PROXY="https://192.168.1.12:3128</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env HTTPS_PROXY="https://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FTP_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV FTP_PROXY="ftp://192.168.1.12:3128"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env FTP_PROXY="ftp://192.168.1.12:3128"</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NO_PROXY</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ENV NO_PROXY="*.test.example.com,.example2.com"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--env NO_PROXY="*.test.example.com,.example2.com"</code></p></td>
-</tr>
-</tbody>
 </table>
+</div>
+<div class="paragraph">
+<p>Some providers support health checks or cross-zone load balancing.</p>
+</div>
+<div class="paragraph">
+<p>Best for public-facing services where clients need access.</p>
+</div>
+<div class="sect3">
+<h4 id="_metallb"><a class="anchor" href="#_metallb"></a>MetalLB</h4>
+<div class="paragraph">
+<p>See <a href="https://metallb.io/concepts/">MetalLB Concepts</a> for more details.</p>
+</div>
+<div class="paragraph">
+<p>Acts as a LoadBalancer implementation for on-premises or bare-metal Kubernetes clusters.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodeport"><a class="anchor" href="#_nodeport"></a>NodePort</h3>
+<div class="paragraph">
+<p>The Nodeport service type exposes the service on a static port on each node&#8217;s IP address.
+Traffic is sent to the NodePort on any node, and every node in the cluster has this port exposed.
+The request is then forwarded to the appropriate backing pod.</p>
+</div>
+<div class="paragraph">
+<p>Because no cloud provider load balancer is used, this makes the NodePort type ideal for on-premises or bare-metal clusters.</p>
+</div>
+<div class="paragraph">
+<p>When you create a NodePort service, Kubernetes allocates a port from a predefined range (default is 30000-32767) and opens that port on all nodes in the cluster. The <code>kube-proxy</code> component then routes incoming traffic on that port to the appropriate backing pods of the service based on the service&#8217;s load-balancing strategy.</p>
+</div>
 </div>
 </div>
 </div>

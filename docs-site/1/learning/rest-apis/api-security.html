@@ -471,10 +471,10 @@
 <p>Sensitive data needs to be encrypted when stored and during transmission</p>
 </li>
 <li>
-<p>Transaction replay attacks need to be identified using tools that analyze AIP request traffic and usage patterns</p>
+<p>Transaction replay attacks need to be identified using tools that analyze API request traffic and usage patterns</p>
 </li>
 <li>
-<p>Arrests for surges in API usage should be put in place</p>
+<p>Alerts for surges in API usage should be put in place</p>
 </li>
 <li>
 <p>Sensitive information should not be part of a URI and should only be sent in the HTTP header using a POST method</p>
@@ -507,7 +507,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Filtering should be used to limit returned data based on filter paramters</p>
+<p>Filtering should be used to limit returned data based on filter parameters</p>
 </li>
 <li>
 <p>Paging - requests a subset of the data to be returned based on requested parameters</p>
@@ -542,7 +542,7 @@
 <div class="sect2">
 <h3 id="_api_filtering"><a class="anchor" href="#_api_filtering"></a>API Filtering</h3>
 <div class="paragraph">
-<p>Filter operaters can be sent as part of the URL request using a colon, such as: <code>?price=gte:10</code>.</p>
+<p>Filter operators can be sent as part of the URL request using a colon, such as: <code>?price=gte:10</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -952,7 +952,7 @@
 <p><em>Client Credentials Grant Type</em>: Least secure. Only used when there is an existing authorization grant between the client/server. Used in machine-to-machine authentication. Client posts a request with the grant type, client id, client secret, and the requested scope. JSON object is returned that contains the token type, expiration time, and access token.</p>
 </li>
 <li>
-<p><em>Implicit Flow Grant Type</em>: Intended for clients such as single page webb apps that can&#8217;t protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.</p>
+<p><em>Implicit Flow Grant Type</em>: Intended for clients such as single page web apps that can&#8217;t protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.</p>
 </li>
 <li>
 <p><em>Resource Owner Password Grant Type</em>: Less secure because the client is required to handle the user&#8217;s credentials. Only used by highly trusted partners in native applications. Client collects and sends authorization credentials to the authorization server. JSON object is returned that contains the token type, expiration time, access token, and refresh token.</p>
@@ -963,7 +963,7 @@
 <div class="sect2">
 <h3 id="_saml_vs_oauth"><a class="anchor" href="#_saml_vs_oauth"></a>SAML vs. OAuth</h3>
 <div class="paragraph">
-<p>Security Assertion Markup Language (SAML) is a protocol for <em>both</em> authentication adn authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user&#8217;s identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.</p>
+<p>Security Assertion Markup Language (SAML) is a protocol for <em>both</em> authentication and authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user&#8217;s identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.</p>
 </div>
 <div class="paragraph">
 <p>OAuth is an authorization framework that uses and works over HTTPS with access tokens instead of a username/password. User auth is delegated to the service which hosts the user account, which authorizes third party access to resources. Has documented flows aka Grant Types, applicable to different situations.</p>

@@ -20,8 +20,8 @@
 * All data passed to API needs to be validated for injection-type attacks
 * All APIs need to be protected with mechanisms like OAuth or OpenID Connect
 * Sensitive data needs to be encrypted when stored and during transmission
-* Transaction replay attacks need to be identified using tools that analyze AIP request traffic and usage patterns
-* Arrests for surges in API usage should be put in place
+* Transaction replay attacks need to be identified using tools that analyze API request traffic and usage patterns
+* Alerts for surges in API usage should be put in place
 * Sensitive information should not be part of a URI and should only be sent in the HTTP header using a POST method
 * Error objects should be well-balanced and not contain internal workings of the underlying backend system
 * Timestamps can be used to limit a period of valid transaction
@@ -32,7 +32,7 @@
 
 == API Development Features
 
-* Filtering should be used to limit returned data based on filter paramters
+* Filtering should be used to limit returned data based on filter parameters
 * Paging - requests a subset of the data to be returned based on requested parameters
 * Sorting - Requests that data is returned in a sorted order based on parameters
 * Data should be available in JSON format for REST APIs
@@ -47,7 +47,7 @@ Returns the data in chunks, or pages.
 
 === API Filtering
 
-Filter operaters can be sent as part of the URL request using a colon, such as: `?price=gte:10`.
+Filter operators can be sent as part of the URL request using a colon, such as: `?price=gte:10`.
 
 === API Sorting
 
@@ -204,12 +204,12 @@ Secure information is encoded in JWTs for secure transmission.
 
 * _Authorization Code Grant Type_: Client redirects the user to the authorization server for authorization. User logs into the auth server to approve the client application. Once authorized, the auth server sends back an auth code and state parameter.
 * _Client Credentials Grant Type_: Least secure. Only used when there is an existing authorization grant between the client/server. Used in machine-to-machine authentication. Client posts a request with the grant type, client id, client secret, and the requested scope. JSON object is returned that contains the token type, expiration time, and access token.
-* _Implicit Flow Grant Type_: Intended for clients such as single page webb apps that can't protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.
+* _Implicit Flow Grant Type_: Intended for clients such as single page web apps that can't protect client secrets. The authorization server returns an access token. This grant type does not return a refresh token, as the browser cannot keep it private.
 * _Resource Owner Password Grant Type_: Less secure because the client is required to handle the user's credentials. Only used by highly trusted partners in native applications. Client collects and sends authorization credentials to the authorization server. JSON object is returned that contains the token type, expiration time, access token, and refresh token.
 
 === SAML vs. OAuth
 
-Security Assertion Markup Language (SAML) is a protocol for _both_ authentication adn authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user's identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.
+Security Assertion Markup Language (SAML) is a protocol for _both_ authentication and authorization in Single Sign On (SSO). Uses XML metadata documents as tokens to assert a user's identity. Users can sign on once for authentication purposes, and security tokens can be reused by other applications without having to sign in again.
 
 OAuth is an authorization framework that uses and works over HTTPS with access tokens instead of a username/password. User auth is delegated to the service which hosts the user account, which authorizes third party access to resources. Has documented flows aka Grant Types, applicable to different situations.
 

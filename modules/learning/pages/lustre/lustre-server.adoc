@@ -513,7 +513,7 @@ dnf install -y \
 
 === Disable System Firewall
 
-To make things easier for us laterwhen we're trying to send IPoIB traffic between
+To make things easier for us later when we're trying to send IPoIB traffic between
 nodes, go ahead and disable the system firewall:
 
 [,bash]

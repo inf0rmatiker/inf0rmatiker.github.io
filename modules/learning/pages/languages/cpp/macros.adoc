@@ -1,6 +1,6 @@
 = Preprocessor Directives
 
-A preprocessor directive are lines in the code that begin with a hash `#`, 
+Preprocessor directives are lines in the code that begin with a hash `#`,
 and are evaluated by the C++ preprocessor _before_ compilation time.
 
 Commonly used categories include things like macro definitions, conditional inclusions, pragma directives, and source file inclusions.

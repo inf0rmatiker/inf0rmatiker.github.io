@@ -50,13 +50,49 @@ git config --global user.email "MY_NAME@example.com"
 
 This section describes how to create an SSH key, and configure Git to use it to sign commits.
 
+First, generate a new SSH key:
 
+[,console]
+----
+ssh-keygen \          
+    -t ed25519 \
+    -C "cacarlson@nvidia.com" \
+    -f "${HOME}/.ssh/id_ed25519_nvidia_git_signing" \
+    -P ""
+----
 
+Upload the `.pub` signing key to GitHub: https://github.com/settings/keys
+Choose `New SSH Key`, set title to something descriptive i.e. "Nvidia MacBook Signing Key",
+then choose `Key Type: Signing Key`, and copy/paste the contents of the `${HOME}/.ssh/id_ed25519_nvidia_git_signing.pub`
+into the `Key` field. You'll need to authenticate with 2FA to add this to your account.
+
+Now, make Git aware of it. This sets the options globally, but you can remove the `--global` flag and
+just run these commands in your repo directory to set the Git config options for that repo.
+
+[,console]
+----
+git config --global user.name="Caleb Carlson"
+git config --global user.email="cacarlson@nvidia.com"
+git config --global user.signingkey="~/.ssh/id_ed25519_nvidia_git_signing.pub"
+git config --global gpg.format=ssh
+git config --global commit.gpgsign=true
+----
+
+Next, we need to create an https://git-scm.com/docs/git-config#Documentation/git-config.txt-gpgsshallowedSignersFile[allowed signers file].
+This is a file containing ssh public keys which you are willing to trust.
+
+[,console]
+----
+mkdir -p ~/.config/git
+echo "cacarlson@nvidia.com $(cat ~/.ssh/id_ed25519_nvidia_git_signing.pub)" > ~/.config/git/allowed-signers
+git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers
+----
 
 ==== References
 
 * https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key[GitHub: Generating a new GPG key]
 * https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key[GitHub: Telling Git about your signing key]
+* https://stackoverflow.com/questions/77935996/git-commit-s-silently-fails-to-sign-and-continues-to-commit-when-using-ssh[Git Commit Silently Fails to Sign]
 
 == Commands
 

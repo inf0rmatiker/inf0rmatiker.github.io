@@ -62,7 +62,7 @@ ssh-keygen \
 ----
 
 Upload the `.pub` signing key to GitHub: https://github.com/settings/keys
-Choose `New SSH Key`, set title to something descriptive i.e. "Nvidia MacBook Signing Key",
+Choose `New SSH Key`, set the title to something descriptive i.e., "Nvidia MacBook Signing Key",
 then choose `Key Type: Signing Key`, and copy/paste the contents of the `${HOME}/.ssh/id_ed25519_nvidia_git_signing.pub`
 into the `Key` field. You'll need to authenticate with 2FA to add this to your account.
 
@@ -89,7 +89,7 @@ git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers
 ----
 
 From now on, when you `git commit`, you can do it like this: `git commit -a -s -S`, and it will sign your commit
-using your signing key you configured.
+using the signing key you configured.
 
 Then, you can view your new commit via `git log --show-signature`:
 
@@ -121,7 +121,7 @@ NOTE: This is _different_ from _signing_ a commit.
 
 https://volunteer.coscup.org/docs/en/dev/how-to-signoff/[COSCUP Volunteer Docs: How to Sign-off Commits]
 
-Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.
+Commit messages should be formatted with the first name, last name, and email address associated with GitHub for that repository.
 
 [,console]
 ----

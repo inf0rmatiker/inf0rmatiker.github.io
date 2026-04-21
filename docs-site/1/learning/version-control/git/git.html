@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Git :: Caleb Carlson | Docs Site</title>
     <link rel="canonical" href="https://inf0rmatiker.github.io/docs-site/1/learning/version-control/git/git.html">
-    <meta name="generator" content="Antora 3.1.4">
+    <meta name="generator" content="Antora 3.1.14">
     <link rel="stylesheet" href="../../../../../_/css/site.css">
   </head>
   <body class="article">
@@ -76,9 +76,6 @@
     <span class="nav-text">Kubernetes</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../kubernetes/container-registries.html">Container Registries</a>
-  </li>
-  <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../kubernetes/crds.html">CRDs</a>
   </li>
   <li class="nav-item" data-depth="3">
@@ -89,9 +86,6 @@
   </li>
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../kubernetes/kubectl.html">kubectl</a>
-  </li>
-  <li class="nav-item" data-depth="3">
-    <a class="nav-link" href="../../kubernetes/networking.html">Kubernetes Networking</a>
   </li>
 </ul>
   </li>
@@ -333,6 +327,9 @@
   <li class="nav-item" data-depth="3">
     <a class="nav-link" href="../../languages/go/go.html">Go</a>
   </li>
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="../../languages/rust/rust.html">Rust</a>
+  </li>
 </ul>
   </li>
   <li class="nav-item" data-depth="2">
@@ -364,9 +361,6 @@
     <a class="nav-link" href="../../todo/todo.html">todo</a>
   </li>
 </ul>
-  </li>
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="../../system-design/system-design.html">System Design</a>
   </li>
 </ul>
   </li>
@@ -482,18 +476,19 @@ git config --global user.email "MY_NAME@example.com"</code></pre>
 <div class="sect2">
 <h3 id="_git_commit_signing"><a class="anchor" href="#_git_commit_signing"></a>Git Commit Signing</h3>
 <div class="paragraph">
-<p>This section describes how to create a GPG key, and configure Git to use it to sign commits.</p>
+<p>This section describes how to create an SSH key, and configure Git to use it to sign commits.</p>
 </div>
 <div class="sect3">
-<h4 id="_gpg_key_creation"><a class="anchor" href="#_gpg_key_creation"></a>GPG Key Creation</h4>
-<div class="paragraph">
+<h4 id="_references"><a class="anchor" href="#_references"></a>References</h4>
+<div class="ulist">
+<ul>
+<li>
 <p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key">GitHub: Generating a new GPG key</a></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_configure_git_to_use_your_gpg_key"><a class="anchor" href="#_configure_git_to_use_your_gpg_key"></a>Configure Git to Use Your GPG Key</h4>
-<div class="paragraph">
+</li>
+<li>
 <p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">GitHub: Telling Git about your signing key</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>

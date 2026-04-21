@@ -3,7 +3,7 @@
 :toc: auto
 :showtitle:
 
-This document partains to default or generic filesystem operations. This does not include notes for high-performance object stores
+This document pertains to default or generic filesystem operations. This does not include notes for high-performance object stores
 like Lustre, GPFS, DAOS, etc.
 
 * For https://www.lustre.org/[Lustre] filesystem operations, see the following Lustre documents

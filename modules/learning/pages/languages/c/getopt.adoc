@@ -33,7 +33,7 @@ In addition to your other includes, add in `#include <getopt.h>`:
 
 == Example Program
 
-Here's an examply program with an option _with_ a required argument, and one without.
+Here's an example program with an option _with_ a required argument, and one without.
 
 [,c]
 ----

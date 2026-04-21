@@ -15,7 +15,7 @@
 * xref:docs-site:learning:languages/cpp/macros.adoc[Macros]
 * xref:docs-site:learning:languages/cpp/pointers.adoc[Pointers]
 * xref:docs-site:learning:languages/cpp/references.adoc[References]
-* xref:docs-site:learning:languages/cpp/structures.adoc[Stuctures]
+* xref:docs-site:learning:languages/cpp/structures.adoc[Structures]
 * xref:docs-site:learning:languages/cpp/types.adoc[Types]
 * xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]
 

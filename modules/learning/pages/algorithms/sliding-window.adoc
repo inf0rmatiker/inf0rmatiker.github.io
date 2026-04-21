@@ -10,7 +10,7 @@ There are two variations of this approach: _Fixed Sliding Window_, where the win
 is static, and _Dynamic Sliding Window_ where the window size can increase and decrease
 based on some criteria.
 
-It's O(n) time where n is the size of the list. This reduces the normal runtime of naive approach
+It's O(n) time where n is the size of the list. This reduces the normal runtime of the naive approach
 from O(n^2).
 
 == Example Problems

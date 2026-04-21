@@ -31,7 +31,7 @@ you made the array.
 int nums[4];
 ----
 
-You can initializing the array with values.
+You can initialize the array with values.
 
 [,cpp]
 ----
@@ -93,7 +93,7 @@ The square brackets `[]` are essentially just
 pointer dereferencing using the number provided the
 the square brackets as the offset. 
 A more manual, but equivalent way of doing this is to
-manupulate the pointer yourself, then dereference:
+manipulate the pointer yourself, then dereference:
 
 [,cpp]
 ----
@@ -121,7 +121,7 @@ int nums[3][5];
 nums[1][2] = 7;
 ----
 
-Initializing them using curly braces like we did wih single-dimension arrays:
+Initializing them using curly braces like we did with single-dimension arrays:
 
 [,cpp]
 ----
@@ -147,7 +147,7 @@ Prints:
 [0][0][0]
 ----
 
-C++ will allocate all this memory contiguously, as if it were a single-dimensional array, but it will keep track of the offets for each sub-array.
+C++ will allocate all this memory contiguously, as if it were a single-dimensional array, but it will keep track of the offsets for each sub-array.
 
 == Copying an Array
 

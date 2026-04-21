@@ -93,4 +93,4 @@ int main() {
 ----
 
 We can create a pointer to the function `&multiply` or `&add`, and 
-give it to the `calcuate` function which abstracts away the operation itself.
+give it to the `calculate` function which abstracts away the operation itself.

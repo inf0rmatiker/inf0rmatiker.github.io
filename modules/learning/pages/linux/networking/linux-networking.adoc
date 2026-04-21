@@ -44,7 +44,7 @@ ip link set dev eth0 up
 ip link set dev eth0 down
 ----
 
-Using `ifconfig``
+Using `ifconfig`
 
 ----
 # /sbin/ifconfig <interface> up

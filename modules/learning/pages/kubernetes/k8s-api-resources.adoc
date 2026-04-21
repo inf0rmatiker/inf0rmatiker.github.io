@@ -43,7 +43,7 @@ https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Kubernetes
 
 == ReplicaSet
 
-https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/[Kubernetes ReplicaSet Documenetation]
+https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/[Kubernetes ReplicaSet Documentation]
 
 == StatefulSet
 

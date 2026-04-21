@@ -91,7 +91,7 @@ git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers
 From now on, when you `git commit`, you can do it like this: `git commit -a -s -S`, and it will sign your commit
 using your signing key you configured.
 
-Then, you can view your commit via `git log --show-signature`:
+Then, you can view your new commit via `git log --show-signature`:
 
 [,console]
 ----

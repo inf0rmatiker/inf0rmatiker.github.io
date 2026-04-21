@@ -492,7 +492,7 @@ git config --global user.email "MY_NAME@example.com"</code></pre>
 </div>
 <div class="paragraph">
 <p>Upload the <code>.pub</code> signing key to GitHub: <a href="https://github.com/settings/keys" class="bare">https://github.com/settings/keys</a>
-Choose <code>New SSH Key</code>, set title to something descriptive i.e. "Nvidia MacBook Signing Key",
+Choose <code>New SSH Key</code>, set the title to something descriptive i.e., "Nvidia MacBook Signing Key",
 then choose <code>Key Type: Signing Key</code>, and copy/paste the contents of the <code>${HOME}/.ssh/id_ed25519_nvidia_git_signing.pub</code>
 into the <code>Key</code> field. You&#8217;ll need to authenticate with 2FA to add this to your account.</p>
 </div>
@@ -522,7 +522,7 @@ git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers</co
 </div>
 <div class="paragraph">
 <p>From now on, when you <code>git commit</code>, you can do it like this: <code>git commit -a -s -S</code>, and it will sign your commit
-using your signing key you configured.</p>
+using the signing key you configured.</p>
 </div>
 <div class="paragraph">
 <p>Then, you can view your new commit via <code>git log --show-signature</code>:</p>
@@ -582,7 +582,7 @@ This is <em>different</em> from <em>signing</em> a commit.
 <p><a href="https://volunteer.coscup.org/docs/en/dev/how-to-signoff/">COSCUP Volunteer Docs: How to Sign-off Commits</a></p>
 </div>
 <div class="paragraph">
-<p>Commit messages should be formatted with the first name, last name, and email address authorized with GitHub for that repository.</p>
+<p>Commit messages should be formatted with the first name, last name, and email address associated with GitHub for that repository.</p>
 </div>
 <div class="listingblock">
 <div class="content">

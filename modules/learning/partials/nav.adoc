@@ -83,6 +83,7 @@
 *** xref:docs-site:learning:languages/cpp/types.adoc[Types]
 *** xref:docs-site:learning:languages/cpp/vectors.adoc[Vectors]
 ** xref:docs-site:learning:languages/go/go.adoc[Go]
+** xref:docs-site:learning:languages/rust/rust.adoc[Rust]
 
 * xref:docs-site:learning:slurm/slurm.adoc[Slurm]
 

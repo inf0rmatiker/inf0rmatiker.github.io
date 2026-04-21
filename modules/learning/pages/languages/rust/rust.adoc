@@ -1,0 +1,62 @@
+= Rust
+
+:toc: auto
+:source-highlighter: highlight.js
+
+== Documentation
+
+https://doc.rust-lang.org/book/ch01-01-installation.html[Installing Rust]
+
+[,console]
+----
+curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+----
+
+== Cargo Project Commands
+
+https://doc.rust-lang.org/book/ch01-03-hello-cargo.html[Hello, Cargo!]
+
+* `cargo init`: Initialize the current working directory as a Cargo project.
+* `cargo new <path>`: Create dir `<path>` and initialize it as a Cargo project.
+* `cargo build`: Build the project specified by `Cargo.toml` to `target/`.
+** Builds to `target/debug` by default. Specify `--release` to build to `target/release`.
+* `cargo run`: Build the project and run the `main()` entrypoint in one command.
+* `cargo clean`: Clean up any built targets and the `target/` dir.
+* `cargo check`: Checks your code to make sure it compiles but doesn't produce an executable.
+* `cargo doc --open`: Generates and opens documentation for the dependencies you've installed via Cargo.
+
+== Enums in Rust
+
+Defining an enum:
+
+[,rust]
+----
+enum IpAddrKind {
+    V4,
+    V6,
+}
+
+// Example usage:
+fn main() {
+    let four: IpAddrKind = IpAddrKind::V4;
+    let four: IpAddrKind = IpAddrKind::V6;
+}
+----
+
+Enums can hold values within them, by defining enums with parentheses after each variant.
+
+[,rust]
+----
+enum IpAddrKind {
+    V4(String),
+    V6(String),
+}
+
+// Example usage:
+fn main() {
+    let four: IpAddrKind = IpAddrKind::V4("127.0.0.1");
+    let four: IpAddrKind = IpAddrKind::V6("00:00:00:00:00:00");
+}
+----
+
+

@@ -88,6 +88,23 @@ echo "cacarlson@nvidia.com $(cat ~/.ssh/id_ed25519_nvidia_git_signing.pub)" > ~/
 git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers
 ----
 
+From now on, when you `git commit`, you can do it like this: `git commit -a -s -S`, and it will sign your commit
+using your signing key you configured.
+
+Then, you can view your commit via `git log --show-signature`:
+
+[,console]
+----
+commit a45186c94b76fc605b73ff93c93a7882420e1da2 (HEAD -> master)
+Good "git" signature for cacarlson@nvidia.com with ED25519 key SHA256:mWy0S6deDF8dXu13zQXvnhnrA/BGEl6i6kuABEq2A6c
+Author: Caleb Carlson <cacarlson@nvidia.com>
+Date:   Tue Apr 21 09:46:37 2026 -0600
+
+    Add git signing docs, pt. 1
+
+    Signed-off-by: Caleb Carlson <cacarlson@nvidia.com>
+----
+
 ==== References
 
 * https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key[GitHub: Generating a new GPG key]

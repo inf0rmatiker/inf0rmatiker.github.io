@@ -71,11 +71,11 @@ just run these commands in your repo directory to set the Git config options for
 
 [,console]
 ----
-git config --global user.name="Caleb Carlson"
-git config --global user.email="cacarlson@nvidia.com"
-git config --global user.signingkey="~/.ssh/id_ed25519_nvidia_git_signing.pub"
-git config --global gpg.format=ssh
-git config --global commit.gpgsign=true
+git config --global user.name "Caleb Carlson"
+git config --global user.email "cacarlson@nvidia.com"
+git config --global user.signingkey "~/.ssh/id_ed25519_nvidia_git_signing.pub"
+git config --global gpg.format ssh
+git config --global commit.gpgsign true
 ----
 
 Next, we need to create an https://git-scm.com/docs/git-config#Documentation/git-config.txt-gpgsshallowedSignersFile[allowed signers file].

@@ -478,6 +478,67 @@ git config --global user.email "MY_NAME@example.com"</code></pre>
 <div class="paragraph">
 <p>This section describes how to create an SSH key, and configure Git to use it to sign commits.</p>
 </div>
+<div class="paragraph">
+<p>First, generate a new SSH key:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">ssh-keygen \
+    -t ed25519 \
+    -C "cacarlson@nvidia.com" \
+    -f "${HOME}/.ssh/id_ed25519_nvidia_git_signing" \
+    -P ""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upload the <code>.pub</code> signing key to GitHub: <a href="https://github.com/settings/keys" class="bare">https://github.com/settings/keys</a>
+Choose <code>New SSH Key</code>, set title to something descriptive i.e. "Nvidia MacBook Signing Key",
+then choose <code>Key Type: Signing Key</code>, and copy/paste the contents of the <code>${HOME}/.ssh/id_ed25519_nvidia_git_signing.pub</code>
+into the <code>Key</code> field. You&#8217;ll need to authenticate with 2FA to add this to your account.</p>
+</div>
+<div class="paragraph">
+<p>Now, make Git aware of it. This sets the options globally, but you can remove the <code>--global</code> flag and
+just run these commands in your repo directory to set the Git config options for that repo.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">git config --global user.name="Caleb Carlson"
+git config --global user.email="cacarlson@nvidia.com"
+git config --global user.signingkey="~/.ssh/id_ed25519_nvidia_git_signing.pub"
+git config --global gpg.format=ssh
+git config --global commit.gpgsign=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we need to create an <a href="https://git-scm.com/docs/git-config#Documentation/git-config.txt-gpgsshallowedSignersFile">allowed signers file</a>.
+This is a file containing ssh public keys which you are willing to trust.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">mkdir -p ~/.config/git
+echo "cacarlson@nvidia.com $(cat ~/.ssh/id_ed25519_nvidia_git_signing.pub)" &gt; ~/.config/git/allowed-signers
+git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed-signers</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From now on, when you <code>git commit</code>, you can do it like this: <code>git commit -a -s -S</code>, and it will sign your commit
+using your signing key you configured.</p>
+</div>
+<div class="paragraph">
+<p>Then, you can view your commit via <code>git log --show-signature</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-console hljs" data-lang="console">commit a45186c94b76fc605b73ff93c93a7882420e1da2 (HEAD -&gt; master)
+Good "git" signature for cacarlson@nvidia.com with ED25519 key SHA256:mWy0S6deDF8dXu13zQXvnhnrA/BGEl6i6kuABEq2A6c
+Author: Caleb Carlson &lt;cacarlson@nvidia.com&gt;
+Date:   Tue Apr 21 09:46:37 2026 -0600
+
+    Add git signing docs, pt. 1
+
+    Signed-off-by: Caleb Carlson &lt;cacarlson@nvidia.com&gt;</code></pre>
+</div>
+</div>
 <div class="sect3">
 <h4 id="_references"><a class="anchor" href="#_references"></a>References</h4>
 <div class="ulist">
@@ -487,6 +548,9 @@ git config --global user.email "MY_NAME@example.com"</code></pre>
 </li>
 <li>
 <p><a href="https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key">GitHub: Telling Git about your signing key</a></p>
+</li>
+<li>
+<p><a href="https://stackoverflow.com/questions/77935996/git-commit-s-silently-fails-to-sign-and-continues-to-commit-when-using-ssh">Git Commit Silently Fails to Sign</a></p>
 </li>
 </ul>
 </div>
